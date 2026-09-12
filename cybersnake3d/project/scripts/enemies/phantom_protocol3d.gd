@@ -173,7 +173,7 @@ func _update_position() -> void:
 		mesh_inst.position = _g2w(grid_pos)
 
 func _g2w(gp: Vector2i) -> Vector3:
-	return Vector3(float(gp.x) - LevelSettings.grid_w * 0.5 + 0.5, 0.5, float(gp.y) - LevelSettings.grid_h * 0.5 + 0.5)
+	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)
 
 func _random_edge() -> Vector2i:
 	var side := randi_range(0, 3)

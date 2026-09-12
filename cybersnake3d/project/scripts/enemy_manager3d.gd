@@ -18,6 +18,9 @@ func _ready() -> void:
 	var floor_mesh := get_node_or_null("../GridFloor") as MeshInstance3D
 	if floor_mesh and floor_mesh.mesh is PlaneMesh:
 		(floor_mesh.mesh as PlaneMesh).size = Vector2(LevelSettings.grid_w, LevelSettings.grid_h)
+		# Origin-fixed floor: it spans world 0..grid_w so existing entities
+		# (snake, shards) stay at their world positions when the board grows.
+		floor_mesh.position = Vector3(LevelSettings.grid_w / 2.0, 0.0, LevelSettings.grid_h / 2.0)
 		var mat = floor_mesh.get_surface_override_material(0) as ShaderMaterial
 		if mat:
 			mat.set_shader_parameter("grid_cells", float(LevelSettings.grid_w))
@@ -64,6 +67,8 @@ func _start_next_wave() -> void:
 		var floor_mesh := get_node_or_null("../GridFloor") as MeshInstance3D
 		if floor_mesh and floor_mesh.mesh is PlaneMesh:
 			(floor_mesh.mesh as PlaneMesh).size = Vector2(LevelSettings.grid_w, LevelSettings.grid_h)
+			# Origin-fixed floor: reposition so it spans world 0..grid_w as it grows.
+			floor_mesh.position = Vector3(LevelSettings.grid_w / 2.0, 0.0, LevelSettings.grid_h / 2.0)
 			var mat = floor_mesh.get_surface_override_material(0) as ShaderMaterial
 			if mat:
 				mat.set_shader_parameter("grid_cells", float(LevelSettings.grid_w))

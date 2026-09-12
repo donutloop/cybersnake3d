@@ -91,4 +91,4 @@ func get_shard_positions() -> Array[Vector2i]:
 	return shards
 
 func _grid_to_world(gp: Vector2i) -> Vector3:
-	return Vector3(float(gp.x) - LevelSettings.grid_w * 0.5 + 0.5, 0.7, float(gp.y) - LevelSettings.grid_h * 0.5 + 0.5)
+	return Vector3(float(gp.x) + 0.5, 0.7, float(gp.y) + 0.5)

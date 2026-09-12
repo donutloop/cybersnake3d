@@ -157,8 +157,8 @@ func _update_visual(delta: float) -> void:
 
 func _update_position() -> void:
 	if mesh_inst:
-		var wx: float = float(grid_pos.x) - LevelSettings.grid_w * 0.5 + 0.5
-		var wz: float = float(grid_pos.y) - LevelSettings.grid_h * 0.5 + 0.5
+		var wx: float = float(grid_pos.x) + 0.5
+		var wz: float = float(grid_pos.y) + 0.5
 		mesh_inst.position = Vector3(wx, 0.4, wz)
 
 func _is_wall(cell: Vector2i) -> bool:

@@ -327,7 +327,10 @@ func get_occupied_cells() -> Array[Vector2i]:
 	return body
 
 func grid_to_world(gp: Vector2i) -> Vector3:
-	return Vector3(float(gp.x) - LevelSettings.grid_w * 0.5 + 0.5, 0.5, float(gp.y) - LevelSettings.grid_h * 0.5 + 0.5)
+	# Origin-fixed mapping: grid cell (0,0) is at world (0,0). The board grows
+	# outward from a fixed corner, so the snake never teleports on a wave
+	# transition (grid_w/h no longer re-centers existing entities).
+	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)
 
 func get_head_world_pos() -> Vector3:
 	if body.size() > 0:

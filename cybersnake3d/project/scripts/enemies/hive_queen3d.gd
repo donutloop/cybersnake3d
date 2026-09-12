@@ -161,8 +161,8 @@ func get_grid_positions() -> Array[Vector2i]:
 	return [grid_pos]
 
 func _g2w_center() -> Vector3:
-	var cx := float(grid_pos.x) - LevelSettings.grid_w * 0.5 + 0.5
-	var cz := float(grid_pos.y) - LevelSettings.grid_h * 0.5 + 0.5
+	var cx := float(grid_pos.x) + 0.5
+	var cz := float(grid_pos.y) + 0.5
 	return Vector3(cx, 1.0, cz)
 
 func _update_position() -> void:

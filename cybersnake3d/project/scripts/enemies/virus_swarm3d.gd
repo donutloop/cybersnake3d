@@ -95,8 +95,8 @@ func _update_boids(delta: float) -> void:
 		velocity.y = 0.0
 		var new_pos := pos + velocity * delta * 5.0
 		new_pos.y = 0.5
-		new_pos.x = clampf(new_pos.x, -LevelSettings.grid_w * 0.5, LevelSettings.grid_w * 0.5)
-		new_pos.z = clampf(new_pos.z, -LevelSettings.grid_h * 0.5, LevelSettings.grid_h * 0.5)
+		new_pos.x = clampf(new_pos.x, 0.0, float(LevelSettings.grid_w))
+		new_pos.z = clampf(new_pos.z, 0.0, float(LevelSettings.grid_h))
 
 		units[i]["pos"] = new_pos
 		(units[i]["mesh"] as MeshInstance3D).position = new_pos
@@ -159,11 +159,11 @@ func get_grid_positions() -> Array[Vector2i]:
 	for u in units:
 		if u["alive"]:
 			var p: Vector3 = u["pos"]
-			positions.append(Vector2i(int(p.x + LevelSettings.grid_w * 0.5), int(p.z + LevelSettings.grid_h * 0.5)))
+			positions.append(Vector2i(int(p.x), int(p.z)))
 	return positions
 
 func _grid_to_world(gp: Vector2i) -> Vector3:
-	return Vector3(float(gp.x) - LevelSettings.grid_w * 0.5 + 0.5, 0.5, float(gp.y) - LevelSettings.grid_h * 0.5 + 0.5)
+	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)
 
 func _random_edge() -> Vector2i:
 	var side := randi_range(0, 3)
