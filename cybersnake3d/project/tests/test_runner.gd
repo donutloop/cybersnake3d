@@ -65,6 +65,12 @@ func assert_gt(actual, expected, name: String) -> void:
 	else:
 		_report_failure(name, "expected > %s, got %s" % [str(expected), str(actual)])
 
+func assert_lt(actual, expected, name: String) -> void:
+	if actual < expected:
+		_report_success(name)
+	else:
+		_report_failure(name, "expected < %s, got %s" % [str(expected), str(actual)])
+
 func assert_not_null(node: Node, name: String) -> void:
 	if node != null:
 		_report_success(name)

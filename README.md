@@ -60,6 +60,13 @@ $GODOT --editor --path cybersnake3d/project/
 
 **Controls**: Arrow keys to steer, Enter to restart after death.
 
+### Gameplay Features
+
+- **Overcharge window** (evolution stage ≥ 5): when the snake eats an ICE
+  shard it enters a brief invulnerable + lethal state. The whole body now
+  glows cyan (`snake3d.gd::_update_overcharge_visual`) so the player can see
+  when they are safe to plow through enemies.
+
 ---
 
 ## Contributing

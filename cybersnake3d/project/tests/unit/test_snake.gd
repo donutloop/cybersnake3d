@@ -37,6 +37,7 @@ func _run_all() -> void:
 	_test_wall_collision()
 	_test_self_collision()
 	_test_evolution()
+	_test_overcharge_glow()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -96,6 +97,19 @@ func _test_evolution() -> void:
 	s.disconnect("evolved", cb)
 	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
+
+func _test_overcharge_glow() -> void:
+	var s := _make_snake()
+	# When the snake overcharges, the body material's emissive energy must spike
+	# (visual feedback for the invulnerable + lethal window).
+	var base_energy: float = s.body_mat.emission_energy_multiplier
+	s.overcharge_active = true
+	s._update_overcharge_visual(0.1)
+	assert_gt(s.body_mat.emission_energy_multiplier, base_energy, "body emissive spikes during overcharge")
+	# When the window ends, the glow must settle back toward the base energy.
+	s.overcharge_active = false
+	s._update_overcharge_visual(0.2)
+	assert_lt(s.body_mat.emission_energy_multiplier, base_energy + 4.0, "body glow settles when overcharge ends")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):

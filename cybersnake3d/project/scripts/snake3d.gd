@@ -45,6 +45,8 @@ var snout_custom_mesh: Mesh = null
 # Materials
 var head_mat: StandardMaterial3D
 var body_mat: StandardMaterial3D
+var _overcharge_glow: float = 0.0
+var _base_body_emission: Color = Color(0.1, 0.5, 1.0)
 var eye_mat: StandardMaterial3D
 
 signal died
@@ -99,7 +101,7 @@ func _process(delta: float) -> void:
 			overcharge_timer = 8.0
 			invuln_timer = 2.0
 			overcharge_active = true
-
+	_update_overcharge_visual(delta)
 	if invuln_timer > 0.0:
 		invuln_timer -= delta
 		# Flash head during invuln
@@ -231,6 +233,7 @@ func _apply_evo_colors() -> void:
 	if body_mat:
 		body_mat.albedo_color = b_color
 		body_mat.emission = b_color
+	_base_body_emission = body_mat.emission
 	
 	# Update procedural head neon materials to match evolutionary color stage
 	if segments.size() > 0 and is_instance_valid(segments[0]):
@@ -470,3 +473,14 @@ func _update_procedural_head_materials(head_node: MeshInstance3D) -> void:
 				mat.albedo_color = current_color
 				mat.emission = current_color
 
+
+func _update_overcharge_visual(delta: float) -> void:
+	# Juice: when overcharging (invulnerable + lethal), the whole body glows.
+	var target := 1.0 if overcharge_active else 0.0
+	_overcharge_glow = move_toward(_overcharge_glow, target, delta * 10.0)
+	if _overcharge_glow > 0.001:
+		body_mat.emission = _base_body_emission.lerp(Color(0.3, 1.0, 1.0), _overcharge_glow)
+		body_mat.emission_energy_multiplier = 1.5 + _overcharge_glow * 5.0
+	else:
+		body_mat.emission = _base_body_emission
+		body_mat.emission_energy_multiplier = 1.5
