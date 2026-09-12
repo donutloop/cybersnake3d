@@ -262,10 +262,15 @@ func update_hud(p_score: int, wave: int, length: int) -> void:
 func show_wave_announce(wave: int) -> void:
 	if not wave_announce:
 		return
-	wave_announce.text = ">>> WAVE %d <<<" % wave
+	wave_announce.modulate.a = 1.0
+	if wave >= 10:
+		wave_announce.text = ">>> BOSS WAVE %d <<<" % wave
+		wave_announce.add_theme_color_override("font_color", Color(1, 0.15, 0.15))
+	else:
+		wave_announce.text = ">>> WAVE %d <<<" % wave
+		wave_announce.add_theme_color_override("font_color", Color(1, 0.15, 0.4))
 	wave_announce.visible = true
 	announce_timer = 2.0
-	wave_announce.modulate.a = 1.0
 
 func _on_score_changed(new_score: int) -> void:
 	var snake := get_node_or_null("../Snake")

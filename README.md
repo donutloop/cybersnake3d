@@ -83,6 +83,8 @@ Clearing a wave awards a bonus (`100 + wave*20` score + 30 XP) and flashes a gre
 
 Taking damage now flashes an enemy's neon material white briefly (hit feedback) on the Shredder, Static Web, and Sentinel boss.
 
+Wave announcements distinguish boss waves: wave 10+ shows a red `>>> BOSS WAVE N <<<` instead of the normal cyan wave banner.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
