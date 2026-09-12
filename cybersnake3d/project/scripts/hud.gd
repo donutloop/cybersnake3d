@@ -21,6 +21,8 @@ var countdown_label: Label
 var paused_label: Label
 var enemy_count_label: Label
 var combo_bar: ProgressBar
+var _combo_live: bool = false
+var _combo_flash: float = 0.0
 var boss_bar: ProgressBar
 var boss_label: Label
 var flash_rect: ColorRect
@@ -260,12 +262,21 @@ func _update_combo_bar() -> void:
 	var timer: float = snake.combo_timer if snake else 0.0
 	var window: float = snake.combo_window if snake else 2.0
 	if timer > 0.0:
+		_combo_live = true
 		combo_bar.visible = true
 		combo_bar.max_value = window
 		combo_bar.value = timer
 	else:
+		if _combo_live:
+			_combo_live = false
+			_combo_flash = 0.35
 		combo_bar.visible = false
 		combo_bar.value = 0.0
+	if _combo_flash > 0.0:
+		_combo_flash = maxf(_combo_flash - 0.05, 0.0)
+		combo_bar.modulate = Color(1.0, 0.2, 0.2)
+	else:
+		combo_bar.modulate = Color.WHITE
 
 func _update_boss_bar() -> void:
 	var manager := get_node_or_null("../EnemyManager")

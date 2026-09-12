@@ -123,6 +123,8 @@ Boss death now cleans up its minions: the Sentinel kills its tagged drones and t
 
 The HUD now shows a live `ENEMIES LEFT` counter, counting in-tree enemies each frame.
 
+The combo meter flashes red when a chain is dropped (timer expires).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
