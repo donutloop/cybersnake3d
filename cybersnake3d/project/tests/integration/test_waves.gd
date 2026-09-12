@@ -32,6 +32,8 @@ func _process(_delta: float) -> void:
 func _run_all() -> void:
 	_test_topology()
 	_test_wave1_spawns_drone()
+	_test_spawns_away_from_snake()
+	_test_wave_grows_grid()
 	_test_wave5_spawns_phantom()
 	_test_phantom_teleports_near_snake()
 	_test_phantom_respects_invulnerability()
@@ -58,6 +60,25 @@ func _test_wave1_spawns_drone() -> void:
 	assert_true(enemies.size() > 0, "wave 1 spawns at least one enemy")
 	var drone := _find_enemy(enemies, "glitch_drone3d.gd")
 	assert_not_null(drone, "wave 1 spawns a glitch_drone enemy")
+
+func _test_spawns_away_from_snake() -> void:
+	# _spawn_enemy must place enemies at least 5 cells (Chebyshev) from the
+	# snake head so they never spawn on top of the player.
+	var drone := _find_enemy(_manager.enemies, "glitch_drone3d.gd")
+	if drone == null:
+		return
+	var head: Vector2i = _snake.body[0]
+	var g: Vector2i = drone.grid_pos
+	assert_true(abs(g.x - head.x) >= 5 or abs(g.y - head.y) >= 5,
+		"spawned enemy keeps Chebyshev distance >= 5 from snake head")
+
+func _test_wave_grows_grid() -> void:
+	# Each wave transition grows the board (1.5x) so the arena expands.
+	var gw_before: int = LevelSettings.grid_w
+	var gh_before: int = LevelSettings.grid_h
+	_manager._start_next_wave()  # increments wave past 1 => grid grows
+	assert_true(LevelSettings.grid_w > gw_before and LevelSettings.grid_h > gh_before,
+		"wave transition grows the grid dimensions")
 
 func _test_wave5_spawns_phantom() -> void:
 	# Advance the real wave system to wave 5: set wave to 4, then let

@@ -105,6 +105,7 @@ func _test_evolution() -> void:
 	s.disconnect("evolved", cb)
 	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
+	assert_eq(s.hp, s.max_hp, "evolution fully heals the snake")
 
 func _test_overcharge_glow() -> void:
 	var s := _make_snake()
