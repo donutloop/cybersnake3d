@@ -197,8 +197,12 @@ func _test_shredder_lunge_advances() -> void:
 # ── phantom_protocol ──────────────────────────────────────────────────
 func _test_phantom_damage_defensive_teleport() -> void:
 	var phantom := _make_enemy(PhantomScript, "phantom")
+	phantom.grid_pos = Vector2i(20, 20)
+	seed(1234)  # deterministic RNG for the teleport offset
+	var before: Vector2i = phantom.grid_pos
 	phantom.take_damage(1)
 	assert_true(phantom.is_phased, "phantom phases defensively when struck")
+	assert_true(phantom.grid_pos != before, "phantom teleports to a new grid cell when struck")
 
 func _test_phantom_phases() -> void:
 	var phantom := _make_enemy(PhantomScript, "phantom2")
