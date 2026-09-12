@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c5c1nih7fsv8d"
+path="res://.godot/imported/snake_skull_base.obj-4263ca53ffd1074ab8372d54ff9e2c9d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/snake_skull_base.obj-4263ca53ffd1074ab8372d54ff9e2c9d.mesh"]
+
+source_file="res://assets/snake_skull_base.obj"
+dest_files=["res://.godot/imported/snake_skull_base.obj-4263ca53ffd1074ab8372d54ff9e2c9d.mesh", "res://.godot/imported/snake_skull_base.obj-4263ca53ffd1074ab8372d54ff9e2c9d.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
