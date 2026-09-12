@@ -147,6 +147,32 @@ func _ready() -> void:
 	boss_bar.show_percentage = false
 	boss_bar.visible = false
 	add_child(boss_bar)
+
+	# Countdown / enemy-count / pause overlay labels (created once in _ready).
+	countdown_label = Label.new()
+	countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	countdown_label.add_theme_font_size_override("font_size", 22)
+	countdown_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.9))
+	countdown_label.position = Vector2(560, 260)
+	countdown_label.size = Vector2(800, 30)
+	countdown_label.visible = false
+	add_child(countdown_label)
+
+	enemy_count_label = Label.new()
+	enemy_count_label.add_theme_font_size_override("font_size", 18)
+	enemy_count_label.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
+	enemy_count_label.position = Vector2(20, 205)
+	enemy_count_label.visible = true
+	add_child(enemy_count_label)
+
+	paused_label = Label.new()
+	paused_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	paused_label.add_theme_font_size_override("font_size", 40)
+	paused_label.add_theme_color_override("font_color", Color(1, 0.85, 0.2))
+	paused_label.position = Vector2(560, 360)
+	paused_label.size = Vector2(800, 50)
+	paused_label.visible = false
+	add_child(paused_label)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -234,28 +260,6 @@ func _update_gain_popup() -> void:
 		gain_popup.text = "+%d" % gain
 	else:
 		gain_popup.visible = false
-	countdown_label = Label.new()
-	countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	countdown_label.add_theme_font_size_override("font_size", 22)
-	countdown_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.9))
-	countdown_label.position = Vector2(560, 260)
-	countdown_label.size = Vector2(800, 30)
-	countdown_label.visible = false
-	add_child(countdown_label)
-	enemy_count_label = Label.new()
-	enemy_count_label.add_theme_font_size_override("font_size", 18)
-	enemy_count_label.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
-	enemy_count_label.position = Vector2(20, 205)
-	enemy_count_label.visible = true
-	add_child(enemy_count_label)
-	paused_label = Label.new()
-	paused_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	paused_label.add_theme_font_size_override("font_size", 40)
-	paused_label.add_theme_color_override("font_color", Color(1, 0.85, 0.2))
-	paused_label.position = Vector2(560, 360)
-	paused_label.size = Vector2(800, 50)
-	paused_label.visible = false
-	add_child(paused_label)
 
 func _update_combo_bar() -> void:
 	var snake := get_node_or_null("../Snake")

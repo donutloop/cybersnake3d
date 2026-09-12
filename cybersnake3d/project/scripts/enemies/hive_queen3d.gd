@@ -57,7 +57,9 @@ func _hatch_swarms(delta: float) -> void:
 	if swarm_timer > 0.0:
 		return
 	swarm_timer = 6.0
-	var manager := get_node_or_null("../EnemyManager")
+	# The queen is spawned as a direct child of the EnemyManager node, so its
+	# parent IS the manager (the "../EnemyManager" path never resolves).
+	var manager := get_parent()
 	if not manager:
 		return
 	# Cap active swarm minions spawned by this queen.
@@ -77,6 +79,8 @@ func _hatch_swarms(delta: float) -> void:
 		if swarm.has_method("set_owner_tag"):
 			swarm.set_owner_tag("hive_queen")
 		manager.add_child(swarm)
+		if "enemies" in manager:
+			manager.enemies.append(swarm)
 
 # ── dash toward snake head ─────────────────────────────────────────
 func _dash(delta: float) -> void:
@@ -140,7 +144,7 @@ func _die() -> void:
 		if snake.has_method("add_xp"):
 			snake.add_xp(250)
 	# Boss death cleans up its hatched minions.
-	var manager := get_node_or_null("../EnemyManager")
+	var manager := get_parent()
 	if manager and "enemies" in manager:
 		for e in manager.enemies:
 			if e and e.has_method("get_owner_tag") and e.get_owner_tag() == "hive_queen" and e.has_method("take_damage"):
