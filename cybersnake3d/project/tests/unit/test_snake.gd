@@ -39,6 +39,7 @@ func _run_all() -> void:
 	_test_evolution()
 	_test_overcharge_glow()
 	_test_combo()
+	_test_hit()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -129,6 +130,21 @@ func _test_combo() -> void:
 	var g3: int = s._register_pickup()
 	assert_eq(g3, 100, "expired window resets the chain")
 	assert_eq(s.combo, 1, "combo resets to 1 after expiry")
+
+func _test_hit() -> void:
+	var s := _make_snake()
+	# A surviving hit reduces hp by 1 and grants i-frames.
+	s.hp = 2
+	s.max_hp = 2
+	var survived1: bool = s._hit()
+	assert_true(survived1, "first hit is survived")
+	assert_eq(s.hp, 1, "hp reduces by 1 on hit")
+	assert_gt(s.invuln_timer, 0.0, "surviving hit grants i-frames")
+	# The second hit at hp=1 brings hp to 0 and is fatal, clamped at 0.
+	var survived2: bool = s._hit()
+	assert_false(survived2, "hit at hp=1 is fatal")
+	assert_eq(s.hp, 0, "hp never goes negative (clamped at 0)")
+	assert_true(not s.is_alive, "snake is dead at hp 0")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):

@@ -279,13 +279,19 @@ func _die() -> void:
 	if overcharge_active:
 		return # handled in enemy scripts now, snake doesn't die during overcharge
 
-	hp -= 1
+	if not _hit():
+		died.emit()
+
+func _hit() -> bool:
+	# Applies one hit of damage and returns whether the snake survived.
+	# HP is clamped at 0 so it never goes negative. Pure logic for unit tests.
+	hp = maxi(0, hp - 1)
 	if hp <= 0:
 		is_alive = false
-		died.emit()
-	else:
-		invuln_timer = 2.0
-
+		return false
+	invuln_timer = 2.0
+	just_attacked = true
+	return true
 func get_occupied_cells() -> Array[Vector2i]:
 	return body
 
