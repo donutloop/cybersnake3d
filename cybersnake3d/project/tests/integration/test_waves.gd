@@ -48,6 +48,8 @@ func _run_all() -> void:
 	_test_hive_queen_enrage()
 	_test_wave6_spawns_web()
 	_test_web_respects_invulnerability()
+	_test_wave8_spawns_split_echo()
+	_test_split_echo_fractures_on_damage()
 
 func _test_topology() -> void:
 	assert_not_null(_snake, "Snake node present in test scene")
@@ -227,6 +229,52 @@ func _test_web_respects_invulnerability() -> void:
 	web._check_residue_collision(_snake)
 	_snake.overcharge_active = false
 	assert_eq(_snake.hp, hp_before, "overcharge burns residue without hurting the snake")
+
+func _test_wave8_spawns_split_echo() -> void:
+	# Wave 8 gates the tier-4 split echo (hydra). Verify it actually spawns
+	# at wave 8 and not before. Prior tests advance the shared manager past
+	# wave 20, leaving split echoes in _manager.enemies, so isolate first.
+	_reset_enemies()
+	_manager.wave = 6
+	_manager._start_next_wave()  # wave becomes 7 (no split echoes yet)
+	assert_eq(_count_script(_manager.enemies, "split_echo3d.gd"), 0,
+		"no split echoes before wave 8")
+	_manager.wave = 7
+	_manager._start_next_wave()  # wave becomes 8
+	var echo := _find_enemy(_manager.enemies, "split_echo3d.gd")
+	assert_not_null(echo, "wave 8 spawns a split_echo enemy")
+
+func _test_split_echo_fractures_on_damage() -> void:
+	# A wounded split echo fractures into two offspring that register in the
+	# manager and cannot split further (regression guard for wave-8 gating).
+	_reset_enemies()
+	_manager.wave = 7
+	_manager._start_next_wave()  # wave becomes 8
+	var echo := _find_enemy(_manager.enemies, "split_echo3d.gd")
+	if echo == null:
+		return  # already failed by the wave-8 spawn test
+	var before: int = _manager.enemies.size()
+	echo.hp = 6
+	echo.max_hp = 6
+	echo.take_damage(3)  # drop to half HP -> fractures
+	assert_true(echo.split_used, "echo splits once below half hp")
+	assert_gt(_manager.enemies.size(), before, "echo fractures into offspring")
+	# Offspring must not split again.
+	for c in _manager.enemies:
+		if c != echo and c.get_script() and c.get_script().resource_path.contains("split_echo3d.gd"):
+			var off: Node = c
+			off.hp = 1
+			off.take_damage(0)
+			assert_eq(off.split_used, true, "offspring cannot split further")
+			break
+
+func _reset_enemies() -> void:
+	# Test isolation: free every enemy node and clear the manager's array so
+	# leftover spawns from earlier wave tests can't pollute later assertions.
+	for e in _manager.enemies:
+		if e is Node:
+			(e as Node).free()
+	_manager.enemies.clear()
 
 func _count_script(enemies: Array, script_fragment: String) -> int:
 	var n := 0
