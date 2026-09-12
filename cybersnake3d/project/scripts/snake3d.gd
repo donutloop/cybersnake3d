@@ -169,10 +169,9 @@ func _step() -> void:
 		return
 
 	# Self collision
-	for i in range(body.size() - 1):
-		if body[i] == new_head:
-			_die()
-			return
+	if _is_self_collision(new_head):
+		_die()
+		return
 
 	body.push_front(new_head)
 
@@ -299,6 +298,13 @@ func _is_wall_death(new_head: Vector2i) -> bool:
 	# Returns true when the head would move outside the play field.
 	return new_head.x < 0 or new_head.x >= LevelSettings.grid_w \
 		or new_head.y < 0 or new_head.y >= LevelSettings.grid_h
+
+func _is_self_collision(new_head: Vector2i) -> bool:
+	# The tail segment vacates this step, so it is not a collision.
+	for i in range(body.size() - 1):
+		if body[i] == new_head:
+			return true
+	return false
 func get_occupied_cells() -> Array[Vector2i]:
 	return body
 

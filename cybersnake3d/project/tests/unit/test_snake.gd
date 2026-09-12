@@ -185,6 +185,7 @@ func _test_wall_death() -> void:
 	assert_true(s._is_wall_death(Vector2i(0, -1)), "negative y is fatal")
 	assert_true(s._is_wall_death(Vector2i(999, 0)), "beyond right edge is fatal")
 
+
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):
 		var d: Vector2i = body[i] - body[i - 1]
