@@ -44,6 +44,7 @@ func _run_all() -> void:
 	_test_pause()
 	_test_wall_death()
 	_test_burst()
+	_test_magnet()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -206,6 +207,21 @@ func _test_burst() -> void:
 	assert_eq(enemy.hits, 1, "overcharge burst damages a nearby enemy")
 	mgr.queue_free()
 	enemy.queue_free()
+
+func _test_magnet() -> void:
+	var snake := _make_snake()
+	var sp_script := GDScript.new()
+	sp_script.source_code = "extends Node\nvar shards = []\nvar eaten = 0\nfunc try_eat(_c):\n\teaten += 1\n\treturn true"
+	sp_script.reload()
+	var sp := Node.new()
+	sp.name = "ICEShardSpawner"
+	sp.set_script(sp_script)
+	snake.get_parent().add_child(sp)
+	var head: Vector2i = snake.body[0]
+	sp.shards = [head]
+	snake._magnet_shards()
+	assert_eq(sp.eaten, 1, "overcharge magnet eats a nearby shard")
+	sp.queue_free()
 
 
 func _is_contiguous(body: Array) -> bool:

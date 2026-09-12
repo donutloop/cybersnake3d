@@ -99,6 +99,8 @@ Overcharge now releases a radial burst: when the timer completes, `_release_burs
 
 The death screen now shows `GAME OVER — SCORE: N — BEST: M`, persisting the high score to `user://best_score.txt`.
 
+Overcharge now magnetizes nearby shards: `_magnet_shards()` eats every shard within a 2-cell radius at burst time, awarding their score/combo.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

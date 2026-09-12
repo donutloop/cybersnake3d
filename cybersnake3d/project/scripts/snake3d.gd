@@ -126,6 +126,7 @@ func _process(delta: float) -> void:
 			invuln_timer = 2.0
 			overcharge_active = true
 			_release_burst()
+			_magnet_shards()
 	_update_overcharge_visual(delta)
 	_decay_combo(delta)
 	if paused:
@@ -537,6 +538,27 @@ func _update_overcharge_visual(delta: float) -> void:
 
 # Registers a shard pickup and returns the score gained. Chaining pickups
 # within the window raises the combo multiplier. Pure logic so it is unit-testable.
+func _magnet_shards() -> void:
+	# Overcharge magnet: pull in nearby shards (2-cell radius) and eat them.
+	var spawner := get_node_or_null("../ICEShardSpawner")
+	if not spawner:
+		return
+	var origin: Vector2i = body[0]
+	var shards: Array = spawner.shards if "shards" in spawner else []
+	var eaten: Array[Vector2i] = []
+	for cell in shards:
+		if abs(cell.x - origin.x) <= 2 and abs(cell.y - origin.y) <= 2:
+			if spawner.try_eat(cell):
+				eaten.append(cell)
+	for cell in eaten:
+		if not has_signal("ate_shard"):
+			continue
+		ate_shard.emit()
+		var gain := _register_pickup()
+		score += gain
+		score_changed.emit(score)
+		last_gain = gain
+
 func _release_burst() -> void:
 	# Radial overcharge burst: damage all enemies within a 2-cell radius.
 	var manager := get_node_or_null("../EnemyManager")
