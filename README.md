@@ -95,6 +95,8 @@ Boss kills now announce a red `BOSS SLAIN +N` banner via a new `snake.boss_slain
 
 Evolution up shows a rising cyan `EVOLUTION UP!` banner alongside the existing white flash.
 
+Overcharge now releases a radial burst: when the timer completes, `_release_burst()` damages every enemy within a 2-cell radius of the snake's head.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

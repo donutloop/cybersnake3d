@@ -125,6 +125,7 @@ func _process(delta: float) -> void:
 			overcharge_timer = 8.0
 			invuln_timer = 2.0
 			overcharge_active = true
+			_release_burst()
 	_update_overcharge_visual(delta)
 	_decay_combo(delta)
 	if paused:
@@ -536,6 +537,22 @@ func _update_overcharge_visual(delta: float) -> void:
 
 # Registers a shard pickup and returns the score gained. Chaining pickups
 # within the window raises the combo multiplier. Pure logic so it is unit-testable.
+func _release_burst() -> void:
+	# Radial overcharge burst: damage all enemies within a 2-cell radius.
+	var manager := get_node_or_null("../EnemyManager")
+	if not manager or not "enemies" in manager:
+		return
+	if body.size() == 0:
+		return
+	var origin: Vector2i = body[0]
+	for e in manager.enemies:
+		if not e or not e.has_method("get_grid_positions") or not e.has_method("take_damage"):
+			continue
+		for cell in e.get_grid_positions():
+			if abs(cell.x - origin.x) <= 2 and abs(cell.y - origin.y) <= 2:
+				e.take_damage(1)
+				break
+
 func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
 	combo_timer = combo_window

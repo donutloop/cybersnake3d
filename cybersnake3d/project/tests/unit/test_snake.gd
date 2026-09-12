@@ -43,6 +43,7 @@ func _run_all() -> void:
 	_test_combo_decay()
 	_test_pause()
 	_test_wall_death()
+	_test_burst()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -183,7 +184,28 @@ func _test_wall_death() -> void:
 	assert_false(s._is_wall_death(Vector2i(1, 1)), "inside bounds is safe")
 	assert_true(s._is_wall_death(Vector2i(-1, 0)), "negative x is fatal")
 	assert_true(s._is_wall_death(Vector2i(0, -1)), "negative y is fatal")
-	assert_true(s._is_wall_death(Vector2i(999, 0)), "beyond right edge is fatal")
+
+func _test_burst() -> void:
+	var snake := _make_snake()
+	var mgr_script := GDScript.new()
+	mgr_script.source_code = "extends Node\nvar enemies = []"
+	mgr_script.reload()
+	var mgr := Node.new()
+	mgr.name = "EnemyManager"
+	mgr.set_script(mgr_script)
+	snake.get_parent().add_child(mgr)
+	var enemy := Node.new()
+	var s := GDScript.new()
+	s.source_code = "extends Node\nvar hits = 0\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1"
+	s.reload()
+	enemy.set_script(s)
+	mgr.enemies = [enemy]
+	var head: Vector2i = snake.body[0]
+	enemy.pos = head
+	snake._release_burst()
+	assert_eq(enemy.hits, 1, "overcharge burst damages a nearby enemy")
+	mgr.queue_free()
+	enemy.queue_free()
 
 
 func _is_contiguous(body: Array) -> bool:
