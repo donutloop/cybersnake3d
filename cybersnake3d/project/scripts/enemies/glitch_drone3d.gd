@@ -33,7 +33,7 @@ func _ready() -> void:
 
 	# 1. Load the demon face mesh if it exists
 	var demon_mesh: Mesh = null
-	if ResourceLoader.exists("res://assets/demon_face.obj"):
+	if ResourceLoader.exists("res://assets/demon_face.obj", "Mesh"):
 		demon_mesh = load("res://assets/demon_face.obj")
 
 	# 2. Create inner demon face material

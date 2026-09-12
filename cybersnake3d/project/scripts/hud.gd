@@ -15,6 +15,7 @@ var overcharge_bar: ProgressBar
 var hp_bar: ProgressBar
 var combo_label: Label
 var gain_popup: Label
+var combo_bar: ProgressBar
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -103,6 +104,20 @@ func _ready() -> void:
 	gain_popup.add_theme_font_size_override("font_size", 18)
 	gain_popup.visible = false
 	add_child(gain_popup)
+
+	# Combo chain window bar
+	var style_combo := StyleBoxFlat.new()
+	style_combo.bg_color = Color(0.2, 1.0, 0.4, 1.0)
+	combo_bar = ProgressBar.new()
+	combo_bar.position = Vector2(240, 145)
+	combo_bar.size = Vector2(160, 10)
+	combo_bar.show_percentage = false
+	combo_bar.add_theme_stylebox_override("background", style_bg)
+	combo_bar.add_theme_stylebox_override("fill", style_combo)
+	combo_bar.max_value = 2.0
+	combo_bar.value = 0.0
+	combo_bar.visible = false
+	add_child(combo_bar)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -133,6 +148,7 @@ func _process(delta: float) -> void:
 	_update_hp_bar()
 	_update_combo_label()
 	_update_gain_popup()
+	_update_combo_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
@@ -177,6 +193,18 @@ func _update_gain_popup() -> void:
 	else:
 		gain_popup.visible = false
 		gain_popup.text = ""
+
+func _update_combo_bar() -> void:
+	var snake := get_node_or_null("../Snake")
+	var timer: float = snake.combo_timer if snake else 0.0
+	var window: float = snake.combo_window if snake else 2.0
+	if timer > 0.0:
+		combo_bar.visible = true
+		combo_bar.max_value = window
+		combo_bar.value = timer
+	else:
+		combo_bar.visible = false
+		combo_bar.value = 0.0
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score

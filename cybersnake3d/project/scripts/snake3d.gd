@@ -65,13 +65,13 @@ signal xp_changed(current_xp: int, current_level: int, current_evo: int)
 
 func _ready() -> void:
 	# Load custom meshes if they exist in the assets directory
-	if ResourceLoader.exists("res://assets/snake_head.obj"):
+	if ResourceLoader.exists("res://assets/snake_head.obj", "Mesh"):
 		head_mesh = load("res://assets/snake_head.obj")
-	if ResourceLoader.exists("res://assets/snake_body.obj"):
+	if ResourceLoader.exists("res://assets/snake_body.obj", "Mesh"):
 		body_mesh = load("res://assets/snake_body.obj")
-	if ResourceLoader.exists("res://assets/snake_skull_base.obj"):
+	if ResourceLoader.exists("res://assets/snake_skull_base.obj", "Mesh"):
 		skull_custom_mesh = load("res://assets/snake_skull_base.obj")
-	if ResourceLoader.exists("res://assets/snake_snout_jaw.obj"):
+	if ResourceLoader.exists("res://assets/snake_snout_jaw.obj", "Mesh"):
 		snout_custom_mesh = load("res://assets/snake_snout_jaw.obj")
 
 	# Create materials
