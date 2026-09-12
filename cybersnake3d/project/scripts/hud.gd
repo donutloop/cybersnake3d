@@ -12,6 +12,7 @@ var announce_timer: float = 0.0
 var lvl_bar: ProgressBar
 var evo_bar: ProgressBar
 var overcharge_bar: ProgressBar
+var hp_bar: ProgressBar
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -69,6 +70,19 @@ func _ready() -> void:
 	overcharge_bar.value = 0.0
 	overcharge_bar.visible = false
 	add_child(overcharge_bar)
+
+	# Snake HP bar (fills with current health)
+	var style_hp := StyleBoxFlat.new()
+	style_hp.bg_color = Color(1.0, 0.2, 0.2, 1.0)
+	hp_bar = ProgressBar.new()
+	hp_bar.position = Vector2(20, 160)
+	hp_bar.size = Vector2(200, 10)
+	hp_bar.show_percentage = false
+	hp_bar.add_theme_stylebox_override("background", style_bg)
+	hp_bar.add_theme_stylebox_override("fill", style_hp)
+	hp_bar.max_value = 1.0
+	hp_bar.value = 1.0
+	add_child(hp_bar)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -96,6 +110,7 @@ func _process(delta: float) -> void:
 			wave_announce.modulate.a = clampf(announce_timer / 0.5, 0.0, 1.0)
 
 	_update_overcharge_bar()
+	_update_hp_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
@@ -110,6 +125,15 @@ func _update_overcharge_bar() -> void:
 	else:
 		overcharge_bar.visible = false
 		overcharge_bar.value = 0.0
+
+func _update_hp_bar() -> void:
+	var snake := get_node_or_null("../Snake")
+	var hp: float = snake.hp if snake else 0.0
+	var max_hp: float = snake.max_hp if snake else 1.0
+	if max_hp > 0.0:
+		hp_bar.value = clampf(hp / max_hp, 0.0, 1.0)
+	else:
+		hp_bar.value = 0.0
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score
