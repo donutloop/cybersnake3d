@@ -103,6 +103,8 @@ Overcharge now magnetizes nearby shards: `_magnet_shards()` eats every shard wit
 
 Wave clears now pulse the neon grid floor: a new `grid_energy` shader uniform flashes the glow and tweens back to 0 via `_pulse_floor()`.
 
+Combo milestones now grant bonus XP: every 5th chained pickup awards 25 XP (`combo % 5 == 0`).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

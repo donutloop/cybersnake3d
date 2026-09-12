@@ -45,6 +45,7 @@ func _run_all() -> void:
 	_test_wall_death()
 	_test_burst()
 	_test_magnet()
+	_test_combo_milestone()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -135,6 +136,15 @@ func _test_combo() -> void:
 	var g3: int = s._register_pickup()
 	assert_eq(g3, 100, "expired window resets the chain")
 	assert_eq(s.combo, 1, "combo resets to 1 after expiry")
+
+func _test_combo_milestone() -> void:
+	var s := _make_snake()
+	var xp_before: int = s.xp
+	for i in range(5):
+		s.combo_timer = 10.0
+		s._register_pickup()
+	assert_true(s.xp >= xp_before + 25, "combo x5 milestone grants bonus XP")
+	assert_eq(s.combo, 5, "combo reaches 5 after five chained pickups")
 
 func _test_hit() -> void:
 	var s := _make_snake()

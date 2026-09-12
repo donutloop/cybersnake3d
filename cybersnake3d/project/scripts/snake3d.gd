@@ -579,6 +579,10 @@ func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
 	combo_timer = combo_window
 	last_gain = 100 * combo
+	if combo % 5 == 0:
+		add_xp(25)
+		if has_signal("xp_changed"):
+			xp_changed.emit(xp, level, evolution_stage)
 	return last_gain
 
 func _decay_combo(delta: float) -> void:
