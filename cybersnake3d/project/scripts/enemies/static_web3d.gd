@@ -25,6 +25,7 @@ var mesh_inst: MeshInstance3D
 var mat: StandardMaterial3D
 var light: OmniLight3D
 var time_passed: float = 0.0
+var flash_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -127,6 +128,8 @@ func take_damage(amount: int = 1) -> void:
 	hp = maxi(0, hp - amount)
 	if hp <= 0:
 		_die()
+		return
+	flash_timer = 0.25
 
 func _die() -> void:
 	is_dead = true
@@ -143,6 +146,11 @@ func get_grid_positions() -> Array[Vector2i]:
 
 # ── visuals / helpers ────────────────────────────────────────────────
 func _update_visual(delta: float) -> void:
+	if flash_timer > 0.0:
+		flash_timer = maxf(flash_timer - delta, 0.0)
+		mat.emission_energy_multiplier = 12.0
+		light.light_energy = 9.0
+		return
 	var pulse := sin(time_passed * 5.0) * 0.15 + 0.85
 	mat.emission_energy_multiplier = 2.5 * pulse
 	light.light_energy = 2.0 * pulse

@@ -11,6 +11,7 @@ var is_boss: bool = true
 var phase: int = 1
 var drone_spawn_timer: float = 5.0
 var pulse: float = 0.0
+var flash_timer: float = 0.0
 
 var mesh_inst: MeshInstance3D
 var mat: StandardMaterial3D
@@ -50,7 +51,11 @@ func _process(delta: float) -> void:
 		drone_spawn_timer = 5.0 if phase == 1 else 8.0
 		_spawn_drones(2 if phase == 1 else 1)
 
-	mat.emission_energy_multiplier = 3.0 + sin(pulse * 2.0) * 1.0
+	if flash_timer > 0.0:
+		flash_timer = maxf(flash_timer - delta, 0.0)
+		mat.emission_energy_multiplier = 14.0
+	else:
+		mat.emission_energy_multiplier = 3.0 + sin(pulse * 2.0) * 1.0
 	_check_snake_collision()
 
 func _spawn_drones(count: int) -> void:
@@ -88,6 +93,8 @@ func take_damage(amount: int = 1) -> void:
 	hp -= amount
 	if hp <= 0:
 		_die()
+		return
+	flash_timer = 0.25
 
 func _die() -> void:
 	is_dead = true

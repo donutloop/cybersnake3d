@@ -81,6 +81,8 @@ Press `Space`/`P` to pause/resume (`get_tree().paused` + a `PAUSED` HUD overlay)
 
 Clearing a wave awards a bonus (`100 + wave*20` score + 30 XP) and flashes a green `WAVE CLEAR +N` announcement.
 
+Taking damage now flashes an enemy's neon material white briefly (hit feedback) on the Shredder, Static Web, and Sentinel boss.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
