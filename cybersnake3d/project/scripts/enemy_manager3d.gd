@@ -107,6 +107,10 @@ func _spawn_wave(w: int) -> void:
 		for i in range(w - 4):
 			_spawn_enemy("res://scripts/enemies/static_web3d.gd")
 
+	if w >= 7:
+		for i in range(w - 5):
+			_spawn_enemy("res://scripts/enemies/hunter3d.gd")
+
 	if w >= 8:
 		for i in range(w - 6):
 			_spawn_enemy("res://scripts/enemies/split_echo3d.gd")

@@ -50,6 +50,7 @@ func _run_all() -> void:
 	_test_web_respects_invulnerability()
 	_test_wave8_spawns_split_echo()
 	_test_split_echo_fractures_on_damage()
+	_test_wave7_spawns_hunter()
 	_test_wave9_spawns_warp_shard()
 	_test_warp_shard_warps_when_hit()
 
@@ -295,6 +296,16 @@ func _test_warp_shard_warps_when_hit() -> void:
 	assert_eq(shard.hp, hp_before - 1, "warp shard survives a single hit (wave-scaled HP)")
 	assert_gt(shard.warps_used, before, "warp shard warps when struck")
 	assert_true(shard.grid_pos != start, "warp shard flees to a new cell")
+
+
+func _test_wave7_spawns_hunter() -> void:
+	# Wave 7 gates the hunter: it must NOT spawn at wave 6 but must appear
+	# once the wave advances to 7.
+	_reset_enemies()
+	_manager.wave = 6
+	_manager._start_next_wave()  # wave becomes 7
+	assert_gt(_count_script(_manager.enemies, "hunter3d.gd"), 0,
+		"wave 7 spawns at least one hunter")
 
 func _reset_enemies() -> void:
 	# Test isolation: free every enemy node and clear the manager's array so

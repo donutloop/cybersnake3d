@@ -14,6 +14,7 @@ const SentinelScript = preload("res://scripts/enemies/blackwall_sentinel3d.gd")
 const QueenScript = preload("res://scripts/enemies/hive_queen3d.gd")
 const SplitEchoScript = preload("res://scripts/enemies/split_echo3d.gd")
 const WarpShardScript = preload("res://scripts/enemies/warp_shard3d.gd")
+const HunterScript = preload("res://scripts/enemies/hunter3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -337,6 +338,28 @@ func _test_warp_shard_dies_awards_xp() -> void:
 	assert_true(shard.is_dead, "warp shard dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "killing a warp shard awards XP")
 
+
+# ── hunter ──────────────────────────────────────────────────────────────
+func _test_hunter_accelerates_while_pursuing() -> void:
+	var hunter := _make_enemy(HunterScript, "hunter")
+	var start_speed: float = hunter.speed_steps
+	# Step repeatedly toward a snake head; speed must ramp up.
+	_snake.body[0] = Vector2i(hunter.grid_pos.x + 2, hunter.grid_pos.y)
+	for _i in range(40):
+		hunter._step_toward_snake()
+	assert_gt(hunter.speed_steps, start_speed,
+		"hunter accelerates the longer it chases")
+	assert_true(hunter.speed_steps <= hunter.max_speed,
+		"hunter never exceeds its max speed")
+
+func _test_hunter_dies_awards_xp() -> void:
+	var hunter := _make_enemy(HunterScript, "hunter2")
+	var xp_before: int = _snake.xp
+	hunter.hp = 2
+	hunter.take_damage(99)
+	assert_true(hunter.is_dead, "hunter dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "killing a hunter awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -367,4 +390,6 @@ func _run_all() -> void:
 	_test_split_offspring_cannot_split()
 	_test_split_echo_dies_awards_xp()
 	_test_warp_shard_teleports_away_on_damage()
+	_test_hunter_accelerates_while_pursuing()
+	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()
