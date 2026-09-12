@@ -68,6 +68,8 @@ func _spawn_drones(count: int) -> void:
 		if script:
 			var drone := Node3D.new()
 			drone.set_script(script)
+			if drone.has_method("set_owner_tag"):
+				drone.set_owner_tag("sentinel")
 			manager.add_child(drone)
 			if "enemies" in manager:
 				manager.enemies.append(drone)
@@ -114,6 +116,12 @@ func _die() -> void:
 		hud.show_wave_announce(0)
 		if hud.wave_announce:
 			hud.wave_announce.text = ">>> FLATLINE COMPLETE <<<"
+	# Boss death cleans up its spawned drones.
+	var manager := get_parent()
+	if manager and "enemies" in manager:
+		for e in manager.enemies:
+			if e and e.has_method("get_owner_tag") and e.get_owner_tag() == "sentinel" and e.has_method("take_damage"):
+				e.take_damage(999)
 	queue_free()
 
 func get_grid_positions() -> Array[Vector2i]:

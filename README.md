@@ -119,6 +119,8 @@ The Hive Queen now enrages below half HP like the Sentinel: `enraged` triggers a
 
 The overcharge meter now tints red during the final second before the burst (a ready-flash).
 
+Boss death now cleans up its minions: the Sentinel kills its tagged drones and the Hive Queen kills its tagged swarms on `_die`.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

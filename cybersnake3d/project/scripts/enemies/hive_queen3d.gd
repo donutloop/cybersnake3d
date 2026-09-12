@@ -139,6 +139,12 @@ func _die() -> void:
 		snake.boss_slain.emit(2500)
 		if snake.has_method("add_xp"):
 			snake.add_xp(250)
+	# Boss death cleans up its hatched minions.
+	var manager := get_node_or_null("../EnemyManager")
+	if manager and "enemies" in manager:
+		for e in manager.enemies:
+			if e and e.has_method("get_owner_tag") and e.get_owner_tag() == "hive_queen" and e.has_method("take_damage"):
+				e.take_damage(999)
 	queue_free()
 
 func set_owner_tag(_t: String) -> void:
