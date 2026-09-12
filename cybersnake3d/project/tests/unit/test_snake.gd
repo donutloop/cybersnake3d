@@ -34,6 +34,7 @@ func _on_evolved(_stage: int) -> void:
 func _run_all() -> void:
 	_test_initial_state()
 	_test_movement()
+	_test_grows_when_eating_shard()
 	_test_wall_collision()
 	_test_self_collision()
 	_test_evolution()
@@ -64,6 +65,24 @@ func _test_movement() -> void:
 	assert_eq(s.body[0], start + Vector2i(1, 0), "step moves head +x")
 	assert_eq(s.body.size(), old_len, "step preserves body length")
 	assert_true(_is_contiguous(s.body), "body stays contiguous after a step")
+
+func _test_grows_when_eating_shard() -> void:
+	# Eating a shard in _step must keep the tail (grow by one segment)
+	# instead of popping it — the classic snake growth mechanic.
+	var spawner := Node.new()
+	var sp := GDScript.new()
+	sp.source_code = "extends Node
+var ate = false
+func try_eat(_c):
+	ate = true
+	return true"
+	sp.reload()
+	spawner.set_script(sp)
+	spawner.name = "ICEShardSpawner"
+	_snake.get_parent().add_child(spawner)  # sibling at ../ICEShardSpawner
+	var before: int = _snake.body.size()
+	_snake._step()
+	assert_eq(_snake.body.size(), before + 1, "snake grows one segment when it eats a shard")
 
 func _test_wall_collision() -> void:
 	var s := _make_snake()
