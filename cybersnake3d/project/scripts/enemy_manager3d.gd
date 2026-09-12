@@ -33,6 +33,7 @@ func _process(delta: float) -> void:
 
 	if not between_waves and enemies.size() == 0:
 		between_waves = true
+		_pulse_floor()
 		wave_cleared.emit(wave)
 		var snake := get_node_or_null("../Snake")
 		if snake:
@@ -108,6 +109,16 @@ func _spawn_wave(w: int) -> void:
 	if w >= 15:
 		for i in range(w - 14):
 			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", 2)
+
+func _pulse_floor() -> void:
+	var floor := get_node_or_null("../GridFloor")
+	if not floor:
+		return
+	var mat := floor.get_material() as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("grid_energy", 1.0)
+		var tw := create_tween()
+		tw.tween_method(func(v): mat.set_shader_parameter("grid_energy", v), 1.0, 0.0, 0.6)
 
 func _spawn_enemy_capped(script_path: String, cap: int) -> void:
 	# Only spawn if fewer than `cap` enemies of this script type are active.

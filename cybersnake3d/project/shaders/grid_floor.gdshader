@@ -8,6 +8,7 @@ uniform float line_width : hint_range(0.005, 0.1) = 0.02;
 uniform float scroll_speed : hint_range(0.0, 5.0) = 0.3;
 uniform float pulse_speed : hint_range(0.0, 5.0) = 1.5;
 uniform float pulse_amount : hint_range(0.0, 1.0) = 0.3;
+uniform float grid_energy : hint_range(0.0, 1.0) = 0.0;
 uniform float grid_cells = 40.0;
 
 void fragment() {
@@ -19,7 +20,7 @@ void fragment() {
 	float line = 1.0 - smoothstep(0.0, line_width, d);
 
 	float pulse = 1.0 + pulse_amount * sin(TIME * pulse_speed);
-	vec3 glow = line_color.rgb * line * pulse;
+	vec3 glow = line_color.rgb * line * pulse * (1.0 + grid_energy);
 
 	ALBEDO = bg_color.rgb + glow;
 	EMISSION = glow * 2.0;
