@@ -40,6 +40,7 @@ func _run_all() -> void:
 	_test_evolution()
 	_test_overcharge_glow()
 	_test_overcharge_speed_boost()
+	_test_hit_breaks_combo()
 	_test_combo()
 	_test_hit()
 	_test_combo_decay()
@@ -131,6 +132,15 @@ func _test_evolution() -> void:
 	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
 	assert_eq(s.hp, s.max_hp, "evolution fully heals the snake")
+
+func _test_hit_breaks_combo() -> void:
+	# Taking damage must break the active shard chain (combo resets to 0).
+	var snake := _make_snake()
+	snake.combo = 4
+	snake.combo_timer = 1.0
+	snake._hit()
+	assert_true(snake.combo == 0, "hit breaks the combo chain")
+	assert_true(snake.combo_timer == 0.0, "hit clears the combo window")
 
 func _test_overcharge_speed_boost() -> void:
 	# During the overcharge burst window the snake moves faster (effective

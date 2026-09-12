@@ -311,6 +311,8 @@ func _hit() -> bool:
 	if hp <= 0:
 		is_alive = false
 		return false
+	combo = 0  # taking damage breaks the shard chain
+	combo_timer = 0.0
 	invuln_timer = 2.0
 	just_attacked = true
 	return true
