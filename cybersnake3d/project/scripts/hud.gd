@@ -193,7 +193,8 @@ func _update_overcharge_bar() -> void:
 	var oc_active: bool = snake.overcharge_active if snake else false
 	if stage >= 5 or oc_active:
 		overcharge_bar.visible = true
-		overcharge_bar.value = snake.overcharge_timer if snake else 0.0
+		overcharge_bar.value = snake.overcharge_timer
+		overcharge_bar.modulate = Color(1.0, 0.25, 0.25) if snake.overcharge_timer <= 1.0 else Color.WHITE if snake else 0.0
 	else:
 		overcharge_bar.visible = false
 		overcharge_bar.value = 0.0

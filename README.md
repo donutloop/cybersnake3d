@@ -117,6 +117,8 @@ Overcharge burst and shard-magnet radii now scale with evolution stage: radius =
 
 The Hive Queen now enrages below half HP like the Sentinel: `enraged` triggers an immediate swarm hatch and doubles its base neon glow.
 
+The overcharge meter now tints red during the final second before the burst (a ready-flash).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
