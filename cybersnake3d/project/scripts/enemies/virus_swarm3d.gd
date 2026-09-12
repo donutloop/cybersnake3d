@@ -122,21 +122,31 @@ func _check_snake_collision() -> void:
 			snake._die()
 			return
 
-func take_damage(_amount: int = 1) -> void:
-	var alive_indices: Array[int] = []
-	for i in range(units.size()):
-		if units[i]["alive"]:
-			alive_indices.append(i)
-	if alive_indices.size() > 0:
+func take_damage(amount: int = 1) -> void:
+	# Kill up to `amount` units (clamped to the alive count). A single hit
+	# (amount=1) still kills exactly one unit, matching the tier contract;
+	# a boss-cleanup hit (e.g. take_damage(999)) clears the whole swarm.
+	var alive_count := _alive_count()
+	if alive_count == 0:
+		return
+	var to_kill: int = clampi(amount, 1, alive_count)
+	for _i in range(to_kill):
+		var alive_indices: Array[int] = []
+		for i in range(units.size()):
+			if units[i]["alive"]:
+				alive_indices.append(i)
+		if alive_indices.size() == 0:
+			break
 		var idx := alive_indices[randi_range(0, alive_indices.size() - 1)]
 		units[idx]["alive"] = false
 		(units[idx]["mesh"] as MeshInstance3D).visible = false
-		var alive_remaining := alive_indices.size() - 1
-		if alive_remaining > 0 and alive_remaining <= units.size() / 2 and not scattering:
+		alive_count -= 1
+		if alive_count > 0 and alive_count <= units.size() / 2 and not scattering:
 			scattering = true
 			scatter_timer = 2.0
-		if alive_remaining == 0:
+		if alive_count == 0:
 			_all_dead()
+			return
 
 func _all_dead() -> void:
 	is_dead = true
@@ -161,6 +171,13 @@ func get_grid_positions() -> Array[Vector2i]:
 			var p: Vector3 = u["pos"]
 			positions.append(Vector2i(int(p.x), int(p.z)))
 	return positions
+
+func _alive_count() -> int:
+	var n: int = 0
+	for u in units:
+		if u["alive"]:
+			n += 1
+	return n
 
 func _grid_to_world(gp: Vector2i) -> Vector3:
 	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)

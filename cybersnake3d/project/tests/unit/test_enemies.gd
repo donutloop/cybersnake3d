@@ -23,6 +23,7 @@ func _ready() -> void:
 
 func _make_snake() -> void:
 	_snake = SnakeScript.new()
+	_snake.name = "Snake"
 	add_child(_snake)
 
 func _make_manager() -> void:
@@ -61,6 +62,11 @@ func _alive_count(swarm: Node) -> int:
 			n += 1
 	return n
 
+func _chebyshev(a: Vector2i, b: Vector2i) -> int:
+	var dx: int = absi(a.x - b.x)
+	var dy: int = absi(a.y - b.y)
+	return maxi(dx, dy)
+
 # ── virus_swarm ──────────────────────────────────────────────────────
 func _test_swarm_hit_kills_one_unit() -> void:
 	var swarm := _make_enemy(SwarmScript, "swarm")
@@ -82,12 +88,29 @@ func _test_swarm_all_dead_frees() -> void:
 		swarm.take_damage(1)
 	assert_true(swarm.is_dead, "swarm is dead when all units are lost")
 
+func _test_swarm_boss_cleanup_kills_all() -> void:
+	# Boss cleanup calls take_damage(999) on a multi-unit swarm. A single
+	# hit must clear the WHOLE swarm, not just one unit (regression guard).
+	var swarm := _make_enemy(SwarmScript, "swarm_cleanup")
+	var n: int = _alive_count(swarm)
+	assert_gt(n, 1, "test swarm has more than one unit to exercise cleanup")
+	swarm.take_damage(999)
+	assert_eq(_alive_count(swarm), 0, "boss-cleanup hit kills every unit")
+	assert_true(swarm.is_dead, "swarm is freed once boss cleanup clears it")
+
 # ── net_reaper ────────────────────────────────────────────────────────
 func _test_reaper_take_damage() -> void:
 	var reaper := _make_enemy(ReaperScript, "reaper")
 	var before: int = reaper.hp
 	reaper.take_damage(1)
 	assert_lt(reaper.hp, before, "reaper hp drops on damage")
+
+func _test_reaper_frenzy_at_low_hp() -> void:
+	# The reaper enters frenzy once it is wounded to its last HP point.
+	var reaper := _make_enemy(ReaperScript, "reaper2")
+	reaper.take_damage(reaper.hp - 1)
+	assert_true(reaper.frenzy, "reaper frenzies when hp reaches 1")
+	assert_gt(reaper.speed_steps, 0, "frenzy still exposes a chase speed")
 	reaper.take_damage(99)
 	assert_true(reaper.is_dead, "reaper dies at hp <= 0")
 
@@ -98,6 +121,18 @@ func _test_worm_damage_shrinks_body() -> void:
 	worm.take_damage(1)
 	assert_lt(worm.body.size(), before, "worm body shrinks on damage")
 
+func _test_worm_chases_snake_head() -> void:
+	# The worm's head advances toward the snake's head each step.
+	_make_snake()
+	var worm := _make_enemy(WormScript, "worm_chase")
+	worm.body[0] = Vector2i(0, 0)
+	_snake.body[0] = Vector2i(3, 0)
+	var dist_before: int = _chebyshev(worm.body[0], _snake.body[0])
+	worm._step()
+	var dist_after: int = _chebyshev(worm.body[0], _snake.body[0])
+	assert_lt(dist_after, dist_before, "worm head closes distance to snake head")
+	assert_eq(worm.body[0].y, _snake.body[0].y, "worm heads straight along the chase axis")
+
 # ── cascade_shredder ──────────────────────────────────────────────────
 func _test_shredder_damage_knockback() -> void:
 	var shredder := _make_enemy(ShredderScript, "shredder")
@@ -107,6 +142,17 @@ func _test_shredder_damage_knockback() -> void:
 	shredder.take_damage(1)
 	assert_false(shredder.charging and shredder.telegraphing,
 		"a hit interrupts the shredder's charge")
+
+func _test_shredder_lunge_advances() -> void:
+	# A lunging shredder advances exactly one cell per lunge step.
+	var shredder := _make_enemy(ShredderScript, "shredder_lunge")
+	shredder.grid_pos = Vector2i(0, 0)
+	shredder.lunge_dir = Vector2i(1, 0)
+	shredder.lunge_cells = 3
+	shredder.move_timer = 0.0
+	shredder._advance_lunge(1.0 / shredder.lunge_speed)
+	assert_eq(shredder.grid_pos.x, 1, "shredder advances one cell along lunge_dir")
+	assert_eq(shredder.lunge_cells, 2, "shredder consumes one lunge cell per step")
 
 # ── phantom_protocol ──────────────────────────────────────────────────
 func _test_phantom_damage_defensive_teleport() -> void:
@@ -165,9 +211,13 @@ func _run_all() -> void:
 	_test_swarm_hit_kills_one_unit()
 	_test_swarm_scatter_trigger()
 	_test_swarm_all_dead_frees()
+	_test_swarm_boss_cleanup_kills_all()
 	_test_reaper_take_damage()
+	_test_reaper_frenzy_at_low_hp()
 	_test_worm_damage_shrinks_body()
+	_test_worm_chases_snake_head()
 	_test_shredder_damage_knockback()
+	_test_shredder_lunge_advances()
 	_test_phantom_damage_defensive_teleport()
 	_test_phantom_phases()
 	_test_web_residue_fades()
