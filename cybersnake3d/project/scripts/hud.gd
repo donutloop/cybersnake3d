@@ -17,6 +17,7 @@ var overcharge_bar: ProgressBar
 var hp_bar: ProgressBar
 var combo_label: Label
 var gain_popup: Label
+var countdown_label: Label
 var combo_bar: ProgressBar
 var boss_bar: ProgressBar
 var boss_label: Label
@@ -178,6 +179,7 @@ func _process(delta: float) -> void:
 	_update_combo_label()
 	_update_gain_popup()
 	_update_combo_bar()
+	_update_wave_countdown()
 	_update_boss_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
@@ -225,7 +227,14 @@ func _update_gain_popup() -> void:
 		gain_popup.text = "+%d" % gain
 	else:
 		gain_popup.visible = false
-		gain_popup.text = ""
+	countdown_label = Label.new()
+	countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	countdown_label.add_theme_font_size_override("font_size", 22)
+	countdown_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.9))
+	countdown_label.position = Vector2(560, 260)
+	countdown_label.size = Vector2(800, 30)
+	countdown_label.visible = false
+	add_child(countdown_label)
 
 func _update_combo_bar() -> void:
 	var snake := get_node_or_null("../Snake")
@@ -260,9 +269,12 @@ func _update_boss_bar() -> void:
 		boss_label.visible = false
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
-	score_label.text = "SCORE: %d" % p_score
-	wave_label.text = "WAVE: %d" % wave
-	length_label.text = "LEN: %d" % length
+	if score_label:
+		score_label.text = "SCORE: %d" % p_score
+	if wave_label:
+		wave_label.text = "WAVE: %d" % wave
+	if length_label:
+		length_label.text = "LEN: %d" % length
 
 func show_wave_announce(wave: int) -> void:
 	if not wave_announce:
@@ -318,6 +330,18 @@ func _on_wave_cleared(wave: int) -> void:
 	wave_announce.text = "WAVE CLEAR +%d" % bonus
 	wave_announce.modulate = Color(0.4, 1.0, 0.4)
 	wave_announce.visible = true
+
+func _update_wave_countdown() -> void:
+	var mgr := get_node_or_null("../EnemyManager")
+	if not mgr or not mgr.between_waves:
+		if countdown_label:
+			countdown_label.visible = false
+		return
+	var remain: float = mgr.wave_delay - mgr.wave_timer
+	var secs: int = maxi(1, int(remain))
+	if countdown_label:
+		countdown_label.text = "NEXT WAVE IN %d" % secs
+		countdown_label.visible = true
 
 func _on_evolved(_stage: int) -> void:
 	if evo_tween:

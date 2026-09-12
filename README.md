@@ -107,6 +107,8 @@ Combo milestones now grant bonus XP: every 5th chained pickup awards 25 XP (`com
 
 The Sentinel boss now enrages below half HP: `enraged` triggers an immediate drone spawn and doubles its base neon glow.
 
+Between waves the HUD now shows a `NEXT WAVE IN N` countdown, and `update_hud` guards its labels against missing scene nodes.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
