@@ -45,6 +45,7 @@ func _run_all() -> void:
 	_test_pause()
 	_test_wall_death()
 	_test_burst()
+	_test_burst_kill_awards_xp()
 	_test_magnet()
 	_test_combo_milestone()
 
@@ -78,11 +79,13 @@ func try_eat(_c):
 	return true"
 	sp.reload()
 	spawner.set_script(sp)
+	var snake := _make_snake()
 	spawner.name = "ICEShardSpawner"
-	_snake.get_parent().add_child(spawner)  # sibling at ../ICEShardSpawner
-	var before: int = _snake.body.size()
-	_snake._step()
-	assert_eq(_snake.body.size(), before + 1, "snake grows one segment when it eats a shard")
+	snake.get_parent().add_child(spawner)  # sibling at ../ICEShardSpawner
+	var before: int = snake.body.size()
+	snake._step()
+	assert_eq(snake.body.size(), before + 1, "snake grows one segment when it eats a shard")
+	spawner.free()  # don't leave a stray ICEShardSpawner for later tests
 
 func _test_wall_collision() -> void:
 	var s := _make_snake()
@@ -239,6 +242,27 @@ func _test_burst() -> void:
 	assert_eq(enemy.hits, 1, "overcharge burst damages a nearby enemy")
 	mgr.queue_free()
 	enemy.queue_free()
+
+func _test_burst_kill_awards_xp() -> void:
+	# Overcharge burst kills must also feed evolution (consistent with head kills).
+	var enemy := Node.new()
+	var es := GDScript.new()
+	es.source_code = "extends Node\nvar pos = Vector2i(1, 1)\nvar is_dead = false\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\tis_dead = true"
+	es.reload()
+	enemy.set_script(es)
+	var mgr := Node.new()
+	mgr.name = "EnemyManager"
+	var snake := _make_snake()
+	snake.get_parent().add_child(mgr)
+	var head: Vector2i = snake.body[0]
+	enemy.pos = head
+	mgr.add_child(enemy)
+	mgr.enemies = [enemy]  # _release_burst iterates mgr.enemies, not children
+	snake.overcharge_active = true
+	var xp_before: int = snake.xp
+	snake._release_burst()
+	assert_true(snake.xp > xp_before, "overcharge burst kill awards XP")
+
 
 func _test_magnet() -> void:
 	var snake := _make_snake()

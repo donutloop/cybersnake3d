@@ -579,6 +579,8 @@ func _release_burst() -> void:
 		for cell in e.get_grid_positions():
 			if abs(cell.x - origin.x) <= 1 + clampi(evolution_stage, 1, 3) and abs(cell.y - origin.y) <= 1 + clampi(evolution_stage, 1, 3):
 				e.take_damage(1)
+				if e.get("is_dead"):
+					add_xp(KILL_XP)  # overcharge kills also feed evolution
 				break
 
 func _register_pickup() -> int:

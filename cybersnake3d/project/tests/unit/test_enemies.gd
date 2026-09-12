@@ -48,7 +48,7 @@ func _test_snake_head_attacks_enemy() -> void:
 		c.free()
 	var enemy := Node.new()
 	var s := GDScript.new()
-	s.source_code = "extends Node\nvar hits = 0\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1"
+	s.source_code = "extends Node\nvar hits = 0\nvar is_dead = false\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1\n\tis_dead = true"
 	s.reload()
 	enemy.set_script(s)
 	_manager.add_child(enemy)
@@ -67,13 +67,13 @@ func _test_snake_kill_awards_xp() -> void:
 	var s := GDScript.new()
 	s.source_code = "extends Node
 var hits = 0
-var dead = false
+var is_dead = false
 var pos = Vector2i(0, 0)
 func get_grid_positions():
 	return [pos]
 func take_damage(_a):
 	hits += 1
-	dead = true
+	is_dead = true
 func is_dead():
 	return dead"
 	s.reload()
