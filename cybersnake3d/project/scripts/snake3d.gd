@@ -121,10 +121,13 @@ func _process(delta: float) -> void:
 	if not is_alive:
 		return
 
-	if evolution_stage >= 5:
+	if evolution_stage >= 3:
+		# Overcharge unlocks at evolution stage 3. Higher stages recharge it
+		# faster: stage 3 takes 8s, stage 5 drops to 4s (min 3s), so evolution
+		# is a real combat upgrade rather than just raw HP/speed.
 		overcharge_timer -= delta
 		if overcharge_timer <= 0.0:
-			overcharge_timer = 8.0
+			overcharge_timer = maxf(3.0, 8.0 - float(evolution_stage))
 			invuln_timer = 2.0
 			overcharge_active = true
 			_release_burst()

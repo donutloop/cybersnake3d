@@ -139,10 +139,13 @@ A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.g
 
 ## Gameplay Features
 
-- **Overcharge window** (evolution stage ≥ 5): when the snake eats an ICE
+- **Overcharge window** (evolution stage ≥ 3): when the snake eats an ICE
   shard it enters a brief invulnerable + lethal state. The whole body now
   glows cyan (`snake3d.gd::_update_overcharge_visual`) so the player can see
-  when they are safe to plow through enemies.
+  when they are safe to plow through enemies. Evolution gates the tool: it
+  stays locked below stage 3, and higher stages recharge the cooldown faster
+  (8s at stage 3 down to a 4s floor at stage 5) so late-game combat cadence
+  improves rather than just raw HP/speed.
 
 - **Shard combo**: eating shards within a short window chains a combo; each
   extra pickup in the chain adds +100 to the score (`snake3d.gd::_register_pickup`).

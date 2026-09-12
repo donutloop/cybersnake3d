@@ -40,6 +40,7 @@ func _run_all() -> void:
 	_test_evolution()
 	_test_overcharge_glow()
 	_test_overcharge_speed_boost()
+	_test_overcharge_cooldown_scales_with_evolution()
 	_test_hit_breaks_combo()
 	_test_combo()
 	_test_hit()
@@ -151,6 +152,33 @@ func _test_overcharge_speed_boost() -> void:
 	snake.move_timer = snake.move_interval * 0.7  # below normal, above burst threshold
 	snake._process(0.01)
 	assert_true(snake.body[0] != head_before, "snake dashes forward during overcharge burst")
+
+func _test_overcharge_cooldown_scales_with_evolution() -> void:
+	# Overcharge is an evolution-gated combat tool: it must NOT trigger at
+	# low stages, but must unlock at stage 3 and recharge faster at higher
+	# stages (stage 3: 8s cooldown, stage 5: 4s, floor 3s).
+	var snake := _make_snake()
+	snake.overcharge_timer = 0.5
+	snake.evolution_stage = 2
+	snake.overcharge_active = false
+	snake._process(1.0)
+	assert_false(snake.overcharge_active, "overcharge stays locked below evolution stage 3")
+
+	# Stage 3 unlocks overcharge and sets the base 8s cooldown.
+	snake.overcharge_timer = 0.5
+	snake.evolution_stage = 3
+	snake.overcharge_active = false
+	snake._process(1.0)
+	assert_true(snake.overcharge_active, "overcharge unlocks at evolution stage 3")
+	assert_eq(snake.overcharge_timer, maxf(3.0, 8.0 - float(snake.evolution_stage)), "stage 3 cooldown is 5s")
+
+	# Stage 5 recharges faster: cooldown drops to the 3s floor.
+	snake.overcharge_timer = 0.5
+	snake.evolution_stage = 5
+	snake.overcharge_active = false
+	snake._process(1.0)
+	assert_true(snake.overcharge_active, "overcharge stays active at max stage")
+	assert_eq(snake.overcharge_timer, maxf(3.0, 8.0 - float(snake.evolution_stage)), "stage 5 cooldown floors at 3s")
 
 func _test_overcharge_glow() -> void:
 	var s := _make_snake()
