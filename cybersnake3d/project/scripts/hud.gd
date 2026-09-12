@@ -13,6 +13,7 @@ var lvl_bar: ProgressBar
 var evo_bar: ProgressBar
 var overcharge_bar: ProgressBar
 var hp_bar: ProgressBar
+var combo_label: Label
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -83,6 +84,15 @@ func _ready() -> void:
 	hp_bar.max_value = 1.0
 	hp_bar.value = 1.0
 	add_child(hp_bar)
+
+	# Combo chain indicator
+	combo_label = Label.new()
+	combo_label.position = Vector2(240, 20)
+	combo_label.size = Vector2(160, 30)
+	combo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	combo_label.add_theme_font_size_override("font_size", 18)
+	combo_label.visible = false
+	add_child(combo_label)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -111,6 +121,7 @@ func _process(delta: float) -> void:
 
 	_update_overcharge_bar()
 	_update_hp_bar()
+	_update_combo_label()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
@@ -134,6 +145,17 @@ func _update_hp_bar() -> void:
 		hp_bar.value = clampf(hp / max_hp, 0.0, 1.0)
 	else:
 		hp_bar.value = 0.0
+
+func _update_combo_label() -> void:
+	var snake := get_node_or_null("../Snake")
+	var combo: int = snake.combo if snake else 0
+	var timer: float = snake.combo_timer if snake else 0.0
+	if combo >= 2 and timer > 0.0:
+		combo_label.visible = true
+		combo_label.text = "COMBO x%d" % combo
+	else:
+		combo_label.visible = false
+		combo_label.text = ""
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score
