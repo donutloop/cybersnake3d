@@ -114,7 +114,9 @@ func _pulse_floor() -> void:
 	var floor := get_node_or_null("../GridFloor")
 	if not floor:
 		return
-	var mat := floor.get_material() as ShaderMaterial
+	# GridFloor is a MeshInstance3D; its grid shader lives on the surface
+	# material override (floor.get_material() does not exist in Godot 4).
+	var mat := floor.get_surface_override_material(0) as ShaderMaterial
 	if mat:
 		mat.set_shader_parameter("grid_energy", 1.0)
 		var tw := create_tween()
