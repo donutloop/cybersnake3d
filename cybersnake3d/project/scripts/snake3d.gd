@@ -108,11 +108,7 @@ func _process(delta: float) -> void:
 			invuln_timer = 2.0
 			overcharge_active = true
 	_update_overcharge_visual(delta)
-	# Combo window decay: chains expire if no pickup happens within the window.
-	if combo_timer > 0.0:
-		combo_timer = maxf(0.0, combo_timer - delta)
-		if combo_timer <= 0.0:
-			combo = 0
+	_decay_combo(delta)
 	if invuln_timer > 0.0:
 		invuln_timer -= delta
 		# Flash head during invuln
@@ -512,3 +508,10 @@ func _register_pickup() -> int:
 	combo_timer = combo_window
 	last_gain = 100 * combo
 	return last_gain
+
+func _decay_combo(delta: float) -> void:
+	# Decays the combo window each frame; a chain expires when it hits 0.
+	if combo_timer > 0.0:
+		combo_timer = maxf(0.0, combo_timer - delta)
+		if combo_timer <= 0.0:
+			combo = 0

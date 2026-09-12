@@ -40,6 +40,7 @@ func _run_all() -> void:
 	_test_overcharge_glow()
 	_test_combo()
 	_test_hit()
+	_test_combo_decay()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -145,6 +146,19 @@ func _test_hit() -> void:
 	assert_false(survived2, "hit at hp=1 is fatal")
 	assert_eq(s.hp, 0, "hp never goes negative (clamped at 0)")
 	assert_true(not s.is_alive, "snake is dead at hp 0")
+
+func _test_combo_decay() -> void:
+	var s := _make_snake()
+	# The combo window decays each frame while active.
+	s.combo = 3
+	s.combo_timer = 1.0
+	s._decay_combo(0.5)
+	assert_lt(s.combo_timer, 1.0, "combo timer decays over time")
+	# When the window expires, the chain resets and the timer clamps at 0.
+	s.combo_timer = 0.2
+	s._decay_combo(0.5)
+	assert_eq(s.combo_timer, 0.0, "combo timer clamps at 0")
+	assert_eq(s.combo, 0, "combo resets when the window expires")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):
