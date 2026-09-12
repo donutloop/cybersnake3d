@@ -100,6 +100,13 @@ func _spawn_enemy(script_path: String) -> void:
 	var enemy := Node3D.new()
 	enemy.set_script(script)
 	add_child(enemy)
+	# Wave scaling: later waves spawn tougher, faster enemies.
+	var hpv: Variant = enemy.get("hp")
+	if hpv != null:
+		enemy.set("hp", int(hpv) + wave - 1)
+	var spv: Variant = enemy.get("speed_steps")
+	if spv != null:
+		enemy.set("speed_steps", float(spv) + float(wave) * 0.15)
 	enemies.append(enemy)
 
 func get_enemy_positions() -> Array[Vector2i]:
