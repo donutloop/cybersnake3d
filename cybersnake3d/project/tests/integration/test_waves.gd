@@ -42,6 +42,7 @@ func _run_all() -> void:
 	_test_wave10_spawns_boss()
 	_test_wave15_spawns_hive_queen()
 	_test_boss_population_capped()
+	_test_sentinel_enrage()
 	_test_wave6_spawns_web()
 	_test_web_respects_invulnerability()
 
@@ -157,6 +158,17 @@ func _test_boss_population_capped() -> void:
 	assert_true(sentinels <= 2, "sentinel population capped at 2")
 	assert_true(queens >= 1, "wave 20 spawns at least one hive queen")
 	assert_true(queens <= 2, "hive queen population capped at 2")
+
+func _test_sentinel_enrage() -> void:
+	# Sentinel enrages once HP drops to half its max.
+	_manager.wave = 9
+	_manager._start_next_wave()  # wave 10 spawns a sentinel
+	var sentinel := _find_enemy(_manager.enemies, "blackwall_sentinel3d.gd")
+	assert_not_null(sentinel, "wave 10 spawns a sentinel for enrage test")
+	if sentinel:
+		while not sentinel.enraged and sentinel.hp > 0:
+			sentinel.take_damage(1)
+	assert_eq(sentinel.enraged, true, "sentinel enrages below half HP")
 
 func _test_wave6_spawns_web() -> void:
 	# Wave 6 gates the static_web (tier 4 area-denial crawler).

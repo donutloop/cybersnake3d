@@ -105,6 +105,8 @@ Wave clears now pulse the neon grid floor: a new `grid_energy` shader uniform fl
 
 Combo milestones now grant bonus XP: every 5th chained pickup awards 25 XP (`combo % 5 == 0`).
 
+The Sentinel boss now enrages below half HP: `enraged` triggers an immediate drone spawn and doubles its base neon glow.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
