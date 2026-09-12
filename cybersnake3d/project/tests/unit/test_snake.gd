@@ -123,6 +123,7 @@ func _test_combo() -> void:
 	var g2: int = s._register_pickup()
 	assert_eq(g2, 200, "chained pickup doubles the gain")
 	assert_eq(s.combo, 2, "second pickup bumps combo to 2")
+	assert_eq(s.last_gain, 200, "last_gain records the chained gain")
 	# Simulating an expired window (combo_timer <= 0) resets the chain.
 	s.combo_timer = 0.0
 	var g3: int = s._register_pickup()

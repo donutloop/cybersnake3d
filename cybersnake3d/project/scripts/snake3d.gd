@@ -40,6 +40,7 @@ var just_attacked: bool = false
 var combo: int = 0
 var combo_timer: float = 0.0
 var combo_window: float = 2.0
+var last_gain: int = 0
 
 var segments: Array[MeshInstance3D] = []
 var head_mesh: Mesh = null
@@ -184,6 +185,7 @@ func _step() -> void:
 		ate_shard.emit()
 		# Chained pickups boost the score: each extra pickup in the window adds 100.
 		var gain := _register_pickup()
+		last_gain = gain
 		score += gain
 		score_changed.emit(score)
 		add_xp(10)
@@ -502,4 +504,5 @@ func _update_overcharge_visual(delta: float) -> void:
 func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
 	combo_timer = combo_window
-	return 100 * combo
+	last_gain = 100 * combo
+	return last_gain

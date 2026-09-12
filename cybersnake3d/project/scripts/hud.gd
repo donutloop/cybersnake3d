@@ -14,6 +14,7 @@ var evo_bar: ProgressBar
 var overcharge_bar: ProgressBar
 var hp_bar: ProgressBar
 var combo_label: Label
+var gain_popup: Label
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -93,6 +94,15 @@ func _ready() -> void:
 	combo_label.add_theme_font_size_override("font_size", 18)
 	combo_label.visible = false
 	add_child(combo_label)
+
+	# Last score-gain popup
+	gain_popup = Label.new()
+	gain_popup.position = Vector2(240, 50)
+	gain_popup.size = Vector2(160, 30)
+	gain_popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	gain_popup.add_theme_font_size_override("font_size", 18)
+	gain_popup.visible = false
+	add_child(gain_popup)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -122,6 +132,7 @@ func _process(delta: float) -> void:
 	_update_overcharge_bar()
 	_update_hp_bar()
 	_update_combo_label()
+	_update_gain_popup()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
@@ -156,6 +167,16 @@ func _update_combo_label() -> void:
 	else:
 		combo_label.visible = false
 		combo_label.text = ""
+
+func _update_gain_popup() -> void:
+	var snake := get_node_or_null("../Snake")
+	var gain: int = snake.last_gain if snake else 0
+	if gain > 0:
+		gain_popup.visible = true
+		gain_popup.text = "+%d" % gain
+	else:
+		gain_popup.visible = false
+		gain_popup.text = ""
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score
