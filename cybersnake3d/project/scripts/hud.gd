@@ -5,6 +5,8 @@ extends CanvasLayer
 @onready var wave_label: Label = $WaveLabel
 @onready var length_label: Label = $LengthLabel
 @onready var death_screen: ColorRect = $DeathScreen
+@onready var death_label: Label = $DeathScreen/DeathLabel
+@onready var restart_label: Label = $DeathScreen/RestartLabel
 @onready var wave_announce: Label = $WaveAnnounce
 
 var announce_timer: float = 0.0
@@ -274,7 +276,11 @@ func _on_ate_shard() -> void:
 	update_hud(sc, 1, length)
 
 func _on_snake_died() -> void:
+	var snake := get_node_or_null("../Snake")
+	var final_score: int = snake.score if snake else 0
+	death_label.text = "GAME OVER — SCORE: %d" % final_score
 	death_screen.visible = true
+	restart_label.visible = true
 
 func _on_evolved(_stage: int) -> void:
 	if evo_tween:

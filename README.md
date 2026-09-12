@@ -75,6 +75,8 @@ $GODOT --editor --path cybersnake3d/project/
 
 A boss health bar (top of screen) appears while the Blackwall Sentinel is alive, fed from its `is_boss`/`hp`/`max_hp` each frame.
 
+The death screen now shows the final score (e.g. `GAME OVER — SCORE: 1234`) before the restart prompt.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
