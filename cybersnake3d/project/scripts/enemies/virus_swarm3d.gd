@@ -8,6 +8,7 @@ var center_pos := Vector3.ZERO
 var is_dead: bool = false
 var scattering: bool = false
 var scatter_timer: float = 0.0
+var owner_tag: String = ""
 
 var unit_mat: StandardMaterial3D
 
@@ -146,6 +147,12 @@ func _all_dead() -> void:
 		if snake.has_method("add_xp"):
 			snake.add_xp(35)
 	queue_free()
+
+func set_owner_tag(t: String) -> void:
+	owner_tag = t
+
+func get_owner_tag() -> String:
+	return owner_tag
 
 func get_grid_positions() -> Array[Vector2i]:
 	var positions: Array[Vector2i] = []

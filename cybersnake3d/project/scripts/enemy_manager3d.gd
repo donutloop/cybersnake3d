@@ -105,6 +105,10 @@ func _spawn_wave(w: int) -> void:
 		for i in range(w - 9):
 			_spawn_enemy("res://scripts/enemies/blackwall_sentinel3d.gd")
 
+	if w >= 15:
+		for i in range(w - 14):
+			_spawn_enemy("res://scripts/enemies/hive_queen3d.gd")
+
 func _spawn_enemy(script_path: String) -> void:
 	var script := load(script_path) as GDScript
 	if not script:

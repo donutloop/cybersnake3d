@@ -40,6 +40,7 @@ func _run_all() -> void:
 	_test_shredder_respects_invulnerability()
 	_test_shredder_damages_vulnerable_snake()
 	_test_wave10_spawns_boss()
+	_test_wave15_spawns_hive_queen()
 	_test_wave6_spawns_web()
 	_test_web_respects_invulnerability()
 
@@ -134,6 +135,16 @@ func _test_wave10_spawns_boss() -> void:
 	if sentinel:
 		assert_eq(sentinel.is_boss, true, "sentinel is flagged as boss")
 		assert_true(sentinel.get("max_hp") > 0, "sentinel has boss HP")
+
+func _test_wave15_spawns_hive_queen() -> void:
+	# Wave 15 gates the hive queen boss (tier-5). Verify it spawns + is flagged boss.
+	_manager.wave = 14
+	_manager._start_next_wave()  # wave becomes 15
+	var queen := _find_enemy(_manager.enemies, "hive_queen3d.gd")
+	assert_not_null(queen, "wave 15 spawns the hive queen boss")
+	if queen:
+		assert_eq(queen.is_boss, true, "hive queen is flagged as boss")
+		assert_true(queen.get("max_hp") >= 16, "hive queen has high boss HP")
 
 func _test_wave6_spawns_web() -> void:
 	# Wave 6 gates the static_web (tier 4 area-denial crawler).
