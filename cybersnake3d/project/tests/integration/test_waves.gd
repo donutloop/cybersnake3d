@@ -50,6 +50,8 @@ func _run_all() -> void:
 	_test_web_respects_invulnerability()
 	_test_wave8_spawns_split_echo()
 	_test_split_echo_fractures_on_damage()
+	_test_wave9_spawns_warp_shard()
+	_test_warp_shard_warps_when_hit()
 
 func _test_topology() -> void:
 	assert_not_null(_snake, "Snake node present in test scene")
@@ -267,6 +269,32 @@ func _test_split_echo_fractures_on_damage() -> void:
 			off.take_damage(0)
 			assert_eq(off.split_used, true, "offspring cannot split further")
 			break
+
+func _test_wave9_spawns_warp_shard() -> void:
+	# Wave 9 gates the warp shard: it must NOT spawn at wave 8 but must
+	# appear once the wave advances to 9.
+	_reset_enemies()
+	_manager.wave = 8
+	_manager._start_next_wave()  # wave becomes 9
+	assert_eq(_count_script(_manager.enemies, "warp_shard3d.gd"), 1,
+		"wave 9 spawns exactly one warp shard")
+
+func _test_warp_shard_warps_when_hit() -> void:
+	# A struck warp shard survives and warps to a distant cell instead of
+	# dying (defensive teleport).
+	_reset_enemies()
+	_manager.wave = 8
+	_manager._start_next_wave()  # wave becomes 9 -> spawns a warp shard
+	var shard := _find_enemy(_manager.enemies, "warp_shard3d.gd")
+	if shard == null:
+		return  # wave-9 spawn already asserted by the prior test
+	var start: Vector2i = shard.grid_pos
+	var before: int = shard.warps_used
+	var hp_before: int = shard.hp
+	shard.take_damage(1)
+	assert_eq(shard.hp, hp_before - 1, "warp shard survives a single hit (wave-scaled HP)")
+	assert_gt(shard.warps_used, before, "warp shard warps when struck")
+	assert_true(shard.grid_pos != start, "warp shard flees to a new cell")
 
 func _reset_enemies() -> void:
 	# Test isolation: free every enemy node and clear the manager's array so

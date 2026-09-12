@@ -13,6 +13,7 @@ const WebScript = preload("res://scripts/enemies/static_web3d.gd")
 const SentinelScript = preload("res://scripts/enemies/blackwall_sentinel3d.gd")
 const QueenScript = preload("res://scripts/enemies/hive_queen3d.gd")
 const SplitEchoScript = preload("res://scripts/enemies/split_echo3d.gd")
+const WarpShardScript = preload("res://scripts/enemies/warp_shard3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -314,6 +315,28 @@ func _test_split_echo_dies_awards_xp() -> void:
 	assert_gt(_snake.xp, xp_before, "killing a split echo awards XP")
 
 # ── runner ─────────────────────────────────────────────────────────────
+# ── warp_shard ──────────────────────────────────────────────────────────
+func _test_warp_shard_teleports_away_on_damage() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard")
+	var start: Vector2i = shard.grid_pos
+	# Place the snake far from the shard so the warp anchor is well away.
+	_snake.body[0] = Vector2i(start.x + 8, start.y + 8)
+	var before: int = shard.warps_used
+	shard.take_damage(1)
+	assert_eq(shard.hp, 3, "warp shard survives a single hit")
+	assert_gt(shard.warps_used, before, "warp shard warps when struck")
+	assert_true(shard.grid_pos != start, "warp shard flees to a new cell after being hit")
+	assert_gt(shard.grid_pos.distance_to(_snake.body[0]), 1.0,
+		"warp shard lands far from the snake head")
+
+func _test_warp_shard_dies_awards_xp() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard2")
+	var xp_before: int = _snake.xp
+	shard.hp = 2
+	shard.take_damage(99)
+	assert_true(shard.is_dead, "warp shard dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "killing a warp shard awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -343,3 +366,5 @@ func _run_all() -> void:
 	_test_split_fractures_on_damage()
 	_test_split_offspring_cannot_split()
 	_test_split_echo_dies_awards_xp()
+	_test_warp_shard_teleports_away_on_damage()
+	_test_warp_shard_dies_awards_xp()
