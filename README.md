@@ -125,6 +125,8 @@ The HUD now shows a live `ENEMIES LEFT` counter, counting in-tree enemies each f
 
 The combo meter flashes red when a chain is dropped (timer expires).
 
+Shard gain now scales with the wave: each +10 wave tier multiplies gain by 10% (e.g. wave 10+ shards pay 200 per combo base).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

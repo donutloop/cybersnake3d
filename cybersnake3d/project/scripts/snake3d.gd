@@ -578,7 +578,10 @@ func _release_burst() -> void:
 func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
 	combo_timer = combo_window
-	last_gain = 100 * combo
+	# Shards pay more in later waves: +10% gain per wave tier.
+	var mgr := get_node_or_null("../EnemyManager")
+	var wave_factor: int = 1 + (int(mgr.wave) / 10 if mgr and "wave" in mgr else 0)
+	last_gain = 100 * combo * wave_factor
 	if combo % 5 == 0:
 		add_xp(25)
 		if has_signal("xp_changed"):
