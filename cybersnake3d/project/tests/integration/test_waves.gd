@@ -40,6 +40,8 @@ func _run_all() -> void:
 	_test_shredder_respects_invulnerability()
 	_test_shredder_damages_vulnerable_snake()
 	_test_wave10_spawns_boss()
+	_test_wave6_spawns_web()
+	_test_web_respects_invulnerability()
 
 func _test_topology() -> void:
 	assert_not_null(_snake, "Snake node present in test scene")
@@ -132,6 +134,31 @@ func _test_wave10_spawns_boss() -> void:
 	if sentinel:
 		assert_eq(sentinel.is_boss, true, "sentinel is flagged as boss")
 		assert_true(sentinel.get("max_hp") > 0, "sentinel has boss HP")
+
+func _test_wave6_spawns_web() -> void:
+	# Wave 6 gates the static_web (tier 4 area-denial crawler).
+	_manager.wave = 5
+	_manager._start_next_wave()  # wave becomes 6
+	var web := _find_enemy(_manager.enemies, "static_web3d.gd")
+	assert_not_null(web, "wave 6 spawns a static_web enemy")
+
+func _test_web_respects_invulnerability() -> void:
+	var web := _find_enemy(_manager.enemies, "static_web3d.gd")
+	if web == null:
+		return
+	_snake.invuln_timer = 2.0
+	web.grid_pos = _snake.body[0]
+	web.mark_residue(_snake.body[0], 10.0)
+	var hp_before: int = _snake.hp
+	web._check_snake_collision()
+	assert_eq(_snake.hp, hp_before, "static_web never damages an invulnerable snake")
+	# Overcharge burns residue instead of hurting the snake.
+	web.residue.clear()
+	web.mark_residue(_snake.body[0], 10.0)
+	_snake.overcharge_active = true
+	web._check_residue_collision(_snake)
+	_snake.overcharge_active = false
+	assert_eq(_snake.hp, hp_before, "overcharge burns residue without hurting the snake")
 
 func _find_enemy(enemies: Array, script_fragment: String) -> Node:
 	for e in enemies:

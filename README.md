@@ -70,6 +70,7 @@ $GODOT --editor --path cybersnake3d/project/
 | Compiler Worm | 4+ | Snake-like trail |
 | **Cascade Shredder** | 4+ | Telegraphs a glowing line, then lunges straight down a row/column at high speed; a hit knocks it out of the charge |
 | Phantom Protocol | 5+ | Phase-shifting teleport |
+| **Static Web** | 6+ | Area-denial crawler that leaves damaging residue cells; overcharge burns residue away |
 | Blackwall Sentinel | 10+ | Boss, spawns drones |
 
 A boss health bar (top of screen) appears while the Blackwall Sentinel is alive, fed from its `is_boss`/`hp`/`max_hp` each frame.
