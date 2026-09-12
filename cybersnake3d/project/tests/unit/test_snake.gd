@@ -120,7 +120,9 @@ func _test_evolution() -> void:
 	_evolved_fired = false
 	var cb := Callable(self, "_on_evolved")
 	s.connect("evolved", cb)
+	var move_before: float = s.move_interval
 	s.add_xp(200)
+	assert_true(s.move_interval < move_before, "evolution increases speed (move_interval decreases)")
 	s.disconnect("evolved", cb)
 	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
