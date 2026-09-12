@@ -161,8 +161,9 @@ func _step() -> void:
 	var new_head := body[0] + direction
 
 	# Wall collision
-	if new_head.x < 0 or new_head.x >= LevelSettings.grid_w or new_head.y < 0 or new_head.y >= LevelSettings.grid_h:
+	if _is_wall_death(new_head):
 		hp = 0
+		hp_changed.emit(hp)
 		is_alive = false
 		died.emit()
 		return
@@ -293,6 +294,11 @@ func _hit() -> bool:
 	invuln_timer = 2.0
 	just_attacked = true
 	return true
+
+func _is_wall_death(new_head: Vector2i) -> bool:
+	# Returns true when the head would move outside the play field.
+	return new_head.x < 0 or new_head.x >= LevelSettings.grid_w \
+		or new_head.y < 0 or new_head.y >= LevelSettings.grid_h
 func get_occupied_cells() -> Array[Vector2i]:
 	return body
 

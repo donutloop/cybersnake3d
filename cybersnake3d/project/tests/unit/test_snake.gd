@@ -42,6 +42,7 @@ func _run_all() -> void:
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
+	_test_wall_death()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -176,6 +177,13 @@ func _test_pause() -> void:
 	s.paused = false
 	s._process(0.1)
 	assert_true(s.paused == false, "un-paused snake keeps updating")
+
+func _test_wall_death() -> void:
+	var s := _make_snake()
+	assert_false(s._is_wall_death(Vector2i(1, 1)), "inside bounds is safe")
+	assert_true(s._is_wall_death(Vector2i(-1, 0)), "negative x is fatal")
+	assert_true(s._is_wall_death(Vector2i(0, -1)), "negative y is fatal")
+	assert_true(s._is_wall_death(Vector2i(999, 0)), "beyond right edge is fatal")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):
