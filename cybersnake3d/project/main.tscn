@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/snake3d.gd" id="snake_script"]
 [ext_resource type="Script" path="res://scripts/spawner3d.gd" id="spawner_script"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/enemy_manager3d.gd" id="enemy_manager_script"]
 [ext_resource type="Script" path="res://scripts/camera_follow.gd" id="camera_script"]
 [ext_resource type="Shader" path="res://shaders/grid_floor.gdshader" id="grid_shader"]
+[ext_resource type="Shader" path="res://shaders/crt_post.gdshader" id="crt_shader"]
 
 [sub_resource type="Environment" id="env_1"]
 background_mode = 1
@@ -30,6 +31,9 @@ size = Vector2(40, 40)
 
 [sub_resource type="ShaderMaterial" id="grid_mat"]
 shader = ExtResource("grid_shader")
+
+[sub_resource type="ShaderMaterial" id="crt_mat"]
+shader = ExtResource("crt_shader")
 
 [node name="Main" type="Node3D"]
 
@@ -133,3 +137,13 @@ theme_override_font_sizes/font_size = 20
 text = "PRESS ENTER TO RESTART"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CRT" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="CRTOverlay" type="ColorRect" parent="CRT"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+material = SubResource("crt_mat")

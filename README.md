@@ -72,6 +72,10 @@ $GODOT --editor --path cybersnake3d/project/
 | Phantom Protocol | 5+ | Phase-shifting teleport |
 | Blackwall Sentinel | 10+ | Boss, spawns drones |
 
+### Post-Processing (neon CRT)
+
+A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
+
 ## Gameplay Features
 
 - **Overcharge window** (evolution stage ≥ 5): when the snake eats an ICE
