@@ -38,6 +38,7 @@ func _run_all() -> void:
 	_test_self_collision()
 	_test_evolution()
 	_test_overcharge_glow()
+	_test_combo()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -110,6 +111,23 @@ func _test_overcharge_glow() -> void:
 	s.overcharge_active = false
 	s._update_overcharge_visual(0.2)
 	assert_lt(s.body_mat.emission_energy_multiplier, base_energy + 4.0, "body glow settles when overcharge ends")
+
+func _test_combo() -> void:
+	var s := _make_snake()
+	# First pickup within a fresh window grants base score and starts the chain.
+	var g1: int = s._register_pickup()
+	assert_eq(g1, 100, "first pickup grants base score")
+	assert_eq(s.combo, 1, "first pickup starts combo at 1")
+	# A second pickup still inside the window chains and boosts the gain.
+	s.combo_timer = 0.5
+	var g2: int = s._register_pickup()
+	assert_eq(g2, 200, "chained pickup doubles the gain")
+	assert_eq(s.combo, 2, "second pickup bumps combo to 2")
+	# Simulating an expired window (combo_timer <= 0) resets the chain.
+	s.combo_timer = 0.0
+	var g3: int = s._register_pickup()
+	assert_eq(g3, 100, "expired window resets the chain")
+	assert_eq(s.combo, 1, "combo resets to 1 after expiry")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):

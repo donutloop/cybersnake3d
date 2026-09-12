@@ -67,6 +67,10 @@ $GODOT --editor --path cybersnake3d/project/
   glows cyan (`snake3d.gd::_update_overcharge_visual`) so the player can see
   when they are safe to plow through enemies.
 
+- **Shard combo**: eating shards within a short window chains a combo; each
+  extra pickup in the chain adds +100 to the score (`snake3d.gd::_register_pickup`).
+  The camera also shakes on damage and shard pickups (`camera_follow.gd::apply_shake`).
+
 ---
 
 ## Contributing

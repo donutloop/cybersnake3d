@@ -36,6 +36,11 @@ var prev_directions: Array[Vector2i] = [Vector2i(1,0), Vector2i(1,0)]
 var invuln_timer: float = 2.0
 var just_attacked: bool = false
 
+# Combo system: chained shard pickups within the window boost the score.
+var combo: int = 0
+var combo_timer: float = 0.0
+var combo_window: float = 2.0
+
 var segments: Array[MeshInstance3D] = []
 var head_mesh: Mesh = null
 var body_mesh: Mesh = null
@@ -102,6 +107,11 @@ func _process(delta: float) -> void:
 			invuln_timer = 2.0
 			overcharge_active = true
 	_update_overcharge_visual(delta)
+	# Combo window decay: chains expire if no pickup happens within the window.
+	if combo_timer > 0.0:
+		combo_timer = maxf(0.0, combo_timer - delta)
+		if combo_timer <= 0.0:
+			combo = 0
 	if invuln_timer > 0.0:
 		invuln_timer -= delta
 		# Flash head during invuln
@@ -172,7 +182,9 @@ func _step() -> void:
 	var spawner := get_node_or_null("../ICEShardSpawner")
 	if spawner and spawner.try_eat(new_head):
 		ate_shard.emit()
-		score += 100
+		# Chained pickups boost the score: each extra pickup in the window adds 100.
+		var gain := _register_pickup()
+		score += gain
 		score_changed.emit(score)
 		add_xp(10)
 		invuln_timer = 0.3
@@ -484,3 +496,10 @@ func _update_overcharge_visual(delta: float) -> void:
 	else:
 		body_mat.emission = _base_body_emission
 		body_mat.emission_energy_multiplier = 1.5
+
+# Registers a shard pickup and returns the score gained. Chaining pickups
+# within the window raises the combo multiplier. Pure logic so it is unit-testable.
+func _register_pickup() -> int:
+	combo = combo + 1 if combo_timer > 0.0 else 1
+	combo_timer = combo_window
+	return 100 * combo
