@@ -41,6 +41,7 @@ func _run_all() -> void:
 	_test_combo()
 	_test_hit()
 	_test_combo_decay()
+	_test_pause()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -159,6 +160,18 @@ func _test_combo_decay() -> void:
 	s._decay_combo(0.5)
 	assert_eq(s.combo_timer, 0.0, "combo timer clamps at 0")
 	assert_eq(s.combo, 0, "combo resets when the window expires")
+
+func _test_pause() -> void:
+	var s := _make_snake()
+	# While paused, per-frame decay still runs but movement is frozen.
+	s.paused = true
+	s.combo_timer = 1.0
+	s._process(0.5)
+	assert_lt(s.combo_timer, 1.0, "combo timer still decays while paused")
+	# Un-pausing resumes normal per-frame updates without crashing.
+	s.paused = false
+	s._process(0.1)
+	assert_true(s.paused == false, "un-paused snake keeps updating")
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):

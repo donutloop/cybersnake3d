@@ -41,6 +41,7 @@ var combo: int = 0
 var combo_timer: float = 0.0
 var combo_window: float = 2.0
 var last_gain: int = 0
+var paused: bool = false
 
 var segments: Array[MeshInstance3D] = []
 var head_mesh: Mesh = null
@@ -109,6 +110,8 @@ func _process(delta: float) -> void:
 			overcharge_active = true
 	_update_overcharge_visual(delta)
 	_decay_combo(delta)
+	if paused:
+		return
 	if invuln_timer > 0.0:
 		invuln_timer -= delta
 		# Flash head during invuln
