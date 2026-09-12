@@ -111,6 +111,8 @@ Between waves the HUD now shows a `NEXT WAVE IN N` countdown, and `update_hud` g
 
 Enemy spawns are now placed far from the snake head (distance >= 5, retried up to 60 cells) so enemies don't appear on top of the player.
 
+Pausing now shows a gold `PAUSED` overlay via `_update_pause()` reading `get_tree().paused`.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

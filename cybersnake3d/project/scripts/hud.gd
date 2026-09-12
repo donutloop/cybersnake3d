@@ -18,6 +18,7 @@ var hp_bar: ProgressBar
 var combo_label: Label
 var gain_popup: Label
 var countdown_label: Label
+var paused_label: Label
 var combo_bar: ProgressBar
 var boss_bar: ProgressBar
 var boss_label: Label
@@ -180,6 +181,7 @@ func _process(delta: float) -> void:
 	_update_gain_popup()
 	_update_combo_bar()
 	_update_wave_countdown()
+	_update_pause()
 	_update_boss_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
@@ -235,6 +237,14 @@ func _update_gain_popup() -> void:
 	countdown_label.size = Vector2(800, 30)
 	countdown_label.visible = false
 	add_child(countdown_label)
+	paused_label = Label.new()
+	paused_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	paused_label.add_theme_font_size_override("font_size", 40)
+	paused_label.add_theme_color_override("font_color", Color(1, 0.85, 0.2))
+	paused_label.position = Vector2(560, 360)
+	paused_label.size = Vector2(800, 50)
+	paused_label.visible = false
+	add_child(paused_label)
 
 func _update_combo_bar() -> void:
 	var snake := get_node_or_null("../Snake")
@@ -342,6 +352,13 @@ func _update_wave_countdown() -> void:
 	if countdown_label:
 		countdown_label.text = "NEXT WAVE IN %d" % secs
 		countdown_label.visible = true
+
+func _update_pause() -> void:
+	var paused: bool = get_tree().paused if get_tree() else false
+	if paused_label:
+		paused_label.visible = paused
+		if paused:
+			paused_label.text = "PAUSED"
 
 func _on_evolved(_stage: int) -> void:
 	if evo_tween:
