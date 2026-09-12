@@ -11,6 +11,7 @@ var announce_timer: float = 0.0
 
 var lvl_bar: ProgressBar
 var evo_bar: ProgressBar
+var overcharge_bar: ProgressBar
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -54,6 +55,20 @@ func _ready() -> void:
 	evo_bar.max_value = 200.0
 	evo_bar.value = 0.0
 	add_child(evo_bar)
+
+	# Overcharge window indicator (fills while the snake is invulnerable+lethal)
+	var style_oc := StyleBoxFlat.new()
+	style_oc.bg_color = Color(0.3, 1.0, 1.0, 1.0)
+	overcharge_bar = ProgressBar.new()
+	overcharge_bar.position = Vector2(20, 145)
+	overcharge_bar.size = Vector2(200, 10)
+	overcharge_bar.show_percentage = false
+	overcharge_bar.add_theme_stylebox_override("background", style_bg)
+	overcharge_bar.add_theme_stylebox_override("fill", style_oc)
+	overcharge_bar.max_value = 8.0
+	overcharge_bar.value = 0.0
+	overcharge_bar.visible = false
+	add_child(overcharge_bar)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -80,8 +95,21 @@ func _process(delta: float) -> void:
 		else:
 			wave_announce.modulate.a = clampf(announce_timer / 0.5, 0.0, 1.0)
 
+	_update_overcharge_bar()
+
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
+
+func _update_overcharge_bar() -> void:
+	var snake := get_node_or_null("../Snake")
+	var stage: int = snake.evolution_stage if snake else 0
+	var oc_active: bool = snake.overcharge_active if snake else false
+	if stage >= 5 or oc_active:
+		overcharge_bar.visible = true
+		overcharge_bar.value = snake.overcharge_timer if snake else 0.0
+	else:
+		overcharge_bar.visible = false
+		overcharge_bar.value = 0.0
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score
