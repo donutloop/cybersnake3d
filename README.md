@@ -97,6 +97,8 @@ Evolution up shows a rising cyan `EVOLUTION UP!` banner alongside the existing w
 
 Overcharge now releases a radial burst: when the timer completes, `_release_burst()` damages every enemy within a 2-cell radius of the snake's head.
 
+The death screen now shows `GAME OVER — SCORE: N — BEST: M`, persisting the high score to `user://best_score.txt`.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

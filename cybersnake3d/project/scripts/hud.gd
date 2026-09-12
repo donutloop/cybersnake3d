@@ -291,9 +291,27 @@ func _on_ate_shard() -> void:
 func _on_snake_died() -> void:
 	var snake := get_node_or_null("../Snake")
 	var final_score: int = snake.score if snake else 0
-	death_label.text = "GAME OVER — SCORE: %d" % final_score
+	var best := _load_best_score()
+	if final_score > best:
+		best = final_score
+		_save_best_score(best)
+	death_label.text = "GAME OVER — SCORE: %d — BEST: %d" % [final_score, best]
 	death_screen.visible = true
 	restart_label.visible = true
+
+func _load_best_score() -> int:
+	var f := FileAccess.open("user://best_score.txt", FileAccess.READ)
+	if f == null:
+		return 0
+	var text := f.get_as_text().strip_edges()
+	f.close()
+	return text.to_int()
+
+func _save_best_score(value: int) -> void:
+	var f := FileAccess.open("user://best_score.txt", FileAccess.WRITE)
+	if f:
+		f.store_string(str(value))
+		f.close()
 
 func _on_wave_cleared(wave: int) -> void:
 	var bonus: int = 100 + wave * 20
