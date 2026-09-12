@@ -59,6 +59,24 @@ func _test_snake_head_attacks_enemy() -> void:
 	assert_eq(enemy.hits, 1, "snake head damages an enemy in its cell")
 	assert_true(_snake.just_attacked, "attack grants just_attacked grace")
 
+func _test_snake_tail_attack_no_grace() -> void:
+	# A tail-cell attack damages the enemy but must NOT grant just_attacked
+	# grace (only the head strike does), so the snake stays vulnerable.
+	for c in _manager.get_children():
+		c.free()
+	var enemy := Node.new()
+	var s := GDScript.new()
+	s.source_code = "extends Node\nvar hits = 0\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1"
+	s.reload()
+	enemy.set_script(s)
+	_manager.add_child(enemy)
+	var tail: Vector2i = _snake.body[_snake.body.size() - 1]
+	enemy.pos = tail
+	_snake.just_attacked = false
+	_snake._check_enemy_damage(tail, true)  # is_tail = true
+	assert_eq(enemy.hits, 1, "tail strike damages an enemy in its cell")
+	assert_false(_snake.just_attacked, "tail strike grants no attack grace")
+
 # ── glitch_drone ─────────────────────────────────────────────────────
 func _test_drone_take_damage() -> void:
 	var drone := _make_enemy(DroneScript, "drone")
@@ -262,3 +280,4 @@ func _run_all() -> void:
 	_test_queen_damage_reduces_hp()
 	_test_queen_respects_invulnerability()
 	_test_snake_head_attacks_enemy()
+	_test_snake_tail_attack_no_grace()
