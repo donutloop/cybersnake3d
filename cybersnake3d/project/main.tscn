@@ -109,6 +109,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 visible = false
 
+[node name="PauseLabel" type="Label" parent="HUD"]
+visible = false
+anchors_preset = 8
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 760.0
+offset_right = 1160.0
+offset_top = -30.0
+offset_bottom = 30.0
+text = "PAUSED — SPACE/P TO RESUME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="DeathScreen" type="ColorRect" parent="HUD"]
 offset_right = 1920.0
 offset_bottom = 1080.0

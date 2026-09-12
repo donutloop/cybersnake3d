@@ -99,6 +99,21 @@ func _ready() -> void:
 	]
 	_rebuild_meshes()
 
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		var k: int = event.keycode
+		if k == KEY_SPACE or k == KEY_P:
+			_set_paused(not paused)
+
+func _set_paused(p: bool) -> void:
+	paused = p
+	get_tree().paused = p
+	var hud := get_node_or_null("../HUD")
+	if hud:
+		var label := hud.get_node_or_null("PauseLabel")
+		if label:
+			label.visible = p
+
 func _process(delta: float) -> void:
 	if not is_alive:
 		return

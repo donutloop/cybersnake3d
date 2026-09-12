@@ -77,6 +77,8 @@ A boss health bar (top of screen) appears while the Blackwall Sentinel is alive,
 
 The death screen now shows the final score (e.g. `GAME OVER — SCORE: 1234`) before the restart prompt.
 
+Press `Space`/`P` to pause/resume (`get_tree().paused` + a `PAUSED` HUD overlay).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
