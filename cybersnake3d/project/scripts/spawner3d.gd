@@ -42,8 +42,11 @@ func _process(delta: float) -> void:
 func _spawn_shard() -> void:
 	var snake := get_node_or_null("../Snake")
 	var occupied: Array[Vector2i] = []
+	# Take a COPY, never a reference: get_occupied_cells() returns the snake's
+	# body array, and appending shard cells to it would corrupt the snake's
+	# body (breaking movement / self-collision).
 	if snake and snake.has_method("get_occupied_cells"):
-		occupied = snake.get_occupied_cells()
+		occupied = snake.get_occupied_cells().duplicate()
 	occupied.append_array(shards)
 
 	for _attempt in range(200):

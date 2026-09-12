@@ -2,9 +2,17 @@
 
 [ext_resource type="Script" path="res://tests/unit/test_snake.gd" id="1_unit"]
 [ext_resource type="Script" path="res://tests/unit/test_enemies.gd" id="2_enemies"]
+[ext_resource type="Script" path="res://tests/unit/test_spawner.gd" id="3_spawner"]
+[ext_resource type="Script" path="res://tests/unit/test_camera.gd" id="4_camera"]
 
 [node name="TestUnit" type="Node"]
 script = ExtResource("1_unit")
 
 [node name="TestEnemies" type="Node" parent="."]
 script = ExtResource("2_enemies")
+
+[node name="TestSpawner" type="Node" parent="."]
+script = ExtResource("3_spawner")
+
+[node name="TestCamera" type="Node" parent="."]
+script = ExtResource("4_camera")
