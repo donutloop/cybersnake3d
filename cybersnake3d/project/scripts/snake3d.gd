@@ -144,7 +144,7 @@ func _process(delta: float) -> void:
 	just_attacked = false
 	_handle_input()
 	move_timer += delta
-	if move_timer >= move_interval:
+	if move_timer >= (move_interval * 0.6 if overcharge_active else move_interval):
 		move_timer = 0.0
 		_step()
 

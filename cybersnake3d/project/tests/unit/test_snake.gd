@@ -39,6 +39,7 @@ func _run_all() -> void:
 	_test_self_collision()
 	_test_evolution()
 	_test_overcharge_glow()
+	_test_overcharge_speed_boost()
 	_test_combo()
 	_test_hit()
 	_test_combo_decay()
@@ -130,6 +131,16 @@ func _test_evolution() -> void:
 	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
 	assert_eq(s.hp, s.max_hp, "evolution fully heals the snake")
+
+func _test_overcharge_speed_boost() -> void:
+	# During the overcharge burst window the snake moves faster (effective
+	# move interval shrinks to 0.6x), so it steps sooner than normal.
+	var snake := _make_snake()
+	var head_before: Vector2i = snake.body[0]
+	snake.overcharge_active = true
+	snake.move_timer = snake.move_interval * 0.7  # below normal, above burst threshold
+	snake._process(0.01)
+	assert_true(snake.body[0] != head_before, "snake dashes forward during overcharge burst")
 
 func _test_overcharge_glow() -> void:
 	var s := _make_snake()
@@ -245,12 +256,20 @@ func _test_burst() -> void:
 
 func _test_burst_kill_awards_xp() -> void:
 	# Overcharge burst kills must also feed evolution (consistent with head kills).
+	# Remove leftover EnemyManager siblings so ../EnemyManager resolves to ours.
+	for child in get_children():
+		if child.name == "EnemyManager":
+			child.free()
 	var enemy := Node.new()
 	var es := GDScript.new()
 	es.source_code = "extends Node\nvar pos = Vector2i(1, 1)\nvar is_dead = false\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\tis_dead = true"
 	es.reload()
 	enemy.set_script(es)
 	var mgr := Node.new()
+	var ms := GDScript.new()
+	ms.source_code = "extends Node\nvar enemies = []"
+	ms.reload()
+	mgr.set_script(ms)
 	mgr.name = "EnemyManager"
 	var snake := _make_snake()
 	snake.get_parent().add_child(mgr)
