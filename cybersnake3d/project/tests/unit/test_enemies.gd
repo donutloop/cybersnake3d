@@ -37,6 +37,24 @@ func _make_enemy(script: GDScript, path: String) -> Node:
 	_manager.add_child(e)
 	return e
 
+# ── snake attacks enemy (Section 6.3) ────────────────────────────────
+func _test_snake_head_attacks_enemy() -> void:
+	# When the snake's head moves into an enemy cell, the enemy takes 1
+	# damage and the snake sets just_attacked (attack grace) so enemies
+	# cannot instantly kill it on the same frame.
+	var enemy := Node.new()
+	var s := GDScript.new()
+	s.source_code = "extends Node\nvar hits = 0\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1"
+	s.reload()
+	enemy.set_script(s)
+	_manager.add_child(enemy)
+	var head: Vector2i = _snake.body[0]
+	enemy.pos = head
+	_snake.just_attacked = false
+	_snake._check_enemy_damage(head, false)
+	assert_eq(enemy.hits, 1, "snake head damages an enemy in its cell")
+	assert_true(_snake.just_attacked, "attack grants just_attacked grace")
+
 # ── glitch_drone ─────────────────────────────────────────────────────
 func _test_drone_take_damage() -> void:
 	var drone := _make_enemy(DroneScript, "drone")
