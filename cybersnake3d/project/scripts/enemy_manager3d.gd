@@ -137,6 +137,18 @@ func _spawn_enemy(script_path: String) -> void:
 	var enemy := Node3D.new()
 	enemy.set_script(script)
 	add_child(enemy)
+	# Spawn far from the snake head so enemies don't appear on top of it.
+	var snake := get_node_or_null("../Snake")
+	if snake and snake.body.size() > 0 and enemy.has_method("_update_position"):
+		var head: Vector2i = snake.body[0]
+		var gw: int = LevelSettings.grid_w
+		var gh: int = LevelSettings.grid_h
+		for attempt in range(60):
+			var cell := Vector2i(randi() % gw, randi() % gh)
+			if abs(cell.x - head.x) >= 5 or abs(cell.y - head.y) >= 5:
+				enemy.grid_pos = cell
+				enemy._update_position()
+				break
 	# Wave scaling: later waves spawn tougher, faster enemies.
 	var hpv: Variant = enemy.get("hp")
 	if hpv != null:
