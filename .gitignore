@@ -1,0 +1,12 @@
+# Godot 4.x import/cache directories
+.godot/
+
+# Godot editor/project metadata
+*.tmp
+
+# Godot binary
+Godot*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
