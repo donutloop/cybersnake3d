@@ -307,6 +307,18 @@ func _on_evolved(_stage: int) -> void:
 	evo_tween = create_tween()
 	flash_rect.color = Color(1.0, 1.0, 1.0, 0.8)
 	evo_tween.tween_property(flash_rect, "color", Color(1.0, 1.0, 1.0, 0.0), 1.0)
+	var banner := Label.new()
+	banner.text = "EVOLUTION UP!"
+	banner.add_theme_font_size_override("font_size", 32)
+	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	banner.add_theme_color_override("font_color", Color(0.4, 1.0, 0.9))
+	banner.position = Vector2(560, 120)
+	banner.size = Vector2(800, 44)
+	add_child(banner)
+	var tw := create_tween()
+	tw.tween_property(banner, "position:y", 60.0, 1.2)
+	tw.tween_property(banner, "modulate:a", 0.0, 0.6)
+	tw.finished.connect(func(): banner.queue_free())
 
 func _on_xp_changed(xp: int, _level: int, evo: int) -> void:
 	lvl_bar.value = xp % 50

@@ -93,6 +93,8 @@ Boss populations are capped at 2 concurrent per boss type (Sentinel, Hive Queen)
 
 Boss kills now announce a red `BOSS SLAIN +N` banner via a new `snake.boss_slain` signal emitted by the Sentinel (2000) and Hive Queen (2500).
 
+Evolution up shows a rising cyan `EVOLUTION UP!` banner alongside the existing white flash.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
