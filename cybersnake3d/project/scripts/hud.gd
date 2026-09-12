@@ -208,6 +208,9 @@ func _update_combo_label() -> void:
 	if combo >= 2 and timer > 0.0:
 		combo_label.visible = true
 		combo_label.text = "COMBO x%d" % combo
+		# Color tiers: x2-3 cyan, x4-5 gold, x6+ red-hot.
+		var color := Color(0.3, 1.0, 0.9) if combo < 4 else (Color(1, 0.85, 0.2) if combo < 6 else Color(1, 0.25, 0.25))
+		combo_label.add_theme_color_override("font_color", color)
 	else:
 		combo_label.visible = false
 		combo_label.text = ""

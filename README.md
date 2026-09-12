@@ -87,6 +87,8 @@ Wave announcements distinguish boss waves: wave 10+ shows a red `>>> BOSS WAVE N
 
 Wave 15+ spawns a second boss, the **Hive Queen** — a mobile amber boss that hatches Virus Swarm minions around itself (capped at 3 active) and dashes toward the snake's head. It shares the overcharge-burn contract and rewards 2500 score + 250 XP on death.
 
+Combo labels now color by tier: cyan at x2-3, gold at x4-5, red-hot at x6+.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
