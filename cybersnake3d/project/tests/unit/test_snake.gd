@@ -138,10 +138,14 @@ func _test_hit() -> void:
 	# A surviving hit reduces hp by 1 and grants i-frames.
 	s.hp = 2
 	s.max_hp = 2
+	# The hp_changed signal must fire with the new hp after each hit.
+	var recorded_hp: Array = [-1]
+	s.hp_changed.connect(func(v: int): recorded_hp[0] = v)
 	var survived1: bool = s._hit()
 	assert_true(survived1, "first hit is survived")
 	assert_eq(s.hp, 1, "hp reduces by 1 on hit")
 	assert_gt(s.invuln_timer, 0.0, "surviving hit grants i-frames")
+	assert_eq(recorded_hp[0], 1, "hp_changed signal fires with new hp")
 	# The second hit at hp=1 brings hp to 0 and is fatal, clamped at 0.
 	var survived2: bool = s._hit()
 	assert_false(survived2, "hit at hp=1 is fatal")
