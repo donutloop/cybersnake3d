@@ -75,6 +75,7 @@ $GODOT --editor --path cybersnake3d/project/
 | Split Echo | 8+ | Splits into non-splitting echoes when wounded |
 | **Warp Shard** | 9+ | Teleports to a distant edge cell when struck, forcing pursuit |
 | Blackwall Sentinel | 10+ | Boss, spawns drones |
+| **Wraith** | 12+ | Phases through body segments — only the head blocks it |
 | Hive Queen | 15+ | Boss, spawns swarm minions |
 
 A boss health bar (top of screen) appears while the Blackwall Sentinel is alive, fed from its `is_boss`/`hp`/`max_hp` each frame.

@@ -123,6 +123,10 @@ func _spawn_wave(w: int) -> void:
 		for i in range(w - 9):
 			_spawn_enemy_capped("res://scripts/enemies/blackwall_sentinel3d.gd", 2)
 
+	if w >= 12:
+		for i in range(w - 11):
+			_spawn_enemy("res://scripts/enemies/wraith3d.gd")
+
 	if w >= 15:
 		for i in range(w - 14):
 			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", 2)

@@ -15,6 +15,7 @@ const QueenScript = preload("res://scripts/enemies/hive_queen3d.gd")
 const SplitEchoScript = preload("res://scripts/enemies/split_echo3d.gd")
 const WarpShardScript = preload("res://scripts/enemies/warp_shard3d.gd")
 const HunterScript = preload("res://scripts/enemies/hunter3d.gd")
+const WraithScript = preload("res://scripts/enemies/wraith3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -360,6 +361,33 @@ func _test_hunter_dies_awards_xp() -> void:
 	assert_true(hunter.is_dead, "hunter dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "killing a hunter awards XP")
 
+
+# ── wraith ──────────────────────────────────────────────────────────────
+func _test_wraith_ignores_body_segments() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith")
+	# Place the wraith on a body segment that is NOT the head; stepping must
+	# still move it toward the head (body segments never block the wraith).
+	_snake.body[0] = Vector2i(5, 5)
+	_snake.body.resize(3)
+	_snake.body[1] = Vector2i(4, 5)
+	wraith.grid_pos = Vector2i(4, 5)
+	var moved: bool = false
+	for _i in range(10):
+		var before: Vector2i = wraith.grid_pos
+		wraith._step_toward_snake()
+		if wraith.grid_pos != before:
+			moved = true
+			break
+	assert_true(moved, "wraith steps through a body segment toward the head")
+
+func _test_wraith_dies_awards_xp() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith2")
+	var xp_before: int = _snake.xp
+	wraith.hp = 3
+	wraith.take_damage(99)
+	assert_true(wraith.is_dead, "wraith dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "killing a wraith awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -391,5 +419,7 @@ func _run_all() -> void:
 	_test_split_echo_dies_awards_xp()
 	_test_warp_shard_teleports_away_on_damage()
 	_test_hunter_accelerates_while_pursuing()
+	_test_wraith_ignores_body_segments()
+	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()

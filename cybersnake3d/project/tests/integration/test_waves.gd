@@ -51,6 +51,7 @@ func _run_all() -> void:
 	_test_wave8_spawns_split_echo()
 	_test_split_echo_fractures_on_damage()
 	_test_wave7_spawns_hunter()
+	_test_wave12_spawns_wraith()
 	_test_wave9_spawns_warp_shard()
 	_test_warp_shard_warps_when_hit()
 
@@ -306,6 +307,16 @@ func _test_wave7_spawns_hunter() -> void:
 	_manager._start_next_wave()  # wave becomes 7
 	assert_gt(_count_script(_manager.enemies, "hunter3d.gd"), 0,
 		"wave 7 spawns at least one hunter")
+
+
+func _test_wave12_spawns_wraith() -> void:
+	# Wave 12 gates the wraith: it must NOT spawn at wave 11 but must appear
+	# once the wave advances to 12.
+	_reset_enemies()
+	_manager.wave = 11
+	_manager._start_next_wave()  # wave becomes 12
+	assert_gt(_count_script(_manager.enemies, "wraith3d.gd"), 0,
+		"wave 12 spawns at least one wraith")
 
 func _reset_enemies() -> void:
 	# Test isolation: free every enemy node and clear the manager's array so
