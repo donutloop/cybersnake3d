@@ -59,6 +59,33 @@ func _test_snake_head_attacks_enemy() -> void:
 	assert_eq(enemy.hits, 1, "snake head damages an enemy in its cell")
 	assert_true(_snake.just_attacked, "attack grants just_attacked grace")
 
+func _test_snake_kill_awards_xp() -> void:
+	# Killing an enemy (Section 6.3 combat) must award XP toward evolution.
+	for c in _manager.get_children():
+		c.free()
+	var enemy := Node.new()
+	var s := GDScript.new()
+	s.source_code = "extends Node
+var hits = 0
+var dead = false
+var pos = Vector2i(0, 0)
+func get_grid_positions():
+	return [pos]
+func take_damage(_a):
+	hits += 1
+	dead = true
+func is_dead():
+	return dead"
+	s.reload()
+	enemy.set_script(s)
+	_manager.add_child(enemy)
+	var head: Vector2i = _snake.body[0]
+	enemy.pos = head
+	var xp_before: int = _snake.xp
+	_snake._check_enemy_damage(head, false)
+	assert_eq(enemy.hits, 1, "snake head kills the enemy")
+	assert_true(_snake.xp > xp_before, "killing an enemy awards XP")
+
 func _test_snake_tail_attack_no_grace() -> void:
 	# A tail-cell attack damages the enemy but must NOT grant just_attacked
 	# grace (only the head strike does), so the snake stays vulnerable.
@@ -285,3 +312,4 @@ func _run_all() -> void:
 	_test_queen_respects_invulnerability()
 	_test_snake_head_attacks_enemy()
 	_test_snake_tail_attack_no_grace()
+	_test_snake_kill_awards_xp()
