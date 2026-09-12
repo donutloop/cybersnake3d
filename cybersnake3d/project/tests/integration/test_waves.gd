@@ -36,6 +36,9 @@ func _run_all() -> void:
 	_test_phantom_teleports_near_snake()
 	_test_phantom_respects_invulnerability()
 	_test_phantom_damages_vulnerable_snake()
+	_test_wave4_spawns_shredder()
+	_test_shredder_respects_invulnerability()
+	_test_shredder_damages_vulnerable_snake()
 
 func _test_topology() -> void:
 	assert_not_null(_snake, "Snake node present in test scene")
@@ -90,6 +93,34 @@ func _test_phantom_damages_vulnerable_snake() -> void:
 	var hp_before: int = _snake.hp
 	phantom._check_snake_collision()
 	assert_eq(_snake.hp, hp_before - 1, "phantom damages a vulnerable snake")
+
+func _test_wave4_spawns_shredder() -> void:
+	# Wave 4 gates the cascade_shredder (tier 3 dasher).
+	_manager.wave = 3
+	_manager._start_next_wave()  # wave becomes 4
+	var shredder := _find_enemy(_manager.enemies, "cascade_shredder3d.gd")
+	assert_not_null(shredder, "wave 4 spawns a cascade_shredder enemy")
+
+func _test_shredder_respects_invulnerability() -> void:
+	var shredder := _find_enemy(_manager.enemies, "cascade_shredder3d.gd")
+	if shredder == null:
+		return
+	_snake.invuln_timer = 2.0
+	shredder.grid_pos = _snake.body[0]
+	var hp_before: int = _snake.hp
+	shredder._check_snake_collision()
+	assert_eq(_snake.hp, hp_before, "shredder never damages an invulnerable snake")
+
+func _test_shredder_damages_vulnerable_snake() -> void:
+	var shredder := _find_enemy(_manager.enemies, "cascade_shredder3d.gd")
+	if shredder == null:
+		return
+	_snake.invuln_timer = 0.0
+	_snake.just_attacked = false
+	shredder.grid_pos = _snake.body[0]
+	var hp_before: int = _snake.hp
+	shredder._check_snake_collision()
+	assert_eq(_snake.hp, hp_before - 1, "shredder damages a vulnerable snake")
 
 func _find_enemy(enemies: Array, script_fragment: String) -> Node:
 	for e in enemies:

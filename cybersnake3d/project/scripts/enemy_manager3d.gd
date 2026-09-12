@@ -84,6 +84,7 @@ func _spawn_wave(w: int) -> void:
 	if w >= 4:
 		for i in range(w - 2):
 			_spawn_enemy("res://scripts/enemies/compiler_worm3d.gd")
+			_spawn_enemy("res://scripts/enemies/cascade_shredder3d.gd")
 
 	if w >= 5:
 		for i in range(w - 3):

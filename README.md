@@ -60,7 +60,19 @@ $GODOT --editor --path cybersnake3d/project/
 
 **Controls**: Arrow keys to steer, Enter to restart after death.
 
-### Gameplay Features
+#### Enemy Roster (wave-gated)
+
+| Enemy | Wave | Behavior |
+|-------|------|----------|
+| Glitch Drone | 1 | Random walk stutter |
+| Virus Swarm | 2+ | Boid flock |
+| Net Reaper | 3+ | A* hunter with frenzy |
+| Compiler Worm | 4+ | Snake-like trail |
+| **Cascade Shredder** | 4+ | Telegraphs a glowing line, then lunges straight down a row/column at high speed; a hit knocks it out of the charge |
+| Phantom Protocol | 5+ | Phase-shifting teleport |
+| Blackwall Sentinel | 10+ | Boss, spawns drones |
+
+## Gameplay Features
 
 - **Overcharge window** (evolution stage ≥ 5): when the snake eats an ICE
   shard it enters a brief invulnerable + lethal state. The whole body now
