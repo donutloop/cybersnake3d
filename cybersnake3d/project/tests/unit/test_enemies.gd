@@ -16,6 +16,7 @@ const SplitEchoScript = preload("res://scripts/enemies/split_echo3d.gd")
 const WarpShardScript = preload("res://scripts/enemies/warp_shard3d.gd")
 const HunterScript = preload("res://scripts/enemies/hunter3d.gd")
 const WraithScript = preload("res://scripts/enemies/wraith3d.gd")
+const ScoreLeechScript = preload("res://scripts/enemies/score_leech3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -388,6 +389,26 @@ func _test_wraith_dies_awards_xp() -> void:
 	assert_true(wraith.is_dead, "wraith dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "killing a wraith awards XP")
 
+
+# ── score_leech ─────────────────────────────────────────────────────────
+func _test_leech_drains_score_on_head_collision() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech")
+	_snake.body[0] = leech.grid_pos
+	_snake.score = 1000
+	_snake.invuln_timer = 0.0   # snake must be vulnerable for the leech to latch
+	_snake.just_attacked = false
+	leech._check_snake_collision()
+	assert_true(_snake.is_alive, "leech does not kill the snake")
+	assert_lt(_snake.score, 1000, "leech drains a fraction of the score")
+
+func _test_leech_dies_awards_xp() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech2")
+	var xp_before: int = _snake.xp
+	leech.hp = 3
+	leech.take_damage(99)
+	assert_true(leech.is_dead, "leech dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "killing a leech awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -420,6 +441,8 @@ func _run_all() -> void:
 	_test_warp_shard_teleports_away_on_damage()
 	_test_hunter_accelerates_while_pursuing()
 	_test_wraith_ignores_body_segments()
+	_test_leech_drains_score_on_head_collision()
+	_test_leech_dies_awards_xp()
 	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()
