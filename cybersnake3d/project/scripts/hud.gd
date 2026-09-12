@@ -16,6 +16,8 @@ var hp_bar: ProgressBar
 var combo_label: Label
 var gain_popup: Label
 var combo_bar: ProgressBar
+var boss_bar: ProgressBar
+var boss_label: Label
 var flash_rect: ColorRect
 var evo_tween: Tween
 
@@ -118,6 +120,26 @@ func _ready() -> void:
 	combo_bar.value = 0.0
 	combo_bar.visible = false
 	add_child(combo_bar)
+
+	# Boss health bar (top of screen, hidden until a boss spawns)
+	boss_label = Label.new()
+	boss_label.text = ">>> BLACKWALL SENTINEL <<<"
+	boss_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	boss_label.add_theme_font_size_override("font_size", 22)
+	boss_label.position = Vector2(0, 6)
+	boss_label.size = Vector2(1920, 30)
+	boss_label.visible = false
+	add_child(boss_label)
+
+	boss_bar = ProgressBar.new()
+	boss_bar.position = Vector2(20, 40)
+	boss_bar.size = Vector2(1880, 14)
+	boss_bar.min_value = 0.0
+	boss_bar.max_value = 1.0
+	boss_bar.value = 1.0
+	boss_bar.show_percentage = false
+	boss_bar.visible = false
+	add_child(boss_bar)
 	
 	call_deferred("_connect_signals")
 	update_hud(0, 1, 3)
@@ -149,6 +171,7 @@ func _process(delta: float) -> void:
 	_update_combo_label()
 	_update_gain_popup()
 	_update_combo_bar()
+	_update_boss_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
 		get_tree().reload_current_scene()
@@ -205,6 +228,26 @@ func _update_combo_bar() -> void:
 	else:
 		combo_bar.visible = false
 		combo_bar.value = 0.0
+
+func _update_boss_bar() -> void:
+	var manager := get_node_or_null("../EnemyManager")
+	var boss: Node = null
+	if manager:
+		var enemies: Array = manager.get("enemies")
+		for e in enemies:
+			if e and e.get("is_boss"):
+				boss = e
+				break
+	if boss and boss.get("hp") != null and boss.get("max_hp") != null:
+		var hp: float = boss.get("hp")
+		var max_hp: float = boss.get("max_hp")
+		boss_bar.max_value = max_hp
+		boss_bar.value = hp
+		boss_bar.visible = true
+		boss_label.visible = true
+	else:
+		boss_bar.visible = false
+		boss_label.visible = false
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	score_label.text = "SCORE: %d" % p_score

@@ -72,6 +72,8 @@ $GODOT --editor --path cybersnake3d/project/
 | Phantom Protocol | 5+ | Phase-shifting teleport |
 | Blackwall Sentinel | 10+ | Boss, spawns drones |
 
+A boss health bar (top of screen) appears while the Blackwall Sentinel is alive, fed from its `is_boss`/`hp`/`max_hp` each frame.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.

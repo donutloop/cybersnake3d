@@ -39,6 +39,7 @@ func _run_all() -> void:
 	_test_wave4_spawns_shredder()
 	_test_shredder_respects_invulnerability()
 	_test_shredder_damages_vulnerable_snake()
+	_test_wave10_spawns_boss()
 
 func _test_topology() -> void:
 	assert_not_null(_snake, "Snake node present in test scene")
@@ -121,6 +122,16 @@ func _test_shredder_damages_vulnerable_snake() -> void:
 	var hp_before: int = _snake.hp
 	shredder._check_snake_collision()
 	assert_eq(_snake.hp, hp_before - 1, "shredder damages a vulnerable snake")
+
+func _test_wave10_spawns_boss() -> void:
+	# Wave 10 gates the blackwall sentinel (boss). Verify its boss flag + HP.
+	_manager.wave = 9
+	_manager._start_next_wave()  # wave becomes 10
+	var sentinel := _find_enemy(_manager.enemies, "blackwall_sentinel3d.gd")
+	assert_not_null(sentinel, "wave 10 spawns the blackwall sentinel boss")
+	if sentinel:
+		assert_eq(sentinel.is_boss, true, "sentinel is flagged as boss")
+		assert_true(sentinel.get("max_hp") > 0, "sentinel has boss HP")
 
 func _find_enemy(enemies: Array, script_fragment: String) -> Node:
 	for e in enemies:

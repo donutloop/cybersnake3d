@@ -7,6 +7,7 @@ var grid_pos := Vector2i(18, 18)
 var hp: int = 10
 var max_hp: int = 10
 var is_dead: bool = false
+var is_boss: bool = true
 var phase: int = 1
 var drone_spawn_timer: float = 5.0
 var pulse: float = 0.0
@@ -69,7 +70,7 @@ func _check_snake_collision() -> void:
 	var snake := get_node_or_null("../../Snake")
 	if not snake or not snake.is_alive or snake.body.size() == 0:
 		return
-	var head := snake.body[0]
+	var head: Vector2i = snake.body[0]
 	if snake.is_invulnerable():
 		if snake.overcharge_active:
 			for dy in range(3):
