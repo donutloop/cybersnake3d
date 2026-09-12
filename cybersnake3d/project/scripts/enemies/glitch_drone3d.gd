@@ -175,7 +175,8 @@ func _check_snake_collision() -> void:
 		snake._die()
 
 func take_damage(amount: int = 1) -> void:
-	hp -= amount
+	# HP never goes negative.
+	hp = maxi(0, hp - amount)
 	if hp <= 0:
 		_die()
 
