@@ -41,6 +41,7 @@ func _run_all() -> void:
 	_test_shredder_damages_vulnerable_snake()
 	_test_wave10_spawns_boss()
 	_test_wave15_spawns_hive_queen()
+	_test_boss_population_capped()
 	_test_wave6_spawns_web()
 	_test_web_respects_invulnerability()
 
@@ -146,6 +147,17 @@ func _test_wave15_spawns_hive_queen() -> void:
 		assert_eq(queen.is_boss, true, "hive queen is flagged as boss")
 		assert_true(queen.get("max_hp") >= 16, "hive queen has high boss HP")
 
+func _test_boss_population_capped() -> void:
+	# At wave 20 both bosses should spawn, but at most 2 of each stay active.
+	_manager.wave = 19
+	_manager._start_next_wave()  # wave becomes 20
+	var sentinels := _count_script(_manager.enemies, "blackwall_sentinel3d.gd")
+	var queens := _count_script(_manager.enemies, "hive_queen3d.gd")
+	assert_true(sentinels >= 1, "wave 20 spawns at least one sentinel")
+	assert_true(sentinels <= 2, "sentinel population capped at 2")
+	assert_true(queens >= 1, "wave 20 spawns at least one hive queen")
+	assert_true(queens <= 2, "hive queen population capped at 2")
+
 func _test_wave6_spawns_web() -> void:
 	# Wave 6 gates the static_web (tier 4 area-denial crawler).
 	_manager.wave = 5
@@ -170,6 +182,13 @@ func _test_web_respects_invulnerability() -> void:
 	web._check_residue_collision(_snake)
 	_snake.overcharge_active = false
 	assert_eq(_snake.hp, hp_before, "overcharge burns residue without hurting the snake")
+
+func _count_script(enemies: Array, script_fragment: String) -> int:
+	var n := 0
+	for e in enemies:
+		if e and e.get_script() and e.get_script().resource_path.contains(script_fragment):
+			n += 1
+	return n
 
 func _find_enemy(enemies: Array, script_fragment: String) -> Node:
 	for e in enemies:

@@ -103,11 +103,21 @@ func _spawn_wave(w: int) -> void:
 
 	if w >= 10:
 		for i in range(w - 9):
-			_spawn_enemy("res://scripts/enemies/blackwall_sentinel3d.gd")
+			_spawn_enemy_capped("res://scripts/enemies/blackwall_sentinel3d.gd", 2)
 
 	if w >= 15:
 		for i in range(w - 14):
-			_spawn_enemy("res://scripts/enemies/hive_queen3d.gd")
+			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", 2)
+
+func _spawn_enemy_capped(script_path: String, cap: int) -> void:
+	# Only spawn if fewer than `cap` enemies of this script type are active.
+	var active := 0
+	for e in enemies:
+		if e and e.get_script() and e.get_script().resource_path == script_path:
+			active += 1
+	if active >= cap:
+		return
+	_spawn_enemy(script_path)
 
 func _spawn_enemy(script_path: String) -> void:
 	var script := load(script_path) as GDScript
