@@ -547,7 +547,7 @@ func _magnet_shards() -> void:
 	var shards: Array = spawner.shards if "shards" in spawner else []
 	var eaten: Array[Vector2i] = []
 	for cell in shards:
-		if abs(cell.x - origin.x) <= 2 and abs(cell.y - origin.y) <= 2:
+		if abs(cell.x - origin.x) <= 1 + clampi(evolution_stage, 1, 3) and abs(cell.y - origin.y) <= 1 + clampi(evolution_stage, 1, 3):
 			if spawner.try_eat(cell):
 				eaten.append(cell)
 	for cell in eaten:
@@ -571,7 +571,7 @@ func _release_burst() -> void:
 		if not e or not e.has_method("get_grid_positions") or not e.has_method("take_damage"):
 			continue
 		for cell in e.get_grid_positions():
-			if abs(cell.x - origin.x) <= 2 and abs(cell.y - origin.y) <= 2:
+			if abs(cell.x - origin.x) <= 1 + clampi(evolution_stage, 1, 3) and abs(cell.y - origin.y) <= 1 + clampi(evolution_stage, 1, 3):
 				e.take_damage(1)
 				break
 

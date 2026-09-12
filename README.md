@@ -113,6 +113,8 @@ Enemy spawns are now placed far from the snake head (distance >= 5, retried up t
 
 Pausing now shows a gold `PAUSED` overlay via `_update_pause()` reading `get_tree().paused`.
 
+Overcharge burst and shard-magnet radii now scale with evolution stage: radius = 1 + clamp(stage, 1, 3), so higher evolutions sweep a wider area.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
