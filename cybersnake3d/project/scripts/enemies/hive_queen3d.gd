@@ -120,8 +120,9 @@ func _check_snake_collision() -> void:
 	var head: Vector2i = snake.body[0]
 	if head != grid_pos:
 		return
-	if snake.is_invulnerable() and snake.overcharge_active:
-		take_damage(1)
+	if snake.is_invulnerable():
+		if snake.overcharge_active:
+			take_damage(1)
 		return
 	snake._die()
 

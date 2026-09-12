@@ -42,6 +42,10 @@ func _test_snake_head_attacks_enemy() -> void:
 	# When the snake's head moves into an enemy cell, the enemy takes 1
 	# damage and the snake sets just_attacked (attack grace) so enemies
 	# cannot instantly kill it on the same frame.
+	# The snake damages the FIRST matching enemy, so clear earlier test
+	# enemies to guarantee the mock is the only occupant of the head cell.
+	for c in _manager.get_children():
+		c.free()
 	var enemy := Node.new()
 	var s := GDScript.new()
 	s.source_code = "extends Node\nvar hits = 0\nvar pos = Vector2i(0, 0)\nfunc get_grid_positions():\n\treturn [pos]\nfunc take_damage(_a):\n\thits += 1"
@@ -220,6 +224,19 @@ func _test_queen_damage_reduces_hp() -> void:
 	queen.take_damage(1)
 	assert_lt(queen.hp, queen.max_hp, "queen hp drops on damage")
 
+func _test_queen_respects_invulnerability() -> void:
+	# Section 4 invariant: an enemy must never call snake._die() while the
+	# snake is invulnerable — it only damages itself during overcharge.
+	var queen := _make_enemy(QueenScript, "queen_invuln")
+	var head: Vector2i = _snake.body[0]
+	queen.grid_pos = head
+	_snake.invuln_timer = 2.0   # spawn/hit grace: queen must not kill
+	var hp_before: int = queen.hp
+	_snake.is_alive = true
+	queen._check_snake_collision()
+	assert_true(_snake.is_alive, "queen cannot kill an invulnerable snake")
+	assert_eq(queen.hp, hp_before, "queen does not self-damage while snake is invulnerable (not overcharging)")
+
 # ── runner ─────────────────────────────────────────────────────────────
 func _run_all() -> void:
 	_make_snake()
@@ -243,3 +260,5 @@ func _run_all() -> void:
 	_test_sentinel_enrages_at_low_hp()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
+	_test_queen_respects_invulnerability()
+	_test_snake_head_attacks_enemy()
