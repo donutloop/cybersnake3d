@@ -43,6 +43,7 @@ func _run_all() -> void:
 	_test_wave15_spawns_hive_queen()
 	_test_boss_population_capped()
 	_test_sentinel_enrage()
+	_test_hive_queen_enrage()
 	_test_wave6_spawns_web()
 	_test_web_respects_invulnerability()
 
@@ -169,6 +170,17 @@ func _test_sentinel_enrage() -> void:
 		while not sentinel.enraged and sentinel.hp > 0:
 			sentinel.take_damage(1)
 	assert_eq(sentinel.enraged, true, "sentinel enrages below half HP")
+
+func _test_hive_queen_enrage() -> void:
+	# Hive queen enrages below half HP and immediately hatches swarms.
+	_manager.wave = 14
+	_manager._start_next_wave()  # wave 15 spawns a hive queen
+	var queen := _find_enemy(_manager.enemies, "hive_queen3d.gd")
+	assert_not_null(queen, "wave 15 spawns a hive queen for enrage test")
+	if queen:
+		while not queen.enraged and queen.hp > 0:
+			queen.take_damage(1)
+	assert_eq(queen.enraged, true, "hive queen enrages below half HP")
 
 func _test_wave6_spawns_web() -> void:
 	# Wave 6 gates the static_web (tier 4 area-denial crawler).

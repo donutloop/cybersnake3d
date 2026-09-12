@@ -14,6 +14,7 @@ var max_hp: int = 16
 var is_dead: bool = false
 var is_boss: bool = true
 var swarm_timer: float = 6.0
+var enraged: bool = false
 var move_timer: float = 0.0
 var pulse: float = 0.0
 var flash_timer: float = 0.0
@@ -105,7 +106,7 @@ func _update_visual(delta: float) -> void:
 		flash_timer = maxf(flash_timer - delta, 0.0)
 		mat.emission_energy_multiplier = 14.0
 	else:
-		mat.emission_energy_multiplier = 3.0 + sin(pulse * 2.0) * 1.0
+		mat.emission_energy_multiplier = (6.0 if enraged else 3.0) + sin(pulse * 2.0) * 1.0
 
 # ── collision / overcharge burn ────────────────────────────────────
 func _check_snake_collision() -> void:
@@ -123,6 +124,9 @@ func _check_snake_collision() -> void:
 func take_damage(amount: int = 1) -> void:
 	hp = maxi(0, hp - amount)
 	flash_timer = 0.25
+	if hp <= max_hp / 2 and not enraged:
+		enraged = true
+		swarm_timer = 0.0
 	if hp <= 0:
 		_die()
 
