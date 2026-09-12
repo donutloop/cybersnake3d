@@ -12,6 +12,7 @@ const PhantomScript = preload("res://scripts/enemies/phantom_protocol3d.gd")
 const WebScript = preload("res://scripts/enemies/static_web3d.gd")
 const SentinelScript = preload("res://scripts/enemies/blackwall_sentinel3d.gd")
 const QueenScript = preload("res://scripts/enemies/hive_queen3d.gd")
+const SplitEchoScript = preload("res://scripts/enemies/split_echo3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -22,6 +23,12 @@ func _ready() -> void:
 	_finish()
 
 func _make_snake() -> void:
+	# Free any leftover Snake children so enemy "../../Snake" paths always
+	# resolve to the _snake member (a stray sibling would shadow it and
+	# receive XP/score awards instead).
+	for c in get_children():
+		if c.name == "Snake":
+			c.free()
 	_snake = SnakeScript.new()
 	_snake.name = "Snake"
 	add_child(_snake)
@@ -276,6 +283,36 @@ func _test_queen_respects_invulnerability() -> void:
 	assert_true(_snake.is_alive, "queen cannot kill an invulnerable snake")
 	assert_eq(queen.hp, hp_before, "queen does not self-damage while snake is invulnerable (not overcharging)")
 
+func _test_split_fractures_on_damage() -> void:
+	var echo := _make_enemy(SplitEchoScript, "split")
+	echo.hp = 6
+	echo.max_hp = 6
+	var before: int = _manager.enemies.size()
+	echo.take_damage(3)   # drop to half HP -> fractures into offspring
+	assert_true(echo.split_used, "echo splits once below half hp")
+	assert_gt(_manager.enemies.size(), before, "echo fractures into offspring")
+
+func _test_split_offspring_cannot_split() -> void:
+	var echo := _make_enemy(SplitEchoScript, "split")
+	echo.hp = 6
+	echo.max_hp = 6
+	echo.take_damage(3)
+	var before: int = _manager.enemies.size()
+	# Damaging an offspring must NOT trigger another split.
+	for c in _manager.get_children():
+		if c != echo and c.has_method("take_damage") and not c.is_dead:
+			c.take_damage(1)
+			break
+	assert_eq(_manager.enemies.size(), before, "offspring cannot split further")
+
+func _test_split_echo_dies_awards_xp() -> void:
+	var echo := _make_enemy(SplitEchoScript, "split")
+	echo.hp = 3
+	var xp_before: int = _snake.xp
+	echo.take_damage(99)
+	assert_true(echo.is_dead, "echo dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "killing a split echo awards XP")
+
 # ── runner ─────────────────────────────────────────────────────────────
 func _run_all() -> void:
 	_make_snake()
@@ -303,3 +340,6 @@ func _run_all() -> void:
 	_test_snake_head_attacks_enemy()
 	_test_snake_tail_attack_no_grace()
 	_test_snake_kill_awards_xp()
+	_test_split_fractures_on_damage()
+	_test_split_offspring_cannot_split()
+	_test_split_echo_dies_awards_xp()
