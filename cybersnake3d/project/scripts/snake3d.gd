@@ -59,6 +59,7 @@ var eye_mat: StandardMaterial3D
 
 signal died
 signal hp_changed(hp: int)
+signal hurt
 signal ate_shard
 signal score_changed(new_score: int)
 signal evolved(stage: int)
@@ -308,6 +309,7 @@ func _hit() -> bool:
 	# HP is clamped at 0 so it never goes negative. Pure logic for unit tests.
 	hp = maxi(0, hp - 1)
 	hp_changed.emit(hp)
+	hurt.emit()
 	if hp <= 0:
 		is_alive = false
 		return false

@@ -23,6 +23,7 @@ var enemy_count_label: Label
 var combo_bar: ProgressBar
 var _combo_live: bool = false
 var _combo_flash: float = 0.0
+var _hurt_flash: float = 0.0
 var boss_bar: ProgressBar
 var boss_label: Label
 var flash_rect: ColorRect
@@ -180,6 +181,8 @@ func _ready() -> void:
 func _connect_signals() -> void:
 	var snake := get_node_or_null("../Snake")
 	if snake:
+		if snake.has_signal("hurt"):
+			snake.hurt.connect(_on_hurt)
 		if snake.has_signal("score_changed"):
 			snake.score_changed.connect(_on_score_changed)
 		if snake.has_signal("died"):
@@ -281,6 +284,11 @@ func _update_combo_bar() -> void:
 		combo_bar.modulate = Color(1.0, 0.2, 0.2)
 	else:
 		combo_bar.modulate = Color.WHITE
+	if _hurt_flash > 0.0:
+		_hurt_flash = maxf(_hurt_flash - 0.08, 0.0)
+		flash_rect.color = Color(1.0, 0.1, 0.1, _hurt_flash)
+	else:
+		flash_rect.color = Color(1.0, 1.0, 1.0, 0.0)
 
 func _update_boss_bar() -> void:
 	var manager := get_node_or_null("../EnemyManager")
@@ -333,6 +341,9 @@ func _on_ate_shard() -> void:
 	var length: int = snake.body.size() if snake else 0
 	var sc: int = snake.score if snake else 0
 	update_hud(sc, 1, length)
+
+func _on_hurt() -> void:
+	_hurt_flash = 0.45
 
 func _on_snake_died() -> void:
 	var snake := get_node_or_null("../Snake")
