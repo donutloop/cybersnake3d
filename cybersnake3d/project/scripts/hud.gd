@@ -19,6 +19,7 @@ var combo_label: Label
 var gain_popup: Label
 var countdown_label: Label
 var paused_label: Label
+var enemy_count_label: Label
 var combo_bar: ProgressBar
 var boss_bar: ProgressBar
 var boss_label: Label
@@ -181,6 +182,7 @@ func _process(delta: float) -> void:
 	_update_gain_popup()
 	_update_combo_bar()
 	_update_wave_countdown()
+	_update_enemy_count()
 	_update_pause()
 	_update_boss_bar()
 
@@ -238,6 +240,12 @@ func _update_gain_popup() -> void:
 	countdown_label.size = Vector2(800, 30)
 	countdown_label.visible = false
 	add_child(countdown_label)
+	enemy_count_label = Label.new()
+	enemy_count_label.add_theme_font_size_override("font_size", 18)
+	enemy_count_label.add_theme_color_override("font_color", Color(1.0, 0.5, 0.5))
+	enemy_count_label.position = Vector2(20, 205)
+	enemy_count_label.visible = true
+	add_child(enemy_count_label)
 	paused_label = Label.new()
 	paused_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	paused_label.add_theme_font_size_override("font_size", 40)
@@ -353,6 +361,16 @@ func _update_wave_countdown() -> void:
 	if countdown_label:
 		countdown_label.text = "NEXT WAVE IN %d" % secs
 		countdown_label.visible = true
+
+func _update_enemy_count() -> void:
+	var mgr := get_node_or_null("../EnemyManager")
+	var alive: int = 0
+	if mgr and "enemies" in mgr:
+		for e in mgr.enemies:
+			if e and e.is_inside_tree():
+				alive += 1
+	if enemy_count_label:
+		enemy_count_label.text = "ENEMIES LEFT: %d" % alive
 
 func _update_pause() -> void:
 	var paused: bool = get_tree().paused if get_tree() else false

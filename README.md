@@ -121,6 +121,8 @@ The overcharge meter now tints red during the final second before the burst (a r
 
 Boss death now cleans up its minions: the Sentinel kills its tagged drones and the Hive Queen kills its tagged swarms on `_die`.
 
+The HUD now shows a live `ENEMIES LEFT` counter, counting in-tree enemies each frame.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
