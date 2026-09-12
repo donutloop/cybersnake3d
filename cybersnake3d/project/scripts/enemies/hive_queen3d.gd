@@ -132,6 +132,7 @@ func _die() -> void:
 	if snake:
 		snake.score += 2500
 		snake.score_changed.emit(snake.score)
+		snake.boss_slain.emit(2500)
 		if snake.has_method("add_xp"):
 			snake.add_xp(250)
 	queue_free()

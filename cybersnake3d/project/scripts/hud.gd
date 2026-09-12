@@ -159,6 +159,8 @@ func _connect_signals() -> void:
 			snake.evolved.connect(_on_evolved)
 		if snake.has_signal("xp_changed"):
 			snake.xp_changed.connect(_on_xp_changed)
+		if snake.has_signal("boss_slain"):
+			snake.boss_slain.connect(_on_boss_slain)
 		var manager := get_node_or_null("../EnemyManager")
 		if manager and manager.has_signal("wave_cleared"):
 			manager.wave_cleared.connect(_on_wave_cleared)
@@ -316,3 +318,18 @@ func _on_xp_changed(xp: int, _level: int, evo: int) -> void:
 	evo_bar.min_value = current_thresh
 	evo_bar.max_value = next_thresh
 	evo_bar.value = clampf(xp, current_thresh, next_thresh)
+
+func _on_boss_slain(value: int) -> void:
+	# Red banner announcing a boss kill reward.
+	var banner := Label.new()
+	banner.text = "BOSS SLAIN +%d" % value
+	banner.add_theme_font_size_override("font_size", 28)
+	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	banner.add_theme_color_override("font_color", Color(1, 0.3, 0.3))
+	banner.position = Vector2(560, 120)
+	banner.size = Vector2(800, 40)
+	add_child(banner)
+	var tw := create_tween()
+	tw.tween_property(banner, "position:y", 60.0, 1.0)
+	tw.tween_property(banner, "modulate:a", 0.0, 0.5)
+	tw.finished.connect(func(): banner.queue_free())

@@ -62,6 +62,7 @@ signal ate_shard
 signal score_changed(new_score: int)
 signal evolved(stage: int)
 signal xp_changed(current_xp: int, current_level: int, current_evo: int)
+signal boss_slain(value: int)
 
 func _ready() -> void:
 	# Load custom meshes if they exist in the assets directory

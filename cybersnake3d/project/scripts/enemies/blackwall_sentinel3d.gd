@@ -102,6 +102,7 @@ func _die() -> void:
 	if snake:
 		snake.score += 2000
 		snake.score_changed.emit(snake.score)
+		snake.boss_slain.emit(2000)
 		if snake.has_method("add_xp"):
 			snake.add_xp(200)
 	var hud := get_node_or_null("../../HUD")

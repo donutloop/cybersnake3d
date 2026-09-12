@@ -91,6 +91,8 @@ Combo labels now color by tier: cyan at x2-3, gold at x4-5, red-hot at x6+.
 
 Boss populations are capped at 2 concurrent per boss type (Sentinel, Hive Queen) to keep the field manageable at high waves.
 
+Boss kills now announce a red `BOSS SLAIN +N` banner via a new `snake.boss_slain` signal emitted by the Sentinel (2000) and Hive Queen (2500).
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
