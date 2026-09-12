@@ -7,20 +7,17 @@ shader_type canvas_item;
 render_mode unshaded;
 
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
-uniform float scanline_strength : hint_range(0.0, 1.0) = 0.25;
-uniform float aberration_strength : hint_range(0.0, 0.1) = 0.02;
-uniform float vignette_strength : hint_range(0.0, 1.0) = 0.4;
+uniform float scanline_strength : hint_range(0.0, 1.0) = 0.18;
+uniform float vignette_strength : hint_range(0.0, 1.0) = 0.35;
 uniform float scanline_freq = 480.0;
 
 void fragment() {
 	vec2 uv = UV;
 	vec2 dir = uv - vec2(0.5);
 
-	// Chromatic aberration: sample R and B slightly offset from the center.
-	vec3 col;
-	col.r = texture(screen_texture, uv + dir * aberration_strength).r;
-	col.g = texture(screen_texture, uv).g;
-	col.b = texture(screen_texture, uv - dir * aberration_strength).b;
+	// Single clean sample: no chromatic aberration, so HUD text/bars never
+	// get duplicated into red/blue ghost copies.
+	vec3 col = texture(screen_texture, uv).rgb;
 
 	// Scanlines along the vertical axis.
 	float scan = sin(uv.y * scanline_freq * 3.14159);
