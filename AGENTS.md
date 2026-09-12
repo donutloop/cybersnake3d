@@ -191,7 +191,8 @@ Agents must treat work on this repository as a **continuous loop, not a one-off 
    Fix all parse/script errors before proceeding.
 4. **Manually verify gameplay-affecting changes** by launching the game (`$GODOT --path project/`) and confirming the invulnerability, collision, and wave-gating rules in Sections 4 and 6.3 still hold.
 5. Commit with a clear message (`feat(enemy): add tier-3 hunter`, `fix(shader): remove return from crt.gdshader fragment`).
-6. **Always push the commit**: `git push origin HEAD`.
+6. **Always push the commit**: `git push origin HEAD`
+7. **Run the test suite before committing** — `tests/run_tests.sh` must report `TEST RESULT: PASSED` (unit + integration). A commit that breaks the suite is rejected..
 7. If the remote has diverged, `git pull --rebase origin HEAD`, resolve, then push again.
 8. Return to step 1 and repeat — never stop iterating on the game.
 
@@ -215,3 +216,25 @@ Agents must treat work on this repository as a **continuous loop, not a one-off 
 
 
 *Last updated from docs.godotengine.org/en/stable.*
+
+## 9. Testing & Integration (Required)
+
+Testing is a first-class project requirement. The framework lives in `tests/`
+and is documented in `tests/README.md`.
+
+- **Architecture**: `tests/test_runner.gd` is the base framework (assertions,
+  summary, exit code). `tests/unit/test_snake.gd` covers snake3d.gd pure logic;
+  `tests/integration/test_waves.gd` runs against a scene that mirrors main.tscn
+  (Snake + EnemyManager siblings) so enemy `../../Snake` paths resolve exactly.
+- **Runner**: `GODOT=/path/to/godot tests/run_tests.sh` runs both suites
+  headless and exits non-zero on any failure (CI-friendly).
+- **Determinism**: unit suites disable auto-processing and drive methods
+  directly; integration suites freeze the wave manager and call the real
+  `_start_next_wave()`.
+- **Signal callbacks**: use method callables (`Callable(self, "_on_*")`), never
+  captured-local lambdas — Godot 4 does not reliably invoke those from emitted
+  signals.
+- **Regression guard**: the wave-5 integration assertion is the regression test
+  for the `phantom_protocol3d.gd` gap and for Variant-inference parse bugs that
+  once prevented enemy scripts from loading.
+

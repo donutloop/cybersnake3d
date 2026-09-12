@@ -68,6 +68,19 @@ See [AGENTS.md](./AGENTS.md) for coding standards, scene tree conventions, and p
 
 ---
 
+## Testing & Integration (Required)
+
+Tests are a first-class requirement — see `AGENTS.md §9` and `tests/README.md`.
+
+```bash
+GODOT=/path/to/godot tests/run_tests.sh
+```
+
+Runs the unit suite (`tests/unit/test_snake.gd`) and the integration suite
+(`tests/integration/test_waves.gd`) headless and exits non-zero on any failure.
+The integration suite is a regression guard for enemy spawning (phantom, worm,
+reaper) and the snake invulnerability contract.
+
 ## License
 
 - [Godot Engine — MIT](https://github.com/godotengine/godot/blob/master/LICENSE.txt)

@@ -122,8 +122,8 @@ func _teleport_near_snake() -> void:
 func _step_toward_snake() -> void:
 	var snake := get_node_or_null("../../Snake")
 	if snake and snake.body.size() > 0:
-		var head := snake.body[0]
-		var diff := head - grid_pos
+		var head: Vector2i = snake.body[0]
+		var diff: Vector2i = head - grid_pos
 		var step := Vector2i.ZERO
 		if abs(diff.x) >= abs(diff.y):
 			step.x = signi(diff.x)

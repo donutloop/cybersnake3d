@@ -40,7 +40,7 @@ func _step() -> void:
 	var snake := get_node_or_null("../../Snake")
 	var target := head + direction
 	if snake and snake.body.size() > 0:
-		var diff := snake.body[0] - head
+		var diff: Vector2i = snake.body[0] - head
 		if abs(diff.x) >= abs(diff.y):
 			target = head + Vector2i(signi(diff.x), 0)
 		else:

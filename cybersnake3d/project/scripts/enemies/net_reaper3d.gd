@@ -61,7 +61,7 @@ func _step_toward_snake() -> void:
 	var snake := get_node_or_null("../../Snake")
 	if not snake or snake.body.size() == 0:
 		return
-	var target := snake.body[0]
+	var target: Vector2i = snake.body[0]
 	var diff := target - grid_pos
 	if abs(diff.x) >= abs(diff.y):
 		grid_pos.x += signi(diff.x)

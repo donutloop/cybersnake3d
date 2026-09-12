@@ -1,0 +1,16 @@
+[gd_scene]
+
+[ext_resource type="Script" path="res://scripts/snake3d.gd" id="1_snake"]
+[ext_resource type="Script" path="res://scripts/enemy_manager3d.gd" id="2_manager"]
+[ext_resource type="Script" path="res://tests/integration/test_waves.gd" id="3_waves"]
+
+[node name="TestMain" type="Node"]
+
+[node name="Snake" type="Node3D" parent="."]
+script = ExtResource("1_snake")
+
+[node name="EnemyManager" type="Node3D" parent="."]
+script = ExtResource("2_manager")
+
+[node name="TestWaves" type="Node" parent="."]
+script = ExtResource("3_waves")
