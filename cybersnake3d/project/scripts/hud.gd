@@ -159,6 +159,9 @@ func _connect_signals() -> void:
 			snake.evolved.connect(_on_evolved)
 		if snake.has_signal("xp_changed"):
 			snake.xp_changed.connect(_on_xp_changed)
+		var manager := get_node_or_null("../EnemyManager")
+		if manager and manager.has_signal("wave_cleared"):
+			manager.wave_cleared.connect(_on_wave_cleared)
 
 func _process(delta: float) -> void:
 	if wave_announce.visible:
@@ -281,6 +284,12 @@ func _on_snake_died() -> void:
 	death_label.text = "GAME OVER — SCORE: %d" % final_score
 	death_screen.visible = true
 	restart_label.visible = true
+
+func _on_wave_cleared(wave: int) -> void:
+	var bonus: int = 100 + wave * 20
+	wave_announce.text = "WAVE CLEAR +%d" % bonus
+	wave_announce.modulate = Color(0.4, 1.0, 0.4)
+	wave_announce.visible = true
 
 func _on_evolved(_stage: int) -> void:
 	if evo_tween:

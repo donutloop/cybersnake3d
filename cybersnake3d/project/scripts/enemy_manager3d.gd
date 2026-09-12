@@ -34,6 +34,13 @@ func _process(delta: float) -> void:
 	if not between_waves and enemies.size() == 0:
 		between_waves = true
 		wave_cleared.emit(wave)
+		var snake := get_node_or_null("../Snake")
+		if snake:
+			var bonus: int = 100 + wave * 20
+			snake.score += bonus
+			snake.score_changed.emit(snake.score)
+			if snake.has_method("add_xp"):
+				snake.add_xp(30)
 		wave_timer = 0.0
 
 	if between_waves:

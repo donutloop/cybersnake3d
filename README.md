@@ -79,6 +79,8 @@ The death screen now shows the final score (e.g. `GAME OVER — SCORE: 1234`) be
 
 Press `Space`/`P` to pause/resume (`get_tree().paused` + a `PAUSED` HUD overlay).
 
+Clearing a wave awards a bonus (`100 + wave*20` score + 30 XP) and flashes a green `WAVE CLEAR +N` announcement.
+
 ### Post-Processing (neon CRT)
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
