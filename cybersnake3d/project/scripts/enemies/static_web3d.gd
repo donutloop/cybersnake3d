@@ -13,8 +13,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 4
-var max_hp: int = 4
+var hp: int = web_base_hp()
+var max_hp: int = web_base_hp()
 var move_speed: float = 1.6
 var move_timer: float = 0.0
 var is_dead: bool = false
@@ -27,6 +27,11 @@ var time_passed: float = 0.0
 var flash_timer: float = 0.0
 
 
+
+
+func web_base_hp() -> int:
+	# Static Web base HP (pure mapping).
+	return 4
 
 func residue_life() -> float:
 	# Static web residue persists for this many seconds (pure mapping).
