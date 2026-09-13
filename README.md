@@ -158,6 +158,7 @@ Snake overcharge cooldown scales via overcharge_cooldown, a pure mapping (floors
 Snake shard gain wave multiplier comes from wave_factor, a pure mapping (+1 per 10 waves).
 Snake base shard gain comes from base_shard_gain, a pure mapping (100 per shard).
 Snake enemy-kill XP comes from kill_xp, a pure mapping (15 XP).
+Snake evolution stage derives from XP via evolution_stage_for_xp, a pure mapping.
 
 ## Gameplay Features
 

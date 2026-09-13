@@ -14,7 +14,6 @@ var score: int = 0
 var xp: int = 0
 var level: int = 1
 const XP_PER_LEVEL: int = 50
-const EVO_THRESHOLDS: Array[int] = [0, 200, 500, 1000, 2000]
 var evolution_stage: int = 1
 
 const EVO_STATS: Array[Dictionary] = [
@@ -70,6 +69,16 @@ signal boss_slain(value: int)
 func kill_xp() -> int:
 	# XP awarded for killing an enemy (pure mapping).
 	return 15
+
+func evolution_stage_for_xp(xp: int) -> int:
+	# Evolution stage derived from total XP thresholds (pure mapping).
+	# Thresholds: stage 2 at 200, stage 3 at 500, stage 4 at 1000, stage 5 at 2000.
+	var thresholds := [200, 500, 1000, 2000]
+	var stage: int = 1
+	for threshold in thresholds:
+		if xp >= threshold:
+			stage += 1
+	return stage
 func stats_for_stage(stage: int) -> Dictionary:
 	# Evolution stats (hp/speed) for the given stage, clamped to the roster.
 	# Pure mapping (no node access) so the logic is unit-testable.
@@ -236,10 +245,7 @@ func add_xp(amount: int) -> void:
 	xp_changed.emit(xp, level, evolution_stage)
 
 func _check_evolution() -> void:
-	var new_evo: int = 0
-	for threshold in EVO_THRESHOLDS:
-		if xp >= threshold:
-			new_evo += 1
+	var new_evo: int = evolution_stage_for_xp(xp)
 	if new_evo > evolution_stage:
 		evolution_stage = new_evo
 		_on_evolve()
