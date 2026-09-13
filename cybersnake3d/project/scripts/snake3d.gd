@@ -91,7 +91,7 @@ func _ready() -> void:
 	var stats: Dictionary = EVO_STATS[evolution_stage]
 	max_hp = stats["hp"]
 	hp = max_hp
-	move_interval = 1.0 / stats["speed"]
+	move_interval = move_interval_from_speed(stats["speed"])
 
 	var cx: int = LevelSettings.grid_w / 2
 	var cy: int = LevelSettings.grid_h / 2
@@ -240,7 +240,7 @@ func _on_evolve() -> void:
 	var stats: Dictionary = EVO_STATS[evolution_stage]
 	max_hp = stats["hp"]
 	hp = max_hp  # full heal on evolution
-	move_interval = 1.0 / stats["speed"]
+	move_interval = move_interval_from_speed(stats["speed"])
 	_apply_evo_colors()
 	evolved.emit(evolution_stage)
 
@@ -638,6 +638,11 @@ func overcharge_duration(evolution_stage: int) -> float:
 	# Higher evolution stages grant a longer overcharge invulnerability window.
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 2.0 + evolution_stage * 0.5
+
+func move_interval_from_speed(speed: int) -> float:
+	# Move interval is the inverse of speed, floored so fast snakes don't /0.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 1.0 / maxf(speed, 1)
 
 func milestone_xp(combo: int) -> int:
 	# Combo milestone XP scales with the streak tier (x1/x1.5/x2).

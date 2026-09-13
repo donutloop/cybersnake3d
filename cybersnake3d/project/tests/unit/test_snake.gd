@@ -50,6 +50,7 @@ func _run_all() -> void:
 	_test_combo_window_extends_with_depth()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
+	_test_move_interval_inverse_speed()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -275,6 +276,13 @@ func _test_milestone_xp_scales_with_tier() -> void:
 	assert_eq(s.milestone_xp(3), 25, "low-tier milestone awards base XP")
 	assert_eq(s.milestone_xp(5), 38, "tier 1.5 milestone awards 38 XP")
 	assert_eq(s.milestone_xp(10), 50, "tier 2 milestone awards 50 XP")
+
+func _test_move_interval_inverse_speed() -> void:
+	# Move interval is the inverse of speed (floored at 1).
+	var s := _make_snake()
+	assert_eq(s.move_interval_from_speed(2), 0.5, "speed 2 moves every 0.5s")
+	assert_eq(s.move_interval_from_speed(4), 0.25, "speed 4 moves every 0.25s")
+	assert_eq(s.move_interval_from_speed(0), 1.0, "speed 0 floors to 1.0s")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()
