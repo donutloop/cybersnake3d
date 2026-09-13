@@ -268,6 +268,11 @@ func _test_enrage_threshold_is_half_hp() -> void:
 	assert_eq(sentinel.enrage_threshold(1), 1, "enrage threshold floors at 1")
 
 # ── hive_queen ────────────────────────────────────────────────────────
+func _test_drone_swarm_size_scales_with_phase() -> void:
+	var sentinel := _make_enemy(SentinelScript, "sentinel4")
+	assert_eq(sentinel.drone_swarm_size(1), 2, "phase 1 spawns 2 drones")
+	assert_eq(sentinel.drone_swarm_size(3), 1, "later phases spawn 1 drone")
+
 func _test_queen_hatches_swarms_into_manager() -> void:
 	var queen := _make_enemy(QueenScript, "queen")
 	var before: int = _manager.enemies.size()
@@ -518,6 +523,7 @@ func _run_all() -> void:
 	_test_sentinel_spawns_drones_into_manager()
 	_test_sentinel_enrages_at_low_hp()
 	_test_enrage_threshold_is_half_hp()
+	_test_drone_swarm_size_scales_with_phase()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()

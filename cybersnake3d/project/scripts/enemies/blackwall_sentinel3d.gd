@@ -54,6 +54,11 @@ func enrage_threshold(max_hp: int) -> int:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return maxi(max_hp / 2, 1)
 
+
+func drone_swarm_size(phase: int) -> int:
+	# Sentinel drone swarm scales with phase (phase 1 spawns 2, later phases 1).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 2 if phase == 1 else 1
 func _process(delta: float) -> void:
 	if is_dead:
 		return
@@ -65,7 +70,7 @@ func _process(delta: float) -> void:
 	drone_spawn_timer -= delta
 	if drone_spawn_timer <= 0.0:
 		drone_spawn_timer = 5.0 if phase == 1 else 8.0
-		_spawn_drones(2 if phase == 1 else 1)
+		_spawn_drones(drone_swarm_size(phase))
 
 	if flash_timer > 0.0:
 		flash_timer = maxf(flash_timer - delta, 0.0)
