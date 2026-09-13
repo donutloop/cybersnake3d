@@ -54,13 +54,18 @@ func _process(delta: float) -> void:
 	if shake_strength > 0.001:
 		apply_shake(delta)
 
+
+func shake_amplitude(strength: float) -> float:
+	# Camera shake amplitude scales with shake strength.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return strength * 0.35
 func apply_shake(delta: float) -> void:
 	shake_time += delta
 	shake_strength = maxf(0.0, shake_strength - shake_decay * delta)
 	var amp := shake_strength
 	var ox := sin(shake_time * 60.0) * amp
 	var oz := sin(shake_time * 47.0 + 1.7) * amp
-	position += Vector3(ox, 0.0, oz) * 0.35
+	position += Vector3(ox, 0.0, oz) * shake_amplitude(shake_strength)
 
 func _on_snake_ate_shard() -> void:
 	shake_strength = maxf(shake_strength, 0.6)

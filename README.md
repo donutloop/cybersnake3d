@@ -202,3 +202,4 @@ Snake evolution stats (hp/speed) come from snake.stats_for_stage, a pure clamped
 Sentinel drone swarms scale with phase via drone_swarm_size, a pure mapping.
 Hive Queen swarm hatch counts scale with wave via hatch_size, a pure mapping (capped 2-6).
 Phantom teleport jitter radius comes from teleport_radius, a pure mapping.
+Camera shake amplitude scales via camera.shake_amplitude, a pure mapping.

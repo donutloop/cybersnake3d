@@ -19,6 +19,7 @@ func _run_all() -> void:
 	_test_shake_decays_over_time()
 	_test_shake_decays_to_zero()
 	_test_shake_never_negative()
+	_test_shake_amplitude_scales_with_strength()
 
 
 func _test_ate_shard_bumps_shake() -> void:
@@ -47,3 +48,7 @@ func _test_shake_never_negative() -> void:
 	_cam._on_snake_ate_shard()
 	_cam.apply_shake(100.0)
 	assert_true(_cam.shake_strength >= 0.0, "shake strength never goes negative")
+
+func _test_shake_amplitude_scales_with_strength() -> void:
+	assert_eq(_cam.shake_amplitude(1.0), 0.35, "full shake maps to 0.35 amplitude")
+	assert_eq(_cam.shake_amplitude(0.0), 0.0, "no shake maps to zero amplitude")
