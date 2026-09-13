@@ -373,6 +373,10 @@ func hp_ratio(hp: float, max_hp: float) -> float:
 
 
 
+
+func wave_clear_bonus(wave: int) -> int:
+	# Score bonus for clearing a wave: base 100 plus 20 per wave (pure mapping).
+	return 100 + wave * 20
 func boss_slain_text(bonus: int) -> String:
 	# Banner announcing a boss kill and its score bonus (pure mapping).
 	return "BOSS SLAIN +%d" % bonus
@@ -438,7 +442,7 @@ func _save_best_score(value: int) -> void:
 		f.close()
 
 func _on_wave_cleared(wave: int) -> void:
-	var bonus: int = 100 + wave * 20
+	var bonus: int = wave_clear_bonus(wave)
 	wave_announce.text = "WAVE CLEAR +%d" % bonus
 	wave_announce.modulate = Color(0.4, 1.0, 0.4)
 	wave_announce.visible = true
