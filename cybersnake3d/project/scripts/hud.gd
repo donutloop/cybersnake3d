@@ -280,7 +280,7 @@ func _update_hp_bar() -> void:
 	var hp: float = snake.hp if snake else 0.0
 	var max_hp: float = snake.max_hp if snake else 1.0
 	if max_hp > 0.0:
-		hp_bar.value = clampf(hp / max_hp, 0.0, 1.0)
+		hp_bar.value = hp_ratio(hp, max_hp)
 	else:
 		hp_bar.value = 0.0
 
@@ -362,6 +362,10 @@ func update_hud(p_score: int, wave: int, length: int) -> void:
 		length_label.text = "LEN: %d" % length
 
 
+
+func hp_ratio(hp: float, max_hp: float) -> float:
+	# Snake HP bar fill ratio, clamped 0..1 (pure mapping).
+	return clampf(hp / max_hp, 0.0, 1.0)
 func is_boss_wave(wave: int) -> bool:
 	# Waves at or past this number are announced as boss waves (pure mapping).
 	return wave >= 10

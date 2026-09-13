@@ -103,6 +103,7 @@ func _run_all() -> void:
 	_test_countdown_text_hides_when_elapsed()
 	_test_gain_text_formats_gain()
 	_test_is_boss_wave()
+	_test_hp_ratio_clamps()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -166,3 +167,7 @@ func _teardown() -> void:
 func _test_is_boss_wave() -> void:
 	assert_eq(_hud.is_boss_wave(9), false, "wave 9 is not a boss wave")
 	assert_eq(_hud.is_boss_wave(10), true, "wave 10 is a boss wave")
+
+func _test_hp_ratio_clamps() -> void:
+	assert_eq(_hud.hp_ratio(50.0, 100.0), 0.5, "half hp fills bar at 50%")
+	assert_eq(_hud.hp_ratio(120.0, 100.0), 1.0, "over-full hp clamps to 1.0")
