@@ -152,6 +152,7 @@ Overdrive Mine flash durations come from prime_flash_time/hit_flash_time, pure m
 Wraith glide speed comes from wraith_speed, a pure mapping (speed 3).
 ICE shard float height comes from shard_float_height, a pure mapping (0.3 units).
 Chrono Anchor flash durations come from anchor_flash_time/anchor_hit_flash_time, pure mappings.
+Snake hit invulnerability comes from hit_invuln_time, a pure mapping (2 seconds).
 
 ## Gameplay Features
 

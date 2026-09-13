@@ -312,6 +312,10 @@ func _die() -> void:
 	if not _hit():
 		died.emit()
 
+
+func hit_invuln_time() -> float:
+	# Snake is invulnerable for this many seconds after being hit (pure mapping).
+	return 2.0
 func _hit() -> bool:
 	# Applies one hit of damage and returns whether the snake survived.
 	# HP is clamped at 0 so it never goes negative. Pure logic for unit tests.
@@ -323,7 +327,7 @@ func _hit() -> bool:
 		return false
 	combo = 0  # taking damage breaks the shard chain
 	combo_timer = 0.0
-	invuln_timer = 2.0
+	invuln_timer = hit_invuln_time()
 	just_attacked = true
 	return true
 

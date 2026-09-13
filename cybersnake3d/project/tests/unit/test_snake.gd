@@ -49,6 +49,7 @@ func _run_all() -> void:
 	_test_burst_damage_scales_with_stage()
 	_test_combo_window_extends_with_depth()
 	_test_stats_for_stage_clamps_roster()
+	_test_hit_invuln_time()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -423,3 +424,7 @@ func _test_stats_for_stage_clamps_roster() -> void:
 	assert_eq(s.stats_for_stage(2)["hp"], 5, "stage 2 hp is 5")
 	assert_eq(s.stats_for_stage(5)["speed"], 10.0, "stage 5 speed is 10")
 	assert_eq(s.stats_for_stage(99)["hp"], 20, "out-of-range stage clamps to last")
+
+func _test_hit_invuln_time() -> void:
+	var s := _make_snake()
+	assert_eq(s.hit_invuln_time(), 2.0, "snake is invulnerable 2s after a hit")
