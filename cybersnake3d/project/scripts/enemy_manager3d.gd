@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 		wave_cleared.emit(wave)
 		var snake := get_node_or_null("../Snake")
 		if snake:
-			var bonus: int = 100 + wave * 20
+			var bonus: int = clear_bonus(wave)
 			snake.score += bonus
 			snake.score_changed.emit(snake.score)
 			if snake.has_method("add_xp"):
@@ -156,6 +156,11 @@ func _pulse_floor() -> void:
 		tw.tween_method(func(v): mat.set_shader_parameter("grid_energy", v), 1.0, 0.0, 0.6)
 
 
+
+func clear_bonus(wave: int) -> int:
+	# Wave-clear score bonus scales with the wave (base 100, +20/wave).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 100 + wave * 20
 func spawn_count(wave: int, unlock_wave: int) -> int:
 	# Enemy spawn count scales with waves past unlock, capped to avoid crowding.
 	# Pure mapping (no node access) so the logic is unit-testable.

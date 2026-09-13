@@ -56,6 +56,7 @@ func _run_all() -> void:
 	_test_wave11_spawns_chrono_anchor()
 	_test_wave13_spawns_overdrive_mine()
 	_test_spawn_count_caps_and_scales()
+	_test_clear_bonus_scales_with_wave()
 	_test_wave9_spawns_warp_shard()
 	_test_warp_shard_warps_when_hit()
 
@@ -334,6 +335,12 @@ func _test_spawn_count_caps_and_scales() -> void:
 	assert_eq(mgr.spawn_count(11, 10), 1, "unlock wave spawns 1")
 	assert_eq(mgr.spawn_count(10, 10), 1, "unlock wave spawns 1")
 	assert_eq(mgr.spawn_count(20, 10), 6, "spawn count caps at 6")
+
+func _test_clear_bonus_scales_with_wave() -> void:
+	# Wave-clear score bonus scales with the wave via the pure mapping.
+	var mgr := _manager
+	assert_eq(mgr.clear_bonus(1), 120, "wave 1 clear bonus is 120")
+	assert_eq(mgr.clear_bonus(10), 300, "wave 10 clear bonus is 300")
 
 func _test_wave11_spawns_chrono_anchor() -> void:
 	# Wave 11 gates the Chrono Anchor (rewinds the snake, never kills).
