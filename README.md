@@ -203,3 +203,4 @@ Sentinel drone swarms scale with phase via drone_swarm_size, a pure mapping.
 Hive Queen swarm hatch counts scale with wave via hatch_size, a pure mapping (capped 2-6).
 Phantom teleport jitter radius comes from teleport_radius, a pure mapping.
 Camera shake amplitude scales via camera.shake_amplitude, a pure mapping.
+CRT vignette ramps with danger via danger_pulse.vignette_strength, a pure mapping.
