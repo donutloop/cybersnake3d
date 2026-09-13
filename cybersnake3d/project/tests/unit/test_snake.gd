@@ -51,6 +51,7 @@ func _run_all() -> void:
 	_test_stats_for_stage_clamps_roster()
 	_test_hit_invuln_time()
 	_test_pickup_and_wall_invuln_times()
+	_test_overcharge_cooldown_scales_with_stage()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -434,3 +435,8 @@ func _test_pickup_and_wall_invuln_times() -> void:
 	var s := _make_snake()
 	assert_eq(s.pickup_invuln_time(), 0.3, "pickup grace lasts 0.3s")
 	assert_eq(s.wall_invuln_time(), 0.2, "wall grace lasts 0.2s")
+
+func _test_overcharge_cooldown_scales_with_stage() -> void:
+	var s := _make_snake()
+	assert_eq(s.overcharge_cooldown(1), 7.0, "stage 1 overcharge cools 7s")
+	assert_eq(s.overcharge_cooldown(5), 3.0, "stage 5 overcharge floors at 3s")

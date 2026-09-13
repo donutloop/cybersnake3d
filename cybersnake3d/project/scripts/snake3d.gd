@@ -132,7 +132,7 @@ func _process(delta: float) -> void:
 		# is a real combat upgrade rather than just raw HP/speed.
 		overcharge_timer -= delta
 		if overcharge_timer <= 0.0:
-			overcharge_timer = maxf(3.0, 8.0 - float(evolution_stage))
+			overcharge_timer = overcharge_cooldown(evolution_stage)
 			invuln_timer = overcharge_duration(evolution_stage)
 			overcharge_active = true
 			_release_burst()
@@ -651,6 +651,11 @@ func combo_window_seconds(combo: int) -> float:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return clampf(1.0 + combo * 0.05, 1.0, 2.5)
 
+
+func overcharge_cooldown(stage: int) -> float:
+	# Overcharge recharges faster at higher stages (base 8s, floors at 3s).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return maxf(3.0, 8.0 - float(stage))
 func overcharge_duration(evolution_stage: int) -> float:
 	# Higher evolution stages grant a longer overcharge invulnerability window.
 	# Pure mapping (no node access) so the logic is unit-testable.

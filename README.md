@@ -154,6 +154,7 @@ ICE shard float height comes from shard_float_height, a pure mapping (0.3 units)
 Chrono Anchor flash durations come from anchor_flash_time/anchor_hit_flash_time, pure mappings.
 Snake hit invulnerability comes from hit_invuln_time, a pure mapping (2 seconds).
 Snake pickup/wall grace periods come from pickup_invuln_time/wall_invuln_time, pure mappings.
+Snake overcharge cooldown scales via overcharge_cooldown, a pure mapping (floors at 3s).
 
 ## Gameplay Features
 
