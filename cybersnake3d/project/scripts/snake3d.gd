@@ -138,7 +138,7 @@ func _process(delta: float) -> void:
 	if not is_alive:
 		return
 
-	if evolution_stage >= 3:
+	if evolution_stage >= overcharge_unlock_stage():
 		# Overcharge unlocks at evolution stage 3. Higher stages recharge it
 		# faster: stage 3 takes 8s, stage 5 drops to 4s (min 3s), so evolution
 		# is a real combat upgrade rather than just raw HP/speed.
@@ -669,6 +669,10 @@ func combo_window_seconds(combo: int) -> float:
 	return clampf(1.0 + combo * 0.05, 1.0, 2.5)
 
 
+
+func overcharge_unlock_stage() -> int:
+	# Overcharge unlocks at this evolution stage (pure mapping).
+	return 3
 func overcharge_cooldown(stage: int) -> float:
 	# Overcharge recharges faster at higher stages (base 8s, floors at 3s).
 	# Pure mapping (no node access) so the logic is unit-testable.

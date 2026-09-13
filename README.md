@@ -148,6 +148,7 @@ Enemy manager hive queen cap comes from hive_queen_cap, a pure mapping (2 concur
 Snake combo milestones come from is_milestone, a pure mapping (every 5th combo).
 Snake combo window fade comes from decay_combo_timer, a pure mapping (linear, clamped).
 Snake overcharge cooldown fade comes from decay_overcharge_timer, a pure mapping (linear, clamped).
+Snake overcharge unlock stage comes from overcharge_unlock_stage, a pure mapping (stage 3).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
