@@ -81,12 +81,17 @@ func _check_snake_collision() -> void:
 	if snake.body.size() > 0 and snake.body[0] == grid_pos:
 		snake._die()
 
+
+func frenzy_speed_multiplier() -> float:
+	# Net Reaper frenzy doubles movement speed at low HP.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 2.0
 func take_damage(amount: int = 1) -> void:
 	hp -= amount
 	if hp == 1 and not frenzy:
 		frenzy = true
 		frenzy_timer = 2.0
-		speed_steps = base_speed * 2.0
+		speed_steps = base_speed * frenzy_speed_multiplier()
 		mat.emission = Color(1.0, 0.0, 0.3, 1.0)
 		mat.emission_energy_multiplier = 5.0
 	if hp <= 0:
