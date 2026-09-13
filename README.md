@@ -146,6 +146,7 @@ ICE shard respawn interval comes from shard_spawn_interval, a pure mapping (5 se
 Enemy manager boss cap comes from boss_cap, a pure mapping (2 concurrent).
 Enemy manager hive queen cap comes from hive_queen_cap, a pure mapping (2 concurrent).
 Snake combo milestones come from is_milestone, a pure mapping (every 5th combo).
+Snake combo window fade comes from decay_combo_timer, a pure mapping (linear, clamped).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.

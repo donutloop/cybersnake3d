@@ -684,6 +684,10 @@ func move_interval_from_speed(speed: int) -> float:
 	return 1.0 / maxf(speed, 1)
 
 
+
+func decay_combo_timer(timer: float, delta: float) -> float:
+	# Combo window shrinks linearly each frame, clamped at zero (pure mapping).
+	return maxf(0.0, timer - delta)
 func is_milestone(combo: int) -> bool:
 	# Every 5th combo registers a milestone bonus (pure mapping).
 	return combo % 5 == 0
@@ -695,6 +699,6 @@ func milestone_xp(combo: int) -> int:
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.
 	if combo_timer > 0.0:
-		combo_timer = maxf(0.0, combo_timer - delta)
+		combo_timer = decay_combo_timer(combo_timer, delta)
 		if combo_timer <= 0.0:
 			combo = 0
