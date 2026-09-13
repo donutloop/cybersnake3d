@@ -613,7 +613,7 @@ func _register_pickup() -> int:
 	# Shards pay more in later waves: +10% gain per wave tier.
 	var mgr := get_node_or_null("../EnemyManager")
 	var wave_factor: int = wave_factor(int(mgr.wave) if mgr and "wave" in mgr else 1)
-	last_gain = 100 * combo * wave_factor
+	last_gain = base_shard_gain() * combo * wave_factor
 	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
 	last_gain = int(round(last_gain * combo_tier_multiplier(combo)))
 	if combo % 5 == 0:
@@ -638,6 +638,10 @@ func burst_damage(evolution_stage: int) -> int:
 	return clampi(evolution_stage, 1, 3)
 
 
+
+func base_shard_gain() -> int:
+	# Base score awarded per shard at combo 1 (pure mapping).
+	return 100
 func wave_factor(wave: int) -> int:
 	# Shard score gain grows with wave: +1 factor per 10 waves (pure mapping).
 	return 1 + wave / 10

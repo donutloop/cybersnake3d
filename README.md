@@ -156,6 +156,7 @@ Snake hit invulnerability comes from hit_invuln_time, a pure mapping (2 seconds)
 Snake pickup/wall grace periods come from pickup_invuln_time/wall_invuln_time, pure mappings.
 Snake overcharge cooldown scales via overcharge_cooldown, a pure mapping (floors at 3s).
 Snake shard gain wave multiplier comes from wave_factor, a pure mapping (+1 per 10 waves).
+Snake base shard gain comes from base_shard_gain, a pure mapping (100 per shard).
 
 ## Gameplay Features
 
