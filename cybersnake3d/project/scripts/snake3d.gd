@@ -134,6 +134,9 @@ func _ready() -> void:
 	_rebuild_meshes()
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	# Do not allow pausing after death, or ui_accept (Enter/Space) can't restart.
+	if not is_alive:
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		var k: int = event.keycode
 		if k == KEY_SPACE or k == KEY_P:
@@ -222,9 +225,12 @@ func _step() -> void:
 		died.emit()
 		return
 
-	# Self collision
+	# Self collision: eating yourself is always fatal, bypassing invulnerability.
 	if _is_self_collision(new_head):
-		_die()
+		hp = 0
+		hp_changed.emit(hp)
+		is_alive = false
+		died.emit()
 		return
 
 	body.push_front(new_head)

@@ -37,6 +37,7 @@ func _run_all() -> void:
 	_test_grows_when_eating_shard()
 	_test_wall_collision()
 	_test_self_collision()
+	_test_self_collision_fatal_while_invulnerable()
 	_test_evolution()
 	_test_overcharge_glow()
 	_test_overcharge_speed_boost()
@@ -132,17 +133,37 @@ func _test_wall_collision() -> void:
 
 func _test_self_collision() -> void:
 	var s := _make_snake()
-	# L-shape body: head (0,0), neck (0,1), tail (1,1). Stepping the head into
-	# its own neck (a non-tail cell) must trigger a self collision.
+	_died_fired = false
+	s.connect("died", Callable(self, "_on_died"))
+	# L-shape body: head (0,0), neck (0,1), tail (1,1). Stepping +y puts the
+	# head on its own neck cell -> eating yourself must be fatal.
 	var body: Array[Vector2i] = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1)]
 	s.set("body", body)
-	s.direction = Vector2i(0, 1)   # facing +y so the step is not a reversal
+	s.direction = Vector2i(0, 1)
 	s.next_direction = Vector2i(0, 1)
-	s.invuln_timer = 0.0           # clear spawn-grace so _die() applies
+	s.invuln_timer = 0.0           # no i-frames: a plain self collision
 	var hp_before: int = s.hp
 	s._step()
-	assert_eq(s.hp, hp_before - 1, "self collision reduces hp by 1")
-	assert_true(s.is_alive, "snake survives a single self collision")
+	assert_eq(s.hp, 0, "self collision zeroes hp (instance death)")
+	assert_eq(s.hp, hp_before - hp_before, "self collision kills regardless of prior hp")
+	assert_false(s.is_alive, "snake dies from eating itself")
+	assert_true(_died_fired, "died signal fires on self collision")
+	s.disconnect("died", Callable(self, "_on_died"))
+
+func _test_self_collision_fatal_while_invulnerable() -> void:
+	# Even during spawn/invulnerability, running into yourself is fatal.
+	var s := _make_snake()
+	_died_fired = false
+	s.connect("died", Callable(self, "_on_died"))
+	var body: Array[Vector2i] = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 1)]
+	s.set("body", body)
+	s.direction = Vector2i(0, 1)
+	s.next_direction = Vector2i(0, 1)
+	s.invuln_timer = 5.0           # i-frames must NOT block self-collision death
+	s._step()
+	assert_false(s.is_alive, "self collision is fatal even during i-frames")
+	assert_true(_died_fired, "died signal fires despite invulnerability")
+	s.disconnect("died", Callable(self, "_on_died"))
 
 func _test_evolution() -> void:
 	var s := _make_snake()
@@ -153,12 +174,11 @@ func _test_evolution() -> void:
 	s.add_xp(200)
 	assert_true(s.move_interval < move_before, "evolution increases speed (move_interval decreases)")
 	s.disconnect("evolved", cb)
-	assert_true(_evolved_fired, "evolved signal emitted at first xp threshold")
+	assert_true(_evolved_fired, "evolved signal fires at the first xp threshold")
 	assert_gt(s.max_hp, 3, "max_hp increases after evolution")
 	assert_eq(s.hp, s.max_hp, "evolution fully heals the snake")
 
 func _test_hit_breaks_combo() -> void:
-	# Taking damage must break the active shard chain (combo resets to 0).
 	var snake := _make_snake()
 	snake.combo = 4
 	snake.combo_timer = 1.0
