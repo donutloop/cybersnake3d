@@ -21,6 +21,7 @@ func _run_all() -> void:
 	_test_shake_never_negative()
 	_test_shake_amplitude_scales_with_strength()
 	_test_shake_decay_rate()
+	_test_base_mappings()
 
 
 func _test_ate_shard_bumps_shake() -> void:
@@ -53,6 +54,12 @@ func _test_shake_never_negative() -> void:
 func _test_shake_amplitude_scales_with_strength() -> void:
 	assert_eq(_cam.shake_amplitude(1.0), 0.35, "full shake maps to 0.35 amplitude")
 	assert_eq(_cam.shake_amplitude(0.0), 0.0, "no shake maps to zero amplitude")
+
+func _test_base_mappings() -> void:
+	var c := _cam
+	assert_eq(c.base_offset(), Vector3(0.0, 30.0, 20.0), "camera base offset")
+	assert_eq(c.base_look_ahead(), 3.0, "camera base look ahead")
+	assert_eq(c.base_smooth_speed(), 5.0, "camera base smooth speed")
 
 func _test_shake_decay_rate() -> void:
 	assert_eq(_cam.shake_decay_rate(), 6.0, "shake decays at 6 per second")

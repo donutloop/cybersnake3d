@@ -168,6 +168,7 @@ Hive Queen base HP comes from queen_base_hp, a pure mapping (16 HP).
 Chrono Anchor base HP comes from chrono_base_hp, a pure mapping (3 HP).
 Wraith base HP comes from wraith_base_hp, a pure mapping (5 HP).
 Overdrive Mine base HP comes from mine_base_hp, a pure mapping (2 HP).
+Camera base_offset/base_look_ahead/base_smooth_speed pure mappings + tests.
 Snake base_move_interval/base_combo_window pure mappings + tests.
 Snake base_max_hp pure mapping (3 hp) + unit test.
 EnemyManager kill_xp_award pure mapping (30 xp) + integration test.

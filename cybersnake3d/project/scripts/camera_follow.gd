@@ -1,15 +1,28 @@
 # camera_follow.gd — Smooth third-person camera following the snake
 extends Camera3D
 
-@export var offset := Vector3(0.0, 30.0, 20.0)
-@export var look_ahead: float = 3.0
-@export var smooth_speed: float = 5.0
+@export var offset := base_offset()
+@export var look_ahead: float = base_look_ahead()
+@export var smooth_speed: float = base_smooth_speed()
 
 var target: Node3D
 var initialized: bool = false
 var smooth_look_target := Vector3.ZERO
 var shake_time: float = 0.0
 var shake_strength: float = 0.0
+
+
+func base_offset() -> Vector3:
+	# Camera base offset from the snake head (pure mapping).
+	return Vector3(0.0, 30.0, 20.0)
+
+func base_look_ahead() -> float:
+	# Camera base look-ahead distance in cells (pure mapping).
+	return 3.0
+
+func base_smooth_speed() -> float:
+	# Camera base smoothing speed (pure mapping).
+	return 5.0
 
 func _ready() -> void:
 	target = get_node_or_null("../Snake")

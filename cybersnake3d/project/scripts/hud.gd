@@ -457,7 +457,7 @@ func _update_wave_countdown() -> void:
 		if countdown_label:
 			countdown_label.visible = false
 		return
-	var remain: float = mgr.wave_delay - mgr.wave_timer
+	var remain: float = mgr.wave_delay(mgr.wave) - mgr.wave_timer
 	var secs: int = maxi(1, int(remain))
 	if countdown_label:
 		countdown_label.text = countdown_text(secs)
