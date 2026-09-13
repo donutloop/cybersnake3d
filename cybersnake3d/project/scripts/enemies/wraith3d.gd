@@ -7,8 +7,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 5
-var max_hp: int = 5
+var hp: int = wraith_base_hp()
+var max_hp: int = wraith_base_hp()
 var move_timer: float = 0.0
 var is_dead: bool = false
 var time_passed: float = 0.0
@@ -18,6 +18,11 @@ var mat: StandardMaterial3D
 var light: OmniLight3D
 
 
+
+
+func wraith_base_hp() -> int:
+	# Wraith base HP (pure mapping).
+	return 5
 
 func wraith_speed() -> float:
 	# Wraith glides across the grid at this speed (pure mapping).
