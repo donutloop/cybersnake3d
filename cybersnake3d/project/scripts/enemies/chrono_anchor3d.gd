@@ -92,6 +92,10 @@ func burn() -> void:
 	queue_free()
 
 
+
+func anchor_base_hp() -> int:
+	# Chrono Anchor base HP (pure mapping).
+	return 3
 func anchor_flash_time() -> float:
 	# Chrono Anchor flash after warping (pure mapping).
 	return 0.35

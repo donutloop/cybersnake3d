@@ -539,6 +539,7 @@ func _run_all() -> void:
 	_test_chrono_anchor_flash_times()
 	_test_boss_cap()
 	_test_hive_queen_cap()
+	_test_chrono_anchor_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -629,3 +630,7 @@ func _test_boss_cap() -> void:
 
 func _test_hive_queen_cap() -> void:
 	assert_eq(_manager.hive_queen_cap(), 2, "max concurrent hive queens is 2")
+
+func _test_chrono_anchor_base_hp() -> void:
+	var anchor := _make_enemy(ChronoAnchorScript, "anchor3")
+	assert_eq(anchor.anchor_base_hp(), 3, "chrono anchor has 3 base HP")
