@@ -161,6 +161,7 @@ Snake enemy-kill XP comes from kill_xp, a pure mapping (15 XP).
 Snake evolution stage derives from XP via evolution_stage_for_xp, a pure mapping.
 HUD boss-wave detection comes from is_boss_wave, a pure mapping (waves >= 10).
 HUD snake HP bar fill comes from hp_ratio, a pure mapping (clamped 0..1).
+HUD evolution XP bar fill comes from evolution_bar_fill, a pure mapping (clamped to stage range).
 
 ## Gameplay Features
 

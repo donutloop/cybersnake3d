@@ -104,6 +104,7 @@ func _run_all() -> void:
 	_test_gain_text_formats_gain()
 	_test_is_boss_wave()
 	_test_hp_ratio_clamps()
+	_test_evolution_bar_fill_clamps()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -171,3 +172,7 @@ func _test_is_boss_wave() -> void:
 func _test_hp_ratio_clamps() -> void:
 	assert_eq(_hud.hp_ratio(50.0, 100.0), 0.5, "half hp fills bar at 50%")
 	assert_eq(_hud.hp_ratio(120.0, 100.0), 1.0, "over-full hp clamps to 1.0")
+
+func _test_evolution_bar_fill_clamps() -> void:
+	assert_eq(_hud.evolution_bar_fill(250.0, 200.0, 500.0), 250.0, "fill shows xp within stage range")
+	assert_eq(_hud.evolution_bar_fill(600.0, 200.0, 500.0), 500.0, "fill clamps at next threshold")

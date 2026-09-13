@@ -363,6 +363,10 @@ func update_hud(p_score: int, wave: int, length: int) -> void:
 
 
 
+
+func evolution_bar_fill(xp: float, current_thresh: float, next_thresh: float) -> float:
+	# Evolution XP bar fill, clamped to the current stage range (pure mapping).
+	return clampf(xp, current_thresh, next_thresh)
 func hp_ratio(hp: float, max_hp: float) -> float:
 	# Snake HP bar fill ratio, clamped 0..1 (pure mapping).
 	return clampf(hp / max_hp, 0.0, 1.0)
@@ -484,7 +488,7 @@ func _on_xp_changed(xp: int, _level: int, evo: int) -> void:
 	
 	evo_bar.min_value = current_thresh
 	evo_bar.max_value = next_thresh
-	evo_bar.value = clampf(xp, current_thresh, next_thresh)
+	evo_bar.value = evolution_bar_fill(xp, current_thresh, next_thresh)
 
 func _on_boss_slain(value: int) -> void:
 	# Red banner announcing a boss kill reward.
