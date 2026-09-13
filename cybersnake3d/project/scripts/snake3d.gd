@@ -25,7 +25,7 @@ const EVO_STATS: Array[Dictionary] = [
 	{"hp": 20, "speed": 10.0},
 ]
 
-var max_hp: int = 3
+var max_hp: int = base_max_hp()
 var hp: int = 3
 
 var overcharge_timer: float = 8.0
@@ -65,6 +65,11 @@ signal xp_changed(current_xp: int, current_level: int, current_evo: int)
 signal boss_slain(value: int)
 
 
+
+
+func base_max_hp() -> int:
+	# Snake base max HP (pure mapping).
+	return 3
 
 func kill_xp() -> int:
 	# XP awarded for killing an enemy (pure mapping).
