@@ -330,7 +330,7 @@ func _check_enemy_damage(head_pos: Vector2i, is_tail_whip: bool) -> void:
 					add_xp(kill_xp())  # combat reward: killing an enemy feeds evolution
 				if not is_tail_whip:
 					just_attacked = true
-					invuln_timer = wall_invuln_time()
+					invuln_timer = maxf(invuln_timer, wall_invuln_time())
 				return
 
 func is_invulnerable() -> bool:

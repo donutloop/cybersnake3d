@@ -80,6 +80,7 @@ func _run_all() -> void:
 	_test_combo_milestone()
 	_test_milestone_xp_changed_once()
 	_test_overcharge_recharge_cycle()
+	_test_overcharge_not_shortened_by_enemy_attack()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -482,6 +483,35 @@ func _test_magnet() -> void:
 	assert_eq(sp.eaten, 1, "overcharge magnet eats a nearby shard")
 	sp.queue_free()
 
+
+func _test_overcharge_not_shortened_by_enemy_attack() -> void:
+	# Regression: attacking an enemy during overcharge must NOT reset the
+	# snake's invuln_timer to the tiny wall-invuln grace (which would end the
+	# overcharge almost immediately). The attack grace must only RAISE the
+	# timer, never shorten an active overcharge window.
+	var s := _make_snake()
+	s.evolution_stage = 3
+	var mgr := Node.new()
+	mgr.name = "EnemyManager"
+	s.get_parent().add_child(mgr)
+	var enemy := Node.new()
+	var es := GDScript.new()
+	es.source_code = "extends Node\nvar pos = Vector2i(0, 0)\nvar hp = 5\nfunc take_damage(_a):\n\thp -= _a\nfunc get_grid_positions():\n\treturn [pos]\n"
+	es.reload()
+	enemy.set_script(es)
+	enemy.pos = s.body[0]
+	mgr.add_child(enemy)
+	# Activate overcharge at stage 3 (unlocked) so the grace is the full
+	# overcharge duration, not the 0.2s wall-invuln.
+	s.overcharge_active = true
+	s.overcharge_timer = s.overcharge_duration()
+	s.invuln_timer = s.overcharge_duration()
+	var dur: float = s.overcharge_duration()
+	s._check_enemy_damage(s.body[0], false)
+	assert_true(s.overcharge_active, "overcharge stays active after attacking an enemy")
+	assert_true(s.invuln_timer >= dur, "attacking an enemy must not shorten the overcharge grace")
+	mgr.queue_free()
+	enemy.queue_free()
 
 func _is_contiguous(body: Array) -> bool:
 	for i in range(1, body.size()):
