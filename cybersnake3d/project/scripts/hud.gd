@@ -63,6 +63,11 @@ func countdown_text(secs: int) -> String:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return "NEXT WAVE IN %d" % secs if secs > 0 else ""
 
+func gain_text(gain: int) -> String:
+	# Score gain popup, hidden when there is no recent gain.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return "+%d" % gain if gain > 0 else ""
+
 func _ready() -> void:
 	death_screen.visible = false
 	wave_announce.visible = false
@@ -298,7 +303,7 @@ func _update_gain_popup() -> void:
 	var gain: int = snake.last_gain if snake else 0
 	if gain > 0:
 		gain_popup.visible = true
-		gain_popup.text = "+%d" % gain
+		gain_popup.text = gain_text(gain)
 	else:
 		gain_popup.visible = false
 

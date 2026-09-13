@@ -101,6 +101,7 @@ func _run_all() -> void:
 	_test_combo_display_shows_only_live_window()
 	_test_combo_tier_color_matches_streak()
 	_test_countdown_text_hides_when_elapsed()
+	_test_gain_text_formats_gain()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -151,6 +152,11 @@ func _test_countdown_text_hides_when_elapsed() -> void:
 	var hud := _hud
 	assert_eq(hud.countdown_text(5), "NEXT WAVE IN 5", "live countdown shows seconds")
 	assert_eq(hud.countdown_text(0), "", "elapsed countdown hides")
+
+func _test_gain_text_formats_gain() -> void:
+	var hud := _hud
+	assert_eq(hud.gain_text(150), "+150", "gain popup shows plus sign")
+	assert_eq(hud.gain_text(0), "", "no gain hides popup")
 
 func _teardown() -> void:
 	_hud.queue_free()
