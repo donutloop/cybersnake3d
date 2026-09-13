@@ -6,8 +6,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 3
-var max_hp: int = 3
+var hp: int = hunter_base_hp()
+var max_hp: int = hunter_base_hp()
 var base_speed: float = 5.0
 var speed_steps: float = base_speed
 var max_speed: float = 12.0

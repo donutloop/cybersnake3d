@@ -6,8 +6,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 4
-var max_hp: int = 4
+var hp: int = leech_base_hp()
+var max_hp: int = leech_base_hp()
 var speed_steps: float = 4.0
 var move_timer: float = 0.0
 var is_dead: bool = false
