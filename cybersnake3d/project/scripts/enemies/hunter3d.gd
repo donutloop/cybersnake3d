@@ -71,6 +71,10 @@ func _process(delta: float) -> void:
 	_check_snake_collision()
 
 
+
+func hunter_base_hp() -> int:
+	# Hunter base HP (pure mapping).
+	return 3
 func hunt_speed(base_speed: float, chase_time: float, max_speed: float) -> int:
 	# Hunter ramps speed with chase time (base + 0.35/s), capped at max speed.
 	# Pure mapping (no node access) so the logic is unit-testable.
