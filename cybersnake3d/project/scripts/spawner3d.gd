@@ -13,6 +13,10 @@ var anim_time: float = 0.0
 var shard_mat: StandardMaterial3D
 
 
+
+func shard_spawn_interval() -> float:
+	# ICE shards respawn after this many seconds (pure mapping).
+	return 5.0
 func max_shards(grid_w: int, grid_h: int) -> int:
 	# ICE shards scale with board area: bigger boards support more shards.
 	# Pure mapping (no node access) so the logic is unit-testable.
@@ -36,7 +40,7 @@ func _process(delta: float) -> void:
 	if shards.size() < 1:
 		_spawn_shard()
 	shard_timer += delta
-	if shard_timer > 5.0 and shards.size() < max_shards(LevelSettings.grid_w, LevelSettings.grid_h):
+	if shard_timer > shard_spawn_interval() and shards.size() < max_shards(LevelSettings.grid_w, LevelSettings.grid_h):
 		shard_timer = 0.0
 		_spawn_shard()
 

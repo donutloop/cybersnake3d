@@ -31,6 +31,7 @@ func _run_all() -> void:
 	_test_get_shard_positions()
 	_test_max_shards_scales_with_area()
 	_test_shard_float_height_bobs()
+	_test_shard_spawn_interval()
 
 
 func _set_snake_occupied(cells: Array) -> void:
@@ -98,3 +99,6 @@ func _test_max_shards_scales_with_area() -> void:
 
 func _test_shard_float_height_bobs() -> void:
 	assert_eq(_spawner.shard_float_height(), 0.3, "shards bob 0.3 units above floor")
+
+func _test_shard_spawn_interval() -> void:
+	assert_eq(_spawner.shard_spawn_interval(), 5.0, "shards respawn every 5 seconds")
