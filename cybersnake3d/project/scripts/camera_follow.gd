@@ -4,7 +4,6 @@ extends Camera3D
 @export var offset := Vector3(0.0, 30.0, 20.0)
 @export var look_ahead: float = 3.0
 @export var smooth_speed: float = 5.0
-@export var shake_decay: float = 6.0
 
 var target: Node3D
 var initialized: bool = false
@@ -59,9 +58,13 @@ func shake_amplitude(strength: float) -> float:
 	# Camera shake amplitude scales with shake strength.
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return strength * 0.35
+
+func shake_decay_rate() -> float:
+	# Camera shake decays at this rate per second (pure mapping).
+	return 6.0
 func apply_shake(delta: float) -> void:
 	shake_time += delta
-	shake_strength = maxf(0.0, shake_strength - shake_decay * delta)
+	shake_strength = maxf(0.0, shake_strength - shake_decay_rate() * delta)
 	var amp := shake_strength
 	var ox := sin(shake_time * 60.0) * amp
 	var oz := sin(shake_time * 47.0 + 1.7) * amp
