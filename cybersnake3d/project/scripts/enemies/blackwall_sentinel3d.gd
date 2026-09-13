@@ -19,7 +19,9 @@ var mat: StandardMaterial3D
 
 func _ready() -> void:
 	# Scale boss HP from the current wave (EnemyManager sibling).
-	var mgr := get_node_or_null("../../EnemyManager")
+	# The Sentinel is spawned as a direct child of the EnemyManager, so the
+	# manager is our parent (../../EnemyManager would miss it).
+	var mgr := get_parent()
 	if mgr:
 		max_hp = boss_hp(mgr.wave)
 		hp = max_hp
