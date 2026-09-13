@@ -109,6 +109,7 @@ func _run_all() -> void:
 	_test_game_over_text_formats_scores()
 	_test_boss_slain_text()
 	_test_wave_clear_bonus_grows()
+	_test_evolution_banner_text()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -193,3 +194,6 @@ func _test_boss_slain_text() -> void:
 func _test_wave_clear_bonus_grows() -> void:
 	assert_eq(_hud.wave_clear_bonus(1), 120, "wave 1 clear gives 120")
 	assert_eq(_hud.wave_clear_bonus(10), 300, "wave 10 clear gives 300")
+
+func _test_evolution_banner_text() -> void:
+	assert_eq(_hud.evolution_banner_text(), "EVOLUTION UP!", "evolution banner headline")

@@ -374,6 +374,10 @@ func hp_ratio(hp: float, max_hp: float) -> float:
 
 
 
+
+func evolution_banner_text() -> String:
+	# Banner announcing an evolution stage-up (pure mapping).
+	return "EVOLUTION UP!"
 func wave_clear_bonus(wave: int) -> int:
 	# Score bonus for clearing a wave: base 100 plus 20 per wave (pure mapping).
 	return 100 + wave * 20
@@ -483,7 +487,7 @@ func _on_evolved(_stage: int) -> void:
 	flash_rect.color = Color(1.0, 1.0, 1.0, 0.8)
 	evo_tween.tween_property(flash_rect, "color", Color(1.0, 1.0, 1.0, 0.0), 1.0)
 	var banner := Label.new()
-	banner.text = "EVOLUTION UP!"
+	banner.text = evolution_banner_text()
 	banner.add_theme_font_size_override("font_size", 32)
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.add_theme_color_override("font_color", Color(0.4, 1.0, 0.9))

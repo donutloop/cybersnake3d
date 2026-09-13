@@ -152,6 +152,7 @@ Snake overcharge unlock stage comes from overcharge_unlock_stage, a pure mapping
 Snake overcharge burst reach comes from burst_reach, a pure mapping (magnet radius + 1).
 HUD boss-kill banner comes from boss_slain_text, a pure formatter.
 HUD wave-clear bonus grows via wave_clear_bonus, a pure mapping (base 100 + 20/wave).
+HUD evolution banner comes from evolution_banner_text, a pure mapping.
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
