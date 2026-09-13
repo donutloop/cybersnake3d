@@ -47,6 +47,7 @@ func _run_all() -> void:
 	_test_combo_tier_multiplier()
 	_test_magnet_radius_scales_with_stage()
 	_test_burst_damage_scales_with_stage()
+	_test_combo_window_extends_with_depth()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -252,6 +253,13 @@ func _test_burst_damage_scales_with_stage() -> void:
 	assert_eq(s.burst_damage(3), 3, "stage 3 burst deals 3")
 	assert_eq(s.burst_damage(9), 3, "burst damage clamps above stage 3")
 	assert_eq(s.burst_damage(0), 1, "burst damage clamps below stage 1")
+
+func _test_combo_window_extends_with_depth() -> void:
+	# Deeper streaks extend the combo window (capped).
+	var s := _make_snake()
+	assert_eq(s.combo_window_seconds(0), 1.0, "base combo window is 1.0s")
+	assert_gt(s.combo_window_seconds(10), 1.0, "deep streaks extend the window")
+	assert_eq(s.combo_window_seconds(50), 2.5, "combo window caps at 2.5s")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()

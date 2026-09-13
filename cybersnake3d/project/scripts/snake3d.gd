@@ -592,7 +592,7 @@ func _release_burst() -> void:
 
 func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
-	combo_timer = combo_window
+	combo_timer = combo_window_seconds(combo)
 	# Shards pay more in later waves: +10% gain per wave tier.
 	var mgr := get_node_or_null("../EnemyManager")
 	var wave_factor: int = 1 + (int(mgr.wave) / 10 if mgr and "wave" in mgr else 0)
@@ -628,6 +628,11 @@ func combo_tier_multiplier(combo: int) -> float:
 	if combo >= 4:
 		return 1.5
 	return 1.0
+
+func combo_window_seconds(combo: int) -> float:
+	# Deeper streaks extend the combo window (base 1.0, +0.05/combo, capped 2.5).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return clampf(1.0 + combo * 0.05, 1.0, 2.5)
 
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.
