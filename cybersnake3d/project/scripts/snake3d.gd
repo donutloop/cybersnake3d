@@ -217,7 +217,7 @@ func _step() -> void:
 		score += gain
 		score_changed.emit(score)
 		add_xp(10)
-		invuln_timer = 0.3
+		invuln_timer = pickup_invuln_time()
 	else:
 		body.pop_back()
 
@@ -297,7 +297,7 @@ func _check_enemy_damage(head_pos: Vector2i, is_tail_whip: bool) -> void:
 					add_xp(KILL_XP)  # combat reward: killing an enemy feeds evolution
 				if not is_tail_whip:
 					just_attacked = true
-					invuln_timer = 0.2
+					invuln_timer = wall_invuln_time()
 				return
 
 func is_invulnerable() -> bool:
@@ -316,6 +316,14 @@ func _die() -> void:
 func hit_invuln_time() -> float:
 	# Snake is invulnerable for this many seconds after being hit (pure mapping).
 	return 2.0
+
+func pickup_invuln_time() -> float:
+	# Brief grace period after picking up a shard (pure mapping).
+	return 0.3
+
+func wall_invuln_time() -> float:
+	# Brief grace period after clipping a wall (pure mapping).
+	return 0.2
 func _hit() -> bool:
 	# Applies one hit of damage and returns whether the snake survived.
 	# HP is clamped at 0 so it never goes negative. Pure logic for unit tests.

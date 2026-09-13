@@ -50,6 +50,7 @@ func _run_all() -> void:
 	_test_combo_window_extends_with_depth()
 	_test_stats_for_stage_clamps_roster()
 	_test_hit_invuln_time()
+	_test_pickup_and_wall_invuln_times()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -428,3 +429,8 @@ func _test_stats_for_stage_clamps_roster() -> void:
 func _test_hit_invuln_time() -> void:
 	var s := _make_snake()
 	assert_eq(s.hit_invuln_time(), 2.0, "snake is invulnerable 2s after a hit")
+
+func _test_pickup_and_wall_invuln_times() -> void:
+	var s := _make_snake()
+	assert_eq(s.pickup_invuln_time(), 0.3, "pickup grace lasts 0.3s")
+	assert_eq(s.wall_invuln_time(), 0.2, "wall grace lasts 0.2s")
