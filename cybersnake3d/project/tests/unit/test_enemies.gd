@@ -246,7 +246,7 @@ func _test_web_residue_fades() -> void:
 	assert_gt(web.residue.size(), 0, "web marks residue cells")
 	# Drive the fade timer; residue should be cleared once it expires.
 	var n: int = web.residue.size()
-	web._process(web.residue_life + 1.0)
+	web._process(web.residue_life() + 1.0)
 	assert_lt(web.residue.size(), n, "residue fades over time")
 
 # ── blackwall_sentinel ────────────────────────────────────────────────
@@ -530,6 +530,7 @@ func _run_all() -> void:
 	_test_frenzy_speed_multiplier_doubles()
 	_test_virus_swarm_size_range()
 	_test_split_echo_fractures_and_third_hp()
+	_test_web_residue_life_persists()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -583,3 +584,7 @@ func _test_split_echo_fractures_and_third_hp() -> void:
 	var echo := _make_enemy(SplitEchoScript, "echo2")
 	assert_eq(echo.split_count(), 2, "split echo fractures into 2 echoes")
 	assert_eq(echo.echo_hp_divisor(), 3, "echoes carry a third of parent HP")
+
+func _test_web_residue_life_persists() -> void:
+	var web := _make_enemy(WebScript, "web2")
+	assert_eq(web.residue_life(), 6.0, "static web residue persists 6 seconds")

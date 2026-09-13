@@ -144,6 +144,7 @@ Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure map
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
 Split Echo fracture count and HP divisor come from split_count/echo_hp_divisor, pure mappings.
+Static Web residue persistence comes from residue_life, a pure mapping (6 seconds).
 
 ## Gameplay Features
 

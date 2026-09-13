@@ -19,7 +19,6 @@ var move_speed: float = 1.6
 var move_timer: float = 0.0
 var is_dead: bool = false
 var residue: Dictionary = {}   # Vector2i -> float (remaining life)
-var residue_life: float = 6.0
 
 var mesh_inst: MeshInstance3D
 var mat: StandardMaterial3D
@@ -28,6 +27,10 @@ var time_passed: float = 0.0
 var flash_timer: float = 0.0
 
 
+
+func residue_life() -> float:
+	# Static web residue persists for this many seconds (pure mapping).
+	return 6.0
 func _ready() -> void:
 	grid_pos = _random_edge()
 
@@ -63,7 +66,7 @@ func _process(delta: float) -> void:
 		_step_chase(snake.body[0], delta)
 
 	# Leave residue at the current cell.
-	mark_residue(grid_pos, residue_life)
+	mark_residue(grid_pos, residue_life())
 
 	_update_position()
 	_check_residue_collision(snake)
