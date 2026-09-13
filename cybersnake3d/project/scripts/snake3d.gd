@@ -625,7 +625,7 @@ func _register_pickup() -> int:
 	last_gain = base_shard_gain() * combo * wave_factor
 	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
 	last_gain = int(round(last_gain * combo_tier_multiplier(combo)))
-	if combo % 5 == 0:
+	if is_milestone(combo):
 		add_xp(milestone_xp(combo))
 		if has_signal("xp_changed"):
 			xp_changed.emit(xp, level, evolution_stage)
@@ -683,6 +683,10 @@ func move_interval_from_speed(speed: int) -> float:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 1.0 / maxf(speed, 1)
 
+
+func is_milestone(combo: int) -> bool:
+	# Every 5th combo registers a milestone bonus (pure mapping).
+	return combo % 5 == 0
 func milestone_xp(combo: int) -> int:
 	# Combo milestone XP scales with the streak tier (x1/x1.5/x2).
 	# Pure mapping (no node access) so the logic is unit-testable.
