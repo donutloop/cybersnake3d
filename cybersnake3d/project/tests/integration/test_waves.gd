@@ -53,6 +53,7 @@ func _run_all() -> void:
 	_test_wave7_spawns_hunter()
 	_test_wave14_spawns_leech()
 	_test_wave12_spawns_wraith()
+	_test_wave13_spawns_overdrive_mine()
 	_test_wave9_spawns_warp_shard()
 	_test_warp_shard_warps_when_hit()
 
@@ -318,6 +319,14 @@ func _test_wave12_spawns_wraith() -> void:
 	_manager._start_next_wave()  # wave becomes 12
 	assert_gt(_count_script(_manager.enemies, "wraith3d.gd"), 0,
 		"wave 12 spawns at least one wraith")
+func _test_wave13_spawns_overdrive_mine() -> void:
+	# Wave 13 gates the Overdrive Mine (wounds, never kills outright).
+	_reset_enemies()
+	_manager.wave = 12
+	_manager._start_next_wave()
+	assert_gt(_count_script(_manager.enemies, "overdrive_mine3d.gd"), 0,
+		"wave 13 spawns at least one Overdrive Mine")
+
 
 
 func _test_wave14_spawns_leech() -> void:

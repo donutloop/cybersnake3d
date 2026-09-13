@@ -17,6 +17,7 @@ const WarpShardScript = preload("res://scripts/enemies/warp_shard3d.gd")
 const HunterScript = preload("res://scripts/enemies/hunter3d.gd")
 const WraithScript = preload("res://scripts/enemies/wraith3d.gd")
 const ScoreLeechScript = preload("res://scripts/enemies/score_leech3d.gd")
+const OverdriveMineScript = preload("res://scripts/enemies/overdrive_mine3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -409,6 +410,42 @@ func _test_leech_dies_awards_xp() -> void:
 	assert_true(leech.is_dead, "leech dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "killing a leech awards XP")
 
+func _test_mine_detonates_wounds_snake() -> void:
+	# A vulnerable snake stepping onto an armed Overdrive Mine is wounded for
+	# exactly 1 HP (not killed) and the mine is consumed by the detonation.
+	var mine := _make_enemy(OverdriveMineScript, "mine")
+	_snake.invuln_timer = 0.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = false
+	_snake.body[0] = mine.grid_pos
+	var hp_before: int = _snake.hp
+	mine._check_snake_collision()
+	assert_eq(_snake.hp, hp_before - 1, "mine wounds the snake by exactly 1 HP")
+	assert_true(_snake.is_alive, "mine never kills outright")
+	assert_true(mine.is_dead, "mine is consumed by the detonation")
+
+func _test_mine_burns_on_overcharge() -> void:
+	# An overcharged (invulnerable) snake burns the mine away instead of
+	# detonating it — no snake HP is lost.
+	var mine := _make_enemy(OverdriveMineScript, "mine2")
+	# Overcharge grants a real invulnerability window (invuln_timer > 0).
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = mine.grid_pos
+	var hp_before: int = _snake.hp
+	mine._check_snake_collision()
+	assert_eq(_snake.hp, hp_before, "overcharge burns the mine with no snake damage")
+	assert_true(mine.is_dead, "mine is burned away")
+
+func _test_mine_strike_destroys_awards_xp() -> void:
+	# A direct head strike destroys the mine normally and awards XP.
+	var mine := _make_enemy(OverdriveMineScript, "mine3")
+	var xp_before: int = _snake.xp
+	mine.take_damage(2)
+	assert_true(mine.is_dead, "mine dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "destroying a mine awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -443,6 +480,9 @@ func _run_all() -> void:
 	_test_wraith_ignores_body_segments()
 	_test_leech_drains_score_on_head_collision()
 	_test_leech_dies_awards_xp()
+	_test_mine_detonates_wounds_snake()
+	_test_mine_burns_on_overcharge()
+	_test_mine_strike_destroys_awards_xp()
 	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()
