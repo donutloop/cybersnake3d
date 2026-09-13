@@ -44,6 +44,7 @@ func _run_all() -> void:
 	_test_overcharge_cooldown_scales_with_evolution()
 	_test_hit_breaks_combo()
 	_test_die_protected_during_overcharge()
+	_test_die_protected_by_overcharge_flag_alone()
 	_test_die_protected_during_grace_invuln()
 	_test_die_vulnerable_reduces_hp_grants_grace()
 	_test_combo()
@@ -366,6 +367,18 @@ func _test_die_protected_during_overcharge() -> void:
 	s._die()
 	assert_eq(s.hp, hp_before, "overcharge protects the snake from _die")
 	assert_true(s.is_alive, "snake stays alive during overcharge")
+
+func _test_die_protected_by_overcharge_flag_alone() -> void:
+	# The overcharge_active flag is the authoritative death gate: even if the
+	# grace timer has drained to 0 (a 1-frame edge between decay blocks), an
+	# active overcharge must still shield the snake from _die().
+	var s := _make_snake()
+	s.overcharge_active = true
+	s.invuln_timer = 0.0
+	var hp_before: int = s.hp
+	s._die()
+	assert_eq(s.hp, hp_before, "overcharge_active alone protects even with zero grace timer")
+	assert_true(s.is_alive, "snake stays alive during active overcharge")
 
 func _test_die_protected_during_grace_invuln() -> void:
 	var s := _make_snake()
