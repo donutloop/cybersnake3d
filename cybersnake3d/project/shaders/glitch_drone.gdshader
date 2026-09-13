@@ -64,7 +64,9 @@ void fragment() {
 
 	col *= emissive_power;
 
-	ALBEDO = vec3(0.0);
-	EMISSION = col;
+	// Unshaded spatial: the visible color is ALBEDO (EMISSION is ignored
+	// without lighting), so output the hologram glow through ALBEDO.
+	ALBEDO = col;
+	EMISSION = vec3(0.0);
 	ALPHA = 1.0;
 }
