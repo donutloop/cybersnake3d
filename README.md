@@ -168,6 +168,7 @@ Hive Queen base HP comes from queen_base_hp, a pure mapping (16 HP).
 Chrono Anchor base HP comes from chrono_base_hp, a pure mapping (3 HP).
 Wraith base HP comes from wraith_base_hp, a pure mapping (5 HP).
 Overdrive Mine base HP comes from mine_base_hp, a pure mapping (2 HP).
+Warp Shard score_award/xp_award pure mappings (250 score, 55 xp).
 Virus Swarm score_award/xp_award pure mappings (200 score, 35 xp).
 Wired hunter/leech/echo base HP vars to their pure helpers (indentation fix).
 Warp Shard base HP wired to shard_base_hp (pure mapping).

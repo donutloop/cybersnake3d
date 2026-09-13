@@ -111,6 +111,15 @@ func take_damage(amount: int = 1) -> void:
 
 
 
+
+func score_award() -> int:
+	# Kill score awarded when a warp shard dies (pure mapping).
+	return 250
+
+func xp_award() -> int:
+	# XP awarded when a warp shard dies (pure mapping).
+	return 55
+
 func shard_base_hp() -> int:
 	# Warp Shard base HP (pure mapping).
 	return 4
@@ -137,10 +146,10 @@ func _die() -> void:
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:
-		snake.score += 250
+		snake.score += score_award()
 		snake.score_changed.emit(snake.score)
 		if snake.has_method("add_xp"):
-			snake.add_xp(55)
+			snake.add_xp(xp_award())
 	queue_free()
 
 func get_grid_positions() -> Array[Vector2i]:
