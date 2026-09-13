@@ -560,7 +560,7 @@ func _magnet_shards() -> void:
 	var shards: Array = spawner.shards if "shards" in spawner else []
 	var eaten: Array[Vector2i] = []
 	for cell in shards:
-		if abs(cell.x - origin.x) <= 1 + clampi(evolution_stage, 1, 3) and abs(cell.y - origin.y) <= 1 + clampi(evolution_stage, 1, 3):
+		if abs(cell.x - origin.x) <= 1 + int(magnet_radius(evolution_stage)) and abs(cell.y - origin.y) <= 1 + int(magnet_radius(evolution_stage)):
 			if spawner.try_eat(cell):
 				eaten.append(cell)
 	for cell in eaten:
@@ -584,7 +584,7 @@ func _release_burst() -> void:
 		if not e or not e.has_method("get_grid_positions") or not e.has_method("take_damage"):
 			continue
 		for cell in e.get_grid_positions():
-			if abs(cell.x - origin.x) <= 1 + clampi(evolution_stage, 1, 3) and abs(cell.y - origin.y) <= 1 + clampi(evolution_stage, 1, 3):
+			if abs(cell.x - origin.x) <= 1 + int(magnet_radius(evolution_stage)) and abs(cell.y - origin.y) <= 1 + int(magnet_radius(evolution_stage)):
 				e.take_damage(1)
 				if e.get("is_dead"):
 					add_xp(KILL_XP)  # overcharge kills also feed evolution
@@ -609,6 +609,11 @@ func overdrive_gain_multiplier(overcharge_active: bool) -> float:
 	# Shards eaten inside the overcharge window score a 1.5x bonus.
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 1.5 if overcharge_active else 1.0
+
+func magnet_radius(evolution_stage: int) -> float:
+	# Overcharge magnet radius scales with evolution stage (clamped 1..3).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return float(clampi(evolution_stage, 1, 3))
 
 func combo_tier_multiplier(combo: int) -> float:
 	# Combo tiers reward deep streaks: x1 under 4, x1.5 at 4-7, x2 at 8+.
