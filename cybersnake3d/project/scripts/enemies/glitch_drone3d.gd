@@ -1,4 +1,10 @@
-# glitch_drone3d.gd — Tier 1: random walk with glitch stutter (3D)
+# glitch_drone3d.gd — Tier 1 monster: the Glitch Drone.
+#
+# 2026-style neon hologram upgrade:
+#   - demon-face core driven by glitch_drone.gdshader (emissive hologram,
+#     animated glitch bands, rim fringe, scanline shimmer).
+#   - additive flame/distortion aura via glitch_aura.gdshader.
+#   - GPUParticles3D spark trail + flickering OmniLight3D for extra juice.
 extends Node3D
 const LevelSettings = preload("res://scripts/level_settings.gd")
 
@@ -14,13 +20,12 @@ var glitch_timer: float = 0.0
 var glitch_cooldown: float = 0.0
 var is_dead: bool = false
 
-var mesh_inst: MeshInstance3D
-var light: OmniLight3D
-var mat: StandardMaterial3D
-var mat_face: StandardMaterial3D
-var mat_flame: StandardMaterial3D
 var face_mesh: MeshInstance3D
-var flame_mesh: MeshInstance3D
+var aura_mesh: MeshInstance3D
+var light: OmniLight3D
+var sparks: GPUParticles3D
+var face_mat: ShaderMaterial
+var aura_mat: ShaderMaterial
 var time_passed: float = 0.0
 
 const DIRECTIONS := [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
@@ -36,108 +41,97 @@ func _ready() -> void:
 	glitch_cooldown = randf_range(2.0, 5.0)
 	time_passed = randf() * 100.0
 
-	# 1. Load the demon face mesh if it exists
-	var demon_mesh: Mesh = null
-	if ResourceLoader.exists("res://assets/demon_face.obj", "Mesh"):
-		demon_mesh = load("res://assets/demon_face.obj")
-
-	# 2. Create inner demon face material
-	mat_face = StandardMaterial3D.new()
-	mat_face.albedo_color = Color(1.0, 0.05, 0.15, 1.0)
-	mat_face.emission_enabled = true
-	mat_face.emission = Color(1.0, 0.0, 0.1, 1.0)
-	mat_face.emission_energy_multiplier = 7.0
-
-	# 3. Create outer transparent flickering flame material
-	mat_flame = StandardMaterial3D.new()
-	mat_flame.albedo_color = Color(1.0, 0.5, 0.1, 0.22)
-	mat_flame.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	mat_flame.blend_mode = StandardMaterial3D.BLEND_MODE_ADD
-	mat_flame.cull_mode = StandardMaterial3D.CULL_DISABLED
-	mat_flame.roughness = 0.1
-	mat_flame.emission_enabled = true
-	mat_flame.emission = Color(1.0, 0.4, 0.05, 1.0)
-	mat_flame.emission_energy_multiplier = 3.5
-	mat = mat_flame # Backwards compatibility
-
-	# 4. Create base pivot mesh instance
-	mesh_inst = MeshInstance3D.new()
-	add_child(mesh_inst)
-
-	# 5. Create inner demon face mesh instance
-	face_mesh = MeshInstance3D.new()
-	if demon_mesh:
-		face_mesh.mesh = demon_mesh
-		face_mesh.scale = Vector3(0.85, 0.85, 0.85)
-		face_mesh.position = Vector3(0, -0.22, 0)
-	else:
-		var box := BoxMesh.new()
-		box.size = Vector3(0.65, 0.65, 0.65)
-		face_mesh.mesh = box
-	face_mesh.material_override = mat_face
-	mesh_inst.add_child(face_mesh)
-
-	# 6. Create outer flickering flame mesh instance
-	flame_mesh = MeshInstance3D.new()
-	var sphere := SphereMesh.new()
-	sphere.radius = 0.55
-	sphere.height = 1.1
-	flame_mesh.mesh = sphere
-	flame_mesh.material_override = mat_flame
-	mesh_inst.add_child(flame_mesh)
-
-	# 7. Create flicker light
-	light = OmniLight3D.new()
-	light.light_color = Color(1.0, 0.45, 0.1)
-	light.light_energy = 1.5
-	light.omni_range = 3.5
-	mesh_inst.add_child(light)
-
+	_build_visuals()
 	_update_position()
 
+func _build_visuals() -> void:
+	# ── demon-face hologram core ───────────────────────────────────────
+	var demon := Mesh.new()
+	if ResourceLoader.exists("res://assets/demon_face.obj", "Mesh"):
+		demon = load("res://assets/demon_face.obj")
+	else:
+		var box := BoxMesh.new()
+		box.size = Vector3(0.9, 0.9, 0.9)
+		demon = box
+
+	face_mat = ShaderMaterial.new()
+	face_mat.shader = load("res://shaders/glitch_drone.gdshader")
+	face_mat.set_shader_parameter("core_color", Color(1.0, 0.05, 0.15))
+	face_mat.set_shader_parameter("rim_color", Color(1.0, 0.30, 0.10))
+	face_mat.set_shader_parameter("emissive_power", 3.0)
+	face_mat.set_shader_parameter("rim_power", 2.0)
+	face_mat.set_shader_parameter("glitch_amount", 0.0)
+
+	face_mesh = MeshInstance3D.new()
+	face_mesh.mesh = demon
+	face_mesh.material_override = face_mat
+	face_mesh.scale = Vector3(1.2, 1.2, 1.2)
+	face_mesh.position = Vector3(0.0, 0.4, 0.0)
+	add_child(face_mesh)
+
+	# ── additive flame/distortion aura ────────────────────────────────
+	var sphere := SphereMesh.new()
+	sphere.radius = 1.0
+	sphere.height = 1.9
+	sphere.radial_segments = 48
+	sphere.rings = 24
+
+	aura_mat = ShaderMaterial.new()
+	aura_mat.shader = load("res://shaders/glitch_aura.gdshader")
+	aura_mat.set_shader_parameter("flame_color", Color(1.0, 0.35, 0.10))
+	aura_mat.set_shader_parameter("intensity", 1.6)
+	aura_mat.set_shader_parameter("noise_scale", 5.0)
+	aura_mat.set_shader_parameter("speed", 2.0)
+
+	aura_mesh = MeshInstance3D.new()
+	aura_mesh.mesh = sphere
+	aura_mesh.material_override = aura_mat
+	aura_mesh.scale = Vector3(1.5, 1.5, 1.5)
+	face_mesh.add_child(aura_mesh)
+
+	# ── spark trail ───────────────────────────────────────────────────
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	pm.emission_sphere_radius = 0.5
+	pm.initial_velocity_min = 0.6
+	pm.initial_velocity_max = 1.4
+	pm.color = Color(1.0, 0.45, 0.15, 0.9)
+
+	sparks = GPUParticles3D.new()
+	sparks.process_material = pm
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.08, 0.08)
+	sparks.draw_pass_1 = quad
+	sparks.amount = 96
+	sparks.lifetime = 1.2
+	sparks.preprocess = 1.0
+	sparks.emitting = true
+	face_mesh.add_child(sparks)
+
+	# ── flicker light ─────────────────────────────────────────────────
+	light = OmniLight3D.new()
+	light.light_color = Color(1.0, 0.25, 0.1)
+	light.light_energy = 1.2
+	light.omni_range = 3.5
+	face_mesh.add_child(light)
+
 func _process(delta: float) -> void:
-	if is_dead:
-		return
-
 	time_passed += delta
-
 	glitch_cooldown -= delta
 	if glitch_cooldown <= 0.0 and not is_glitching:
 		is_glitching = true
 		glitch_timer = randf_range(0.15, 0.35)
 
-	# Calculate high-frequency flicker values
-	var flicker_val := sin(time_passed * 45.0) * 0.12 + cos(time_passed * 60.0) * 0.08 + randf_range(-0.08, 0.08)
-
 	if is_glitching:
 		glitch_timer -= delta
-		# Glitch visual — random offset + flash
-		mesh_inst.position = _grid_to_world(grid_pos) + Vector3(randf_range(-0.15, 0.15), 0, randf_range(-0.15, 0.15))
-		
-		var glitch_scale := 1.3 + randf_range(-0.25, 0.25)
-		flame_mesh.scale = Vector3(glitch_scale, glitch_scale, glitch_scale)
-		mat_flame.emission_energy_multiplier = 9.0 + randf_range(-2.0, 2.0)
-		light.light_energy = 4.0 + randf_range(-1.0, 1.0)
-		
+		var g := clampf(1.0 - glitch_timer / 0.35, 0.0, 1.0)
+		_drive_shaders(g)
 		if glitch_timer <= 0.0:
 			is_glitching = false
 			glitch_cooldown = randf_range(2.0, 5.0)
-			mat_flame.emission_energy_multiplier = 4.0
-		return
-
-	# Natural hovering wobble + slow rotation of the face core
-	if face_mesh:
-		face_mesh.rotate_y(delta * 1.8)
-		face_mesh.position.y = -0.1 + sin(time_passed * 4.5) * 0.06
-
-	# Natural flame flickering (scaling distort and emission fluctuation)
-	var flame_scale_x := 1.0 + flicker_val
-	var flame_scale_y := 1.0 + flicker_val + sin(time_passed * 25.0) * 0.12 # stretch vertically
-	var flame_scale_z := 1.0 + flicker_val
-	flame_mesh.scale = Vector3(flame_scale_x, flame_scale_y, flame_scale_z)
-
-	mat_flame.emission_energy_multiplier = 4.5 + flicker_val * 7.5 + randf_range(-0.3, 0.3)
-	light.light_energy = 1.8 + flicker_val * 2.5
+			_drive_shaders(0.0)
+	else:
+		_drive_shaders(0.0)
 
 	move_timer += delta
 	if move_timer >= 1.0 / speed_steps:
@@ -146,6 +140,19 @@ func _process(delta: float) -> void:
 		_update_position()
 
 	_check_snake_collision()
+
+# Drives shader uniforms / lights from a glitch intensity in 0..1.
+func _drive_shaders(glitch: float) -> void:
+	if face_mat:
+		face_mat.set_shader_parameter("glitch_amount", glitch)
+		face_mat.set_shader_parameter("emissive_power", 3.0 + glitch * 6.0)
+		face_mat.set_shader_parameter("rim_power", 2.0 + glitch * 3.0)
+	if aura_mat:
+		aura_mat.set_shader_parameter("intensity", 1.6 + glitch * 2.0 + sin(time_passed * 5.0) * 0.3)
+	if light:
+		light.light_energy = 1.2 + glitch * 3.0 + sin(time_passed * 6.0) * 0.25
+	if sparks:
+		sparks.emitting = true
 
 func _step() -> void:
 	tick_count += 1
@@ -158,7 +165,6 @@ func _step() -> void:
 			grid_pos = next
 		return
 
-	# Try random direction
 	var dirs: Array = DIRECTIONS.duplicate()
 	dirs.shuffle()
 	for i in range(dirs.size()):
@@ -170,38 +176,32 @@ func _step() -> void:
 
 func _check_snake_collision() -> void:
 	var snake := get_node_or_null("../../Snake")
-	if not snake or not snake.is_alive:
+	if not snake:
 		return
-	if snake.is_invulnerable():
-		if snake.overcharge_active and snake.body.size() > 0 and snake.body[0] == grid_pos:
-			take_damage(1)
-		return
-	if snake.body.size() > 0 and snake.body[0] == grid_pos:
+	if snake.body and snake.body.size() > 0 and snake.body[0] == grid_pos:
 		snake._die()
 
 func take_damage(amount: int = 1) -> void:
-	# HP never goes negative.
 	hp = maxi(0, hp - amount)
 	if hp <= 0:
 		_die()
 
 func _die() -> void:
-	if is_dead: return
+	if is_dead:
+		return
 	is_dead = true
-	var snake := get_node_or_null("../../Snake")
-	if snake:
-		snake.score += 50
-		snake.score_changed.emit(snake.score)
-		if snake.has_method("add_xp"):
-			snake.add_xp(25)
+	if light:
+		light.light_energy = 0.0
+	if sparks:
+		sparks.emitting = false
 	queue_free()
 
 func get_grid_positions() -> Array[Vector2i]:
 	return [grid_pos]
 
 func _update_position() -> void:
-	if mesh_inst:
-		mesh_inst.position = _grid_to_world(grid_pos)
+	if face_mesh:
+		face_mesh.position = _grid_to_world(grid_pos)
 
 func _grid_to_world(gp: Vector2i) -> Vector3:
 	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)
