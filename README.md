@@ -193,3 +193,4 @@ The wave-clear score bonus scales with the wave via clear_bonus, a pure mapping.
 The HUD wave label zero-pads the wave number via wave_label_text, a pure formatter.
 The HUD combo label shows the multiplier only while the combo window is live via combo_display_text, a pure formatter.
 The snake move interval is the inverse of speed via move_interval_from_speed, a pure clamped mapping.
+The Blackwall Sentinel enrages below half max HP via enrage_threshold, a pure mapping.

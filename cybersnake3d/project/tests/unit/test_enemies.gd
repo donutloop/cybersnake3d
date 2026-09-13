@@ -262,6 +262,11 @@ func _test_sentinel_enrages_at_low_hp() -> void:
 	sentinel.take_damage(0)
 	assert_true(sentinel.enraged, "sentinel enrages when wounded below half hp")
 
+func _test_enrage_threshold_is_half_hp() -> void:
+	var sentinel := _make_enemy(SentinelScript, "sentinel3")
+	assert_eq(sentinel.enrage_threshold(20), 10, "sentinel enrage threshold is half max HP")
+	assert_eq(sentinel.enrage_threshold(1), 1, "enrage threshold floors at 1")
+
 # ── hive_queen ────────────────────────────────────────────────────────
 func _test_queen_hatches_swarms_into_manager() -> void:
 	var queen := _make_enemy(QueenScript, "queen")
@@ -512,6 +517,7 @@ func _run_all() -> void:
 	_test_web_residue_fades()
 	_test_sentinel_spawns_drones_into_manager()
 	_test_sentinel_enrages_at_low_hp()
+	_test_enrage_threshold_is_half_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()

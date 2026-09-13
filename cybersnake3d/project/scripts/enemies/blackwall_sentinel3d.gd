@@ -49,6 +49,11 @@ func boss_hp(wave: int) -> int:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 10 + maxi(wave - 10, 0) / 5
 
+func enrage_threshold(max_hp: int) -> int:
+	# The Sentinel enrages below half its max HP.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return maxi(max_hp / 2, 1)
+
 func _process(delta: float) -> void:
 	if is_dead:
 		return
@@ -108,7 +113,7 @@ func take_damage(amount: int = 1) -> void:
 		_die()
 		return
 	flash_timer = 0.25
-	if hp <= max_hp / 2 and not enraged:
+	if hp <= enrage_threshold(max_hp) and not enraged:
 		enraged = true
 		drone_spawn_timer = 0.0
 
