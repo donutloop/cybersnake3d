@@ -128,7 +128,7 @@ func _process(delta: float) -> void:
 		overcharge_timer -= delta
 		if overcharge_timer <= 0.0:
 			overcharge_timer = maxf(3.0, 8.0 - float(evolution_stage))
-			invuln_timer = 2.0
+			invuln_timer = overcharge_duration(evolution_stage)
 			overcharge_active = true
 			_release_burst()
 			_magnet_shards()
@@ -633,6 +633,11 @@ func combo_window_seconds(combo: int) -> float:
 	# Deeper streaks extend the combo window (base 1.0, +0.05/combo, capped 2.5).
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return clampf(1.0 + combo * 0.05, 1.0, 2.5)
+
+func overcharge_duration(evolution_stage: int) -> float:
+	# Higher evolution stages grant a longer overcharge invulnerability window.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 2.0 + evolution_stage * 0.5
 
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.
