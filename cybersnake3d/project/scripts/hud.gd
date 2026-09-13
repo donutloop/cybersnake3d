@@ -257,6 +257,9 @@ func _process(delta: float) -> void:
 	_update_boss_bar()
 
 	if death_screen.visible and Input.is_action_just_pressed("ui_accept"):
+		# Unpause in case a pause toggle fired before the death screen; a paused
+		# scene stops _process and would block the restart.
+		get_tree().paused = false
 		get_tree().reload_current_scene()
 
 func _update_overcharge_bar() -> void:
