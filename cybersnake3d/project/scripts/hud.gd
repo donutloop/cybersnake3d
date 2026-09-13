@@ -361,11 +361,15 @@ func update_hud(p_score: int, wave: int, length: int) -> void:
 	if length_label:
 		length_label.text = "LEN: %d" % length
 
+
+func is_boss_wave(wave: int) -> bool:
+	# Waves at or past this number are announced as boss waves (pure mapping).
+	return wave >= 10
 func show_wave_announce(wave: int) -> void:
 	if not wave_announce:
 		return
 	wave_announce.modulate.a = 1.0
-	if wave >= 10:
+	if is_boss_wave(wave):
 		wave_announce.text = ">>> BOSS WAVE %d <<<" % wave
 		wave_announce.add_theme_color_override("font_color", Color(1, 0.15, 0.15))
 	else:

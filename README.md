@@ -159,6 +159,7 @@ Snake shard gain wave multiplier comes from wave_factor, a pure mapping (+1 per 
 Snake base shard gain comes from base_shard_gain, a pure mapping (100 per shard).
 Snake enemy-kill XP comes from kill_xp, a pure mapping (15 XP).
 Snake evolution stage derives from XP via evolution_stage_for_xp, a pure mapping.
+HUD boss-wave detection comes from is_boss_wave, a pure mapping (waves >= 10).
 
 ## Gameplay Features
 

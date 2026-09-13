@@ -102,6 +102,7 @@ func _run_all() -> void:
 	_test_combo_tier_color_matches_streak()
 	_test_countdown_text_hides_when_elapsed()
 	_test_gain_text_formats_gain()
+	_test_is_boss_wave()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -161,3 +162,7 @@ func _test_gain_text_formats_gain() -> void:
 func _teardown() -> void:
 	_hud.queue_free()
 	_snake.queue_free()
+
+func _test_is_boss_wave() -> void:
+	assert_eq(_hud.is_boss_wave(9), false, "wave 9 is not a boss wave")
+	assert_eq(_hud.is_boss_wave(10), true, "wave 10 is a boss wave")
