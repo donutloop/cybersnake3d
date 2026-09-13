@@ -46,6 +46,7 @@ func _run_all() -> void:
 	_test_overdrive_shard_bonus()
 	_test_combo_tier_multiplier()
 	_test_magnet_radius_scales_with_stage()
+	_test_burst_damage_scales_with_stage()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -242,6 +243,15 @@ func _test_magnet_radius_scales_with_stage() -> void:
 	assert_eq(s.magnet_radius(3), 3.0, "stage 3 magnet radius is 3")
 	assert_eq(s.magnet_radius(9), 3.0, "magnet radius clamps above stage 3")
 	assert_eq(s.magnet_radius(0), 1.0, "magnet radius clamps below stage 1")
+
+func _test_burst_damage_scales_with_stage() -> void:
+	# Overcharge burst damage follows evolution stage, clamped to [1,3].
+	var s := _make_snake()
+	assert_eq(s.burst_damage(1), 1, "stage 1 burst deals 1")
+	assert_eq(s.burst_damage(2), 2, "stage 2 burst deals 2")
+	assert_eq(s.burst_damage(3), 3, "stage 3 burst deals 3")
+	assert_eq(s.burst_damage(9), 3, "burst damage clamps above stage 3")
+	assert_eq(s.burst_damage(0), 1, "burst damage clamps below stage 1")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()

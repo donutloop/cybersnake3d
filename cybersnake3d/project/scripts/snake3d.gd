@@ -287,7 +287,7 @@ func _check_enemy_damage(head_pos: Vector2i, is_tail_whip: bool) -> void:
 			continue
 		for cell in enemy.get_grid_positions():
 			if cell == head_pos:
-				enemy.take_damage(1)
+				enemy.take_damage(burst_damage(evolution_stage))
 				if enemy.get("is_dead"):
 					add_xp(KILL_XP)  # combat reward: killing an enemy feeds evolution
 				if not is_tail_whip:
@@ -614,6 +614,11 @@ func magnet_radius(evolution_stage: int) -> float:
 	# Overcharge magnet radius scales with evolution stage (clamped 1..3).
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return float(clampi(evolution_stage, 1, 3))
+
+func burst_damage(evolution_stage: int) -> int:
+	# Overcharge burst damage scales with evolution stage (1..3).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return clampi(evolution_stage, 1, 3)
 
 func combo_tier_multiplier(combo: int) -> float:
 	# Combo tiers reward deep streaks: x1 under 4, x1.5 at 4-7, x2 at 8+.
