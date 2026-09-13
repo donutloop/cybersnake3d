@@ -63,6 +63,14 @@ func _die() -> void:
 			snake.add_xp(30)
 	queue_free()
 
+
+func split_count() -> int:
+	# Split Echo fractures into this many echoes (pure mapping).
+	return 2
+
+func echo_hp_divisor() -> int:
+	# Echoes carry a third of the parent's HP (pure mapping).
+	return 3
 func _split() -> void:
 	split_used = true
 	var parent := get_parent()
@@ -70,7 +78,7 @@ func _split() -> void:
 		return
 	var spawned := 0
 	for cell in _neighbor_cells():
-		if spawned >= 2:
+		if spawned >= split_count():
 			break
 		# Avoid overlapping another echo at the same cell.
 		var occupied := false
@@ -89,7 +97,7 @@ func _split() -> void:
 		echo.set_script(load("res://scripts/enemies/split_echo3d.gd"))
 		parent.add_child(echo)
 		echo.grid_pos = cell
-		echo.hp = maxi(1, max_hp / 3)
+		echo.hp = maxi(1, max_hp / echo_hp_divisor())
 		echo.max_hp = echo.hp
 		echo.split_used = true  # echoes cannot split further
 		echo._update_position()

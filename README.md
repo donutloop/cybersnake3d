@@ -143,6 +143,7 @@ A `danger_pulse.gd` controller drives those uniforms from the Snake's HP each fr
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
+Split Echo fracture count and HP divisor come from split_count/echo_hp_divisor, pure mappings.
 
 ## Gameplay Features
 

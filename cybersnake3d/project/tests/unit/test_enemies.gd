@@ -529,6 +529,7 @@ func _run_all() -> void:
 	_test_wave_delay_shrinks_with_wave()
 	_test_frenzy_speed_multiplier_doubles()
 	_test_virus_swarm_size_range()
+	_test_split_echo_fractures_and_third_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -577,3 +578,8 @@ func _test_virus_swarm_size_range() -> void:
 	var swarm := _make_enemy(SwarmScript, "swarm2")
 	assert_eq(swarm.swarm_size_min(), 4, "virus swarm spawns at least 4")
 	assert_eq(swarm.swarm_size_max(), 8, "virus swarm spawns at most 8")
+
+func _test_split_echo_fractures_and_third_hp() -> void:
+	var echo := _make_enemy(SplitEchoScript, "echo2")
+	assert_eq(echo.split_count(), 2, "split echo fractures into 2 echoes")
+	assert_eq(echo.echo_hp_divisor(), 3, "echoes carry a third of parent HP")
