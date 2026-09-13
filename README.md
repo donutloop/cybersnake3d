@@ -1,5 +1,13 @@
 # Prototype Omega — CyberSnake 3D
 
+> **Built by an AI coding agent.**
+>
+> This project was developed by an **agentic system** — the game code, test
+> suite, and bug fixes were produced autonomously by an AI coding agent (see
+> the `setup/` agent environment below) with **minimal human interference**.
+> Humans reviewed high-level direction and validated checkpoints; the agent
+> wrote, tested, and iterated on the implementation itself.
+
 This repository contains the **CyberSnake 3D** Godot project (a neon 3D snake
 game) plus its test suite and the AI-agent environment that builds it.
 
