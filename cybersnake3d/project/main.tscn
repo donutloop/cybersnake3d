@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/camera_follow.gd" id="camera_script"]
 [ext_resource type="Shader" path="res://shaders/grid_floor.gdshader" id="grid_shader"]
 [ext_resource type="Shader" path="res://shaders/crt_post.gdshader" id="crt_shader"]
+[ext_resource type="Script" path="res://scripts/danger_pulse.gd" id="danger_pulse"]
 
 [sub_resource type="Environment" id="env_1"]
 background_mode = 1
@@ -160,3 +161,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 material = SubResource("crt_mat")
+
+[node name="DangerPulse" type="Node" parent="CRT"]
+script = ExtResource("danger_pulse")

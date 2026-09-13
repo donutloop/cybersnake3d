@@ -139,6 +139,8 @@ Shard gain now scales with the wave: each +10 wave tier multiplies gain by 10% (
 
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
 
+A `danger_pulse.gd` controller drives those uniforms from the Snake's HP each frame: the `vignette_strength` darkens toward the screen edge as HP drops (0 at full HP, 1 at 1 HP — a pure, unit-tested mapping), and `scanline_strength` spikes briefly whenever the snake takes a hit.
+
 ## Gameplay Features
 
 - **Overcharge window** (evolution stage ≥ 3): when the snake eats an ICE
