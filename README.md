@@ -180,3 +180,4 @@ reaper) and the snake invulnerability contract.
 
 - [Godot Engine — MIT](https://github.com/godotengine/godot/blob/master/LICENSE.txt)
 Shards eaten inside the overcharge window score a 1.5x gain bonus (overdrive_gain_multiplier), so risky overcharge play pays off.
+Deep combo streaks also tier up the shard gain: x1 under 4, x1.5 at 4-7, x2 at 8+ (combo_tier_multiplier).

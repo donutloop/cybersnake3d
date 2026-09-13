@@ -598,6 +598,7 @@ func _register_pickup() -> int:
 	var wave_factor: int = 1 + (int(mgr.wave) / 10 if mgr and "wave" in mgr else 0)
 	last_gain = 100 * combo * wave_factor
 	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
+	last_gain = int(round(last_gain * combo_tier_multiplier(combo)))
 	if combo % 5 == 0:
 		add_xp(25)
 		if has_signal("xp_changed"):
@@ -608,6 +609,15 @@ func overdrive_gain_multiplier(overcharge_active: bool) -> float:
 	# Shards eaten inside the overcharge window score a 1.5x bonus.
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 1.5 if overcharge_active else 1.0
+
+func combo_tier_multiplier(combo: int) -> float:
+	# Combo tiers reward deep streaks: x1 under 4, x1.5 at 4-7, x2 at 8+.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	if combo >= 8:
+		return 2.0
+	if combo >= 4:
+		return 1.5
+	return 1.0
 
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.

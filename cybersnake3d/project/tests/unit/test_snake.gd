@@ -44,6 +44,7 @@ func _run_all() -> void:
 	_test_hit_breaks_combo()
 	_test_combo()
 	_test_overdrive_shard_bonus()
+	_test_combo_tier_multiplier()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -224,6 +225,13 @@ func _test_overdrive_shard_bonus() -> void:
 	s.overcharge_active = true
 	var bonus: int = s._register_pickup()
 	assert_eq(bonus, int(round(base * s.overdrive_gain_multiplier(true))), "overcharge shard scores 1.5x bonus")
+
+func _test_combo_tier_multiplier() -> void:
+	# Deep combo streaks scale shard gain via tiers (pure mapping).
+	var s := _make_snake()
+	assert_eq(s.combo_tier_multiplier(1), 1.0, "combo under 4 stays x1")
+	assert_eq(s.combo_tier_multiplier(4), 1.5, "combo 4-7 scores x1.5")
+	assert_eq(s.combo_tier_multiplier(8), 2.0, "combo 8+ scores x2")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()
