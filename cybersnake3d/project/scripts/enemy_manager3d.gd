@@ -48,7 +48,7 @@ func _process(delta: float) -> void:
 			snake.score += bonus
 			snake.score_changed.emit(snake.score)
 			if snake.has_method("add_xp"):
-				snake.add_xp(30)
+				snake.add_xp(kill_xp_award())
 		wave_timer = 0.0
 
 	if between_waves:
@@ -160,6 +160,11 @@ func _pulse_floor() -> void:
 		tw.tween_method(func(v): mat.set_shader_parameter("grid_energy", v), 1.0, 0.0, 0.6)
 
 
+
+
+func kill_xp_award() -> int:
+	# XP awarded when an enemy is slain (pure mapping).
+	return 30
 
 func clear_bonus(wave: int) -> int:
 	# Wave-clear score bonus scales with the wave (base 100, +20/wave).
