@@ -9,8 +9,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i(19, 19)
-var hp: int = 16
-var max_hp: int = 16
+var hp: int = queen_base_hp()
+var max_hp: int = queen_base_hp()
 var is_dead: bool = false
 var is_boss: bool = true
 var swarm_timer: float = 6.0
@@ -52,6 +52,11 @@ func _process(delta: float) -> void:
 	_check_snake_collision()
 
 # ── swarm hatching ──────────────────────────────────────────────────
+
+
+func queen_base_hp() -> int:
+	# Hive Queen base HP (pure mapping).
+	return 16
 
 func hatch_size(wave: int) -> int:
 	# Hive swarm size scales with wave (base 2, +1 per 3 waves, capped 6).

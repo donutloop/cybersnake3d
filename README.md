@@ -164,6 +164,7 @@ Static Web base HP comes from web_base_hp, a pure mapping (4 HP).
 Phantom Protocol base HP comes from phantom_base_hp, a pure mapping (3 HP).
 Blackwall Sentinel base HP comes from sentinel_base_hp, a pure mapping (10 HP).
 Glitch Drone base HP comes from drone_base_hp, a pure mapping (1 HP).
+Hive Queen base HP comes from queen_base_hp, a pure mapping (16 HP).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
