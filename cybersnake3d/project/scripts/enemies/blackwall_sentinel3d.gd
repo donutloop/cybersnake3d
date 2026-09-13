@@ -18,6 +18,11 @@ var mesh_inst: MeshInstance3D
 var mat: StandardMaterial3D
 
 func _ready() -> void:
+	# Scale boss HP from the current wave (EnemyManager sibling).
+	var mgr := get_node_or_null("../../EnemyManager")
+	if mgr:
+		max_hp = boss_hp(mgr.wave)
+		hp = max_hp
 	grid_pos = Vector2i(int(LevelSettings.grid_w) / 2 - 1, LevelSettings.grid_h / 2 - 1)
 	mat = StandardMaterial3D.new()
 	mat.albedo_color = Color(0.8, 0.0, 0.2, 1.0)
@@ -38,6 +43,11 @@ func _ready() -> void:
 	light.light_energy = 4.0
 	light.omni_range = 8.0
 	mesh_inst.add_child(light)
+
+func boss_hp(wave: int) -> int:
+	# Boss HP scales with wave (base 10, +1 every 5 waves past the first).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 10 + maxi(wave - 10, 0) / 5
 
 func _process(delta: float) -> void:
 	if is_dead:

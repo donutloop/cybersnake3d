@@ -484,6 +484,14 @@ func _test_anchor_strike_destroys_awards_xp() -> void:
 	assert_true(anchor.is_dead, "anchor dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "destroying an anchor awards XP")
 
+func _test_boss_hp_scales_with_wave() -> void:
+	# Boss HP scales with wave via the pure boss_hp mapping.
+	var boss := _make_enemy(SentinelScript, "boss")
+	assert_eq(boss.boss_hp(10), 10, "wave 10 boss has base HP 10")
+	assert_eq(boss.boss_hp(15), 11, "wave 15 boss gains +1 HP")
+	assert_eq(boss.boss_hp(25), 13, "wave 25 boss gains +3 HP")
+	assert_eq(boss.boss_hp(5), 10, "pre-boss wave floors at base HP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -504,6 +512,7 @@ func _run_all() -> void:
 	_test_web_residue_fades()
 	_test_sentinel_spawns_drones_into_manager()
 	_test_sentinel_enrages_at_low_hp()
+	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
 	_test_queen_respects_invulnerability()
