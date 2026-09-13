@@ -531,6 +531,7 @@ func _run_all() -> void:
 	_test_virus_swarm_size_range()
 	_test_split_echo_fractures_and_third_hp()
 	_test_web_residue_life_persists()
+	_test_warp_flash_time()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -588,3 +589,7 @@ func _test_split_echo_fractures_and_third_hp() -> void:
 func _test_web_residue_life_persists() -> void:
 	var web := _make_enemy(WebScript, "web2")
 	assert_eq(web.residue_life(), 6.0, "static web residue persists 6 seconds")
+
+func _test_warp_flash_time() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard2")
+	assert_eq(shard.warp_flash_time(), 0.35, "warp flash lasts 0.35s")

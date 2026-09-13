@@ -109,6 +109,10 @@ func take_damage(amount: int = 1) -> void:
 	# Defensive warp: flee to a distant edge cell each time we're struck.
 	_teleport_away()
 
+
+func warp_flash_time() -> float:
+	# Warp flash duration after teleporting (pure mapping).
+	return 0.35
 func _teleport_away() -> void:
 	warps_used += 1
 	var snake := get_node_or_null("../../Snake")
@@ -123,7 +127,7 @@ func _teleport_away() -> void:
 			grid_pos = cell
 			break
 	_update_position()
-	warp_flash = 0.35
+	warp_flash = warp_flash_time()
 
 func _die() -> void:
 	is_dead = true
