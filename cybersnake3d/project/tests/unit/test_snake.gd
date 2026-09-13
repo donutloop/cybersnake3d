@@ -58,6 +58,7 @@ func _run_all() -> void:
 	_test_evolution_stage_for_xp()
 	_test_is_milestone()
 	_test_decay_combo_timer_fades()
+	_test_decay_overcharge_timer_fades()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -475,3 +476,8 @@ func _test_decay_combo_timer_fades() -> void:
 	var s := _make_snake()
 	assert_eq(s.decay_combo_timer(1.0, 0.1), 0.9, "combo timer fades by delta")
 	assert_eq(s.decay_combo_timer(0.1, 0.5), 0.0, "combo timer clamps at zero")
+
+func _test_decay_overcharge_timer_fades() -> void:
+	var s := _make_snake()
+	assert_eq(s.decay_overcharge_timer(2.0, 0.5), 1.5, "overcharge cooldown shrinks by delta")
+	assert_eq(s.decay_overcharge_timer(0.2, 0.5), 0.0, "overcharge cooldown clamps at zero")

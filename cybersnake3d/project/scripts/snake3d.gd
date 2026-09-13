@@ -142,7 +142,7 @@ func _process(delta: float) -> void:
 		# Overcharge unlocks at evolution stage 3. Higher stages recharge it
 		# faster: stage 3 takes 8s, stage 5 drops to 4s (min 3s), so evolution
 		# is a real combat upgrade rather than just raw HP/speed.
-		overcharge_timer -= delta
+		overcharge_timer = decay_overcharge_timer(overcharge_timer, delta)
 		if overcharge_timer <= 0.0:
 			overcharge_timer = overcharge_cooldown(evolution_stage)
 			invuln_timer = overcharge_duration(evolution_stage)
@@ -685,6 +685,10 @@ func move_interval_from_speed(speed: int) -> float:
 
 
 
+
+func decay_overcharge_timer(timer: float, delta: float) -> float:
+	# Overcharge cooldown shrinks each frame, clamped at zero (pure mapping).
+	return maxf(0.0, timer - delta)
 func decay_combo_timer(timer: float, delta: float) -> float:
 	# Combo window shrinks linearly each frame, clamped at zero (pure mapping).
 	return maxf(0.0, timer - delta)
