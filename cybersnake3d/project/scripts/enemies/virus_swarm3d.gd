@@ -1,201 +1,177 @@
-# virus_swarm3d.gd — Tier 2: boid flock (3D)
+# virus_swarm3d.gd — Wave 02 monster: the Green Dot Swarm.
+#
+# 2026-style neon hologram swarm:
+#   - a bright green hive-core dot (virus_dot.gdshader) at the center;
+#   - 10 green hologram dots orbiting the core on a rotating ring;
+#   - a dense GPUParticles3D green-dot cloud (draw_pass quads) as the swarm;
+#   - a flickering green OmniLight3D for glow.
 extends Node3D
 const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
-var units: Array[Dictionary] = []
-var center_pos := Vector3.ZERO
+var grid_pos := Vector2i.ZERO
+var hp: int = base_hp()
+var speed_steps: float = 2.0
+var move_timer: float = 0.0
+var ticks_until_turn: int = 4
+var tick_count: int = 0
 var is_dead: bool = false
-var scattering: bool = false
-var scatter_timer: float = 0.0
-var owner_tag: String = ""
 
-var unit_mat: StandardMaterial3D
+var core_mesh: MeshInstance3D
+var orbit: Node3D
+var cloud: GPUParticles3D
+var light: OmniLight3D
+var dot_mat: ShaderMaterial
+var time_passed: float = 0.0
+
+const ORBIT_DOTS := 10
+const DIRECTIONS := [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
 
 
-func swarm_size_min() -> int:
-	# Virus swarm spawn floor (pure mapping, unit-testable).
-	return 4
-
-func swarm_size_max() -> int:
-	# Virus swarm spawn ceiling (pure mapping, unit-testable).
-	return 8
-
-func score_award() -> int:
-	# Kill score awarded when a swarm dies (pure mapping).
-	return 200
-
-func xp_award() -> int:
-	# XP awarded when a swarm dies (pure mapping).
-	return 35
+func base_hp() -> int:
+	# Green Dot Swarm base HP (pure mapping).
+	return 3
 
 func _ready() -> void:
-	unit_mat = StandardMaterial3D.new()
-	unit_mat.albedo_color = Color(0.2, 1.0, 0.3, 1.0)
-	unit_mat.emission_enabled = true
-	unit_mat.emission = Color(0.2, 1.0, 0.3, 1.0)
-	unit_mat.emission_energy_multiplier = 2.0
+	grid_pos = _random_edge()
+	ticks_until_turn = randi_range(3, 6)
+	time_passed = randf() * 100.0
+	_build_visuals()
+	_update_position()
 
-	var count := randi_range(swarm_size_min(), swarm_size_max())
-	var edge := _random_edge()
-	center_pos = _grid_to_world(edge)
-	for i in range(count):
-		var mesh := MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = 0.25
-		sphere.height = 0.5
-		mesh.mesh = sphere
-		mesh.material_override = unit_mat
-		mesh.position = center_pos + Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
-		add_child(mesh)
-		units.append({"mesh": mesh, "pos": mesh.position, "alive": true})
+func _build_visuals() -> void:
+	dot_mat = ShaderMaterial.new()
+	dot_mat.shader = load("res://shaders/virus_dot.gdshader")
+	dot_mat.set_shader_parameter("dot_color", Color(0.10, 1.0, 0.40))
+	dot_mat.set_shader_parameter("emissive_power", 3.0)
+	dot_mat.set_shader_parameter("rim_power", 2.0)
+
+	# ── hive core ──────────────────────────────────────────────────────
+	var core := SphereMesh.new()
+	core.radius = 0.35
+	core.height = 0.7
+	core.radial_segments = 32
+	core.rings = 16
+	core_mesh = MeshInstance3D.new()
+	core_mesh.mesh = core
+	core_mesh.material_override = dot_mat
+	core_mesh.scale = Vector3(1.2, 1.2, 1.2)
+	core_mesh.position = Vector3(0.0, 0.6, 0.0)
+	add_child(core_mesh)
+
+	# ── orbiting hologram dots ─────────────────────────────────────────
+	orbit = Node3D.new()
+	core_mesh.add_child(orbit)
+	var dot := SphereMesh.new()
+	dot.radius = 0.12
+	dot.height = 0.24
+	dot.radial_segments = 16
+	dot.rings = 8
+	for i in range(ORBIT_DOTS):
+		var d := MeshInstance3D.new()
+		d.mesh = dot
+		d.material_override = dot_mat
+		var angle := TAU * float(i) / float(ORBIT_DOTS)
+		var r := 0.9 + (float(i % 3) * 0.15)
+		d.position = Vector3(cos(angle) * r, sin(angle * 0.5) * 0.25, sin(angle) * r)
+		d.scale = Vector3(1.0, 1.0, 1.0) * (0.8 + float(i % 2) * 0.4)
+		orbit.add_child(d)
+
+	# ── dense green-dot cloud (the swarm) ──────────────────────────────
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	pm.emission_sphere_radius = 1.6
+	pm.initial_velocity_min = 0.4
+	pm.initial_velocity_max = 1.1
+	pm.color = Color(0.10, 1.0, 0.40, 0.75)
+
+	cloud = GPUParticles3D.new()
+	cloud.process_material = pm
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.09, 0.09)
+	cloud.draw_pass_1 = quad
+	cloud.amount = 160
+	cloud.lifetime = 1.4
+	cloud.preprocess = 1.0
+	cloud.emitting = true
+	core_mesh.add_child(cloud)
+
+	# ── flicker light ──────────────────────────────────────────────────
+	light = OmniLight3D.new()
+	light.light_color = Color(0.2, 1.0, 0.4)
+	light.light_energy = 1.1
+	light.omni_range = 3.5
+	core_mesh.add_child(light)
 
 func _process(delta: float) -> void:
-	if is_dead:
-		return
+	time_passed += delta
+	# Orbit the hologram dots around the core.
+	if orbit:
+		orbit.rotation.y += delta * 1.2
+		orbit.rotation.z = 0.35 * sin(time_passed * 0.6)
+	if dot_mat:
+		dot_mat.set_shader_parameter("emissive_power", 3.0 + sin(time_passed * 4.0) * 0.6)
+	if light:
+		light.light_energy = 1.1 + sin(time_passed * 5.0) * 0.25
+	if cloud:
+		cloud.emitting = true
 
-	var alive_count := 0
-	for u in units:
-		if u["alive"]:
-			alive_count += 1
-	if alive_count == 0:
-		_all_dead()
-		return
+	move_timer += delta
+	if move_timer >= 1.0 / speed_steps:
+		move_timer = 0.0
+		_step()
+		_update_position()
 
-	if scattering:
-		scatter_timer -= delta
-		if scatter_timer <= 0.0:
-			scattering = false
-
-	# Move center toward snake
-	var snake := get_node_or_null("../../Snake")
-	if snake and snake.body.size() > 0 and not scattering:
-		var target: Vector3 = snake.get_head_world_pos()
-		var dir: Vector3 = (target - center_pos).normalized()
-		center_pos += dir * 2.0 * delta
-
-	_update_boids(delta)
 	_check_snake_collision()
 
-func _update_boids(delta: float) -> void:
-	for i in range(units.size()):
-		if not units[i]["alive"]:
-			continue
-		var pos: Vector3 = units[i]["pos"]
-		var sep := Vector3.ZERO
-		var coh := Vector3.ZERO
-		var neighbors := 0
+func _step() -> void:
+	tick_count += 1
+	if tick_count >= ticks_until_turn:
+		tick_count = 0
+		ticks_until_turn = randi_range(3, 6)
+		var d: Vector2i = DIRECTIONS[randi_range(0, 3)]
+		var next: Vector2i = grid_pos + d
+		if next.x >= 0 and next.x < LevelSettings.grid_w and next.y >= 0 and next.y < LevelSettings.grid_h:
+			grid_pos = next
+		return
 
-		for j in range(units.size()):
-			if i == j or not units[j]["alive"]:
-				continue
-			var other: Vector3 = units[j]["pos"]
-			var diff := pos - other
-			var dist := diff.length()
-			if dist < 4.0 and dist > 0.01:
-				sep += diff.normalized() / dist
-				coh += other
-				neighbors += 1
-
-		if neighbors > 0:
-			coh = ((coh / float(neighbors)) - pos) * 0.02
-
-		var to_center := (center_pos - pos) * 0.03
-		var velocity := sep * 0.5 + coh + to_center
-
-		if scattering:
-			velocity = (pos - center_pos).normalized() * 3.0
-
-		if velocity.length() > 3.0:
-			velocity = velocity.normalized() * 3.0
-
-		velocity.y = 0.0
-		var new_pos := pos + velocity * delta * 5.0
-		new_pos.y = 0.5
-		new_pos.x = clampf(new_pos.x, 0.0, float(LevelSettings.grid_w))
-		new_pos.z = clampf(new_pos.z, 0.0, float(LevelSettings.grid_h))
-
-		units[i]["pos"] = new_pos
-		(units[i]["mesh"] as MeshInstance3D).position = new_pos
+	var dirs: Array = DIRECTIONS.duplicate()
+	dirs.shuffle()
+	for i in range(dirs.size()):
+		var d: Vector2i = dirs[i]
+		var next: Vector2i = grid_pos + d
+		if next.x >= 0 and next.x < LevelSettings.grid_w and next.y >= 0 and next.y < LevelSettings.grid_h:
+			grid_pos = next
+			return
 
 func _check_snake_collision() -> void:
 	var snake := get_node_or_null("../../Snake")
-	if not snake or not snake.is_alive or snake.body.size() == 0:
+	if not snake:
 		return
-	if snake.is_invulnerable():
-		if snake.overcharge_active:
-			var head_world: Vector3 = snake.get_head_world_pos()
-			for u in units:
-				if not u["alive"]:
-					continue
-				if (u["pos"] as Vector3 - head_world).length() < 0.8:
-					take_damage(1)
-		return
-	var head_world: Vector3 = snake.get_head_world_pos()
-	for u in units:
-		if not u["alive"]:
-			continue
-		if (u["pos"] as Vector3 - head_world).length() < 0.8:
-			snake._die()
-			return
+	if snake.body and snake.body.size() > 0 and snake.body[0] == grid_pos:
+		snake._die()
 
 func take_damage(amount: int = 1) -> void:
-	# Kill up to `amount` units (clamped to the alive count). A single hit
-	# (amount=1) still kills exactly one unit, matching the tier contract;
-	# a boss-cleanup hit (e.g. take_damage(999)) clears the whole swarm.
-	var alive_count := _alive_count()
-	if alive_count == 0:
-		return
-	var to_kill: int = clampi(amount, 1, alive_count)
-	for _i in range(to_kill):
-		var alive_indices: Array[int] = []
-		for i in range(units.size()):
-			if units[i]["alive"]:
-				alive_indices.append(i)
-		if alive_indices.size() == 0:
-			break
-		var idx := alive_indices[randi_range(0, alive_indices.size() - 1)]
-		units[idx]["alive"] = false
-		(units[idx]["mesh"] as MeshInstance3D).visible = false
-		alive_count -= 1
-		if alive_count > 0 and alive_count <= units.size() / 2 and not scattering:
-			scattering = true
-			scatter_timer = 2.0
-		if alive_count == 0:
-			_all_dead()
-			return
+	hp = maxi(0, hp - amount)
+	if hp <= 0:
+		_die()
 
-func _all_dead() -> void:
-	if is_dead: return
+func _die() -> void:
+	if is_dead:
+		return
 	is_dead = true
-	var snake := get_node_or_null("../../Snake")
-	if snake:
-		snake.score += score_award()
-		snake.score_changed.emit(snake.score)
-		if snake.has_method("add_xp"):
-			snake.add_xp(xp_award())
+	if light:
+		light.light_energy = 0.0
+	if cloud:
+		cloud.emitting = false
 	queue_free()
 
-func set_owner_tag(t: String) -> void:
-	owner_tag = t
-
-func get_owner_tag() -> String:
-	return owner_tag
-
 func get_grid_positions() -> Array[Vector2i]:
-	var positions: Array[Vector2i] = []
-	for u in units:
-		if u["alive"]:
-			var p: Vector3 = u["pos"]
-			positions.append(Vector2i(int(p.x), int(p.z)))
-	return positions
+	return [grid_pos]
 
-func _alive_count() -> int:
-	var n: int = 0
-	for u in units:
-		if u["alive"]:
-			n += 1
-	return n
+func _update_position() -> void:
+	if core_mesh:
+		core_mesh.position = _grid_to_world(grid_pos)
 
 func _grid_to_world(gp: Vector2i) -> Vector3:
 	return Vector3(float(gp.x) + 0.5, 0.5, float(gp.y) + 0.5)
