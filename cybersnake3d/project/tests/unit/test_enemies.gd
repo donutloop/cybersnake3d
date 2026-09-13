@@ -543,6 +543,7 @@ func _run_all() -> void:
 	_test_reaper_base_hp()
 	_test_warp_shard_base_hp()
 	_test_split_echo_base_hp()
+	_test_leech_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -649,3 +650,7 @@ func _test_warp_shard_base_hp() -> void:
 func _test_split_echo_base_hp() -> void:
 	var echo := _make_enemy(SplitEchoScript, "echo3")
 	assert_eq(echo.echo_base_hp(), 6, "split echo has 6 base HP")
+
+func _test_leech_base_hp() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech3")
+	assert_eq(leech.leech_base_hp(), 4, "score leech has 4 base HP")

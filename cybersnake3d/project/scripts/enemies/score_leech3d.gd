@@ -90,6 +90,10 @@ func _check_snake_collision() -> void:
 		_drain_score(snake)
 
 
+
+func leech_base_hp() -> int:
+	# Score Leech base HP (pure mapping).
+	return 4
 func drain_ratio() -> float:
 	# Score Leech siphons this fraction of the snake's score per drain (pure mapping).
 	return 0.25
