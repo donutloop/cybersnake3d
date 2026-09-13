@@ -18,8 +18,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 3
-var max_hp: int = 3
+var hp: int = chrono_base_hp()
+var max_hp: int = chrono_base_hp()
 var is_dead: bool = false
 
 var mesh_inst: MeshInstance3D
@@ -28,6 +28,11 @@ var light: OmniLight3D
 var time_passed: float = 0.0
 var flash_timer: float = 0.0
 
+
+
+func chrono_base_hp() -> int:
+	# Chrono Anchor base HP (pure mapping).
+	return 3
 
 func _ready() -> void:
 	grid_pos = _random_edge()

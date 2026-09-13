@@ -551,6 +551,7 @@ func _run_all() -> void:
 	_test_sentinel_base_hp()
 	_test_drone_base_hp()
 	_test_queen_base_hp()
+	_test_chrono_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -689,3 +690,7 @@ func _test_drone_base_hp() -> void:
 func _test_queen_base_hp() -> void:
 	var queen := _make_enemy(QueenScript, "queen_base_hp")
 	assert_eq(queen.queen_base_hp(), 16, "hive queen has 16 base HP")
+
+func _test_chrono_base_hp() -> void:
+	var anchor := _make_enemy(ChronoAnchorScript, "chrono_base_hp")
+	assert_eq(anchor.chrono_base_hp(), 3, "chrono anchor has 3 base HP")
