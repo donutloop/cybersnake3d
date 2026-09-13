@@ -52,6 +52,7 @@ func _run_all() -> void:
 	_test_hit_invuln_time()
 	_test_pickup_and_wall_invuln_times()
 	_test_overcharge_cooldown_scales_with_stage()
+	_test_wave_factor_grows_with_wave()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -440,3 +441,8 @@ func _test_overcharge_cooldown_scales_with_stage() -> void:
 	var s := _make_snake()
 	assert_eq(s.overcharge_cooldown(1), 7.0, "stage 1 overcharge cools 7s")
 	assert_eq(s.overcharge_cooldown(5), 3.0, "stage 5 overcharge floors at 3s")
+
+func _test_wave_factor_grows_with_wave() -> void:
+	var s := _make_snake()
+	assert_eq(s.wave_factor(5), 1, "wave 5 has base factor 1")
+	assert_eq(s.wave_factor(20), 3, "wave 20 has factor 3")

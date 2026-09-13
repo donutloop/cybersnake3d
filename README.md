@@ -155,6 +155,7 @@ Chrono Anchor flash durations come from anchor_flash_time/anchor_hit_flash_time,
 Snake hit invulnerability comes from hit_invuln_time, a pure mapping (2 seconds).
 Snake pickup/wall grace periods come from pickup_invuln_time/wall_invuln_time, pure mappings.
 Snake overcharge cooldown scales via overcharge_cooldown, a pure mapping (floors at 3s).
+Snake shard gain wave multiplier comes from wave_factor, a pure mapping (+1 per 10 waves).
 
 ## Gameplay Features
 
