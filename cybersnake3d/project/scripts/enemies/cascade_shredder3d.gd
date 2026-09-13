@@ -169,6 +169,7 @@ func take_damage(amount: int = 1) -> void:
 	telegraphing = false
 
 func _die() -> void:
+	if is_dead: return
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:

@@ -166,6 +166,7 @@ func take_damage(amount: int = 1) -> void:
 			return
 
 func _all_dead() -> void:
+	if is_dead: return
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:

@@ -143,6 +143,7 @@ func _teleport_away() -> void:
 	warp_flash = warp_flash_time()
 
 func _die() -> void:
+	if is_dead: return
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:
