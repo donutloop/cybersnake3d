@@ -42,12 +42,16 @@ func _process(_delta: float) -> void:
 		_recent_hit = hit_flash_strength()
 	_last_hp = _snake.hp
 	if _recent_hit > 0.0:
-		_recent_hit = maxf(_recent_hit - _delta, 0.0)
+		_recent_hit = decay_flash(_recent_hit, _delta)
 	_update_uniforms()
 
 
 
 
+
+func decay_flash(hit: float, delta: float) -> float:
+	# Recent-hit flash fades linearly each frame, clamped at zero (pure mapping).
+	return maxf(hit - delta, 0.0)
 func hit_flash_strength() -> float:
 	# Danger pulse recent-hit flash strength (pure mapping).
 	return 0.35

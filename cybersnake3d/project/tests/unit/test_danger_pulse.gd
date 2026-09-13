@@ -20,6 +20,7 @@ func _run_all() -> void:
 	_test_vignette_strength_ramps_with_danger()
 	_test_scanline_strength_ramps_with_hit()
 	_test_hit_flash_strength()
+	_test_decay_flash_fades()
 
 func _danger(hp: int, max_hp: int) -> float:
 	var pulse := Node.new()
@@ -61,4 +62,11 @@ func _test_hit_flash_strength() -> void:
 	var pulse := Node.new()
 	pulse.set_script(DangerPulseScript)
 	assert_eq(pulse.hit_flash_strength(), 0.35, "hit flash strength is 0.35")
+	pulse.free()
+
+func _test_decay_flash_fades() -> void:
+	var pulse := Node.new()
+	pulse.set_script(DangerPulseScript)
+	assert_eq(pulse.decay_flash(0.5, 0.1), 0.4, "hit flash fades by delta")
+	assert_eq(pulse.decay_flash(0.1, 0.5), 0.0, "hit flash clamps at zero")
 	pulse.free()
