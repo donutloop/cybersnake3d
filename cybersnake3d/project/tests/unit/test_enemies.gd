@@ -536,6 +536,7 @@ func _run_all() -> void:
 	_test_score_leech_drain_ratio()
 	_test_overdrive_mine_flash_times()
 	_test_wraith_speed_glides()
+	_test_chrono_anchor_flash_times()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -615,3 +616,8 @@ func _test_overdrive_mine_flash_times() -> void:
 func _test_wraith_speed_glides() -> void:
 	var wraith := _make_enemy(WraithScript, "wraith2")
 	assert_eq(wraith.wraith_speed(), 3.0, "wraith glides at speed 3")
+
+func _test_chrono_anchor_flash_times() -> void:
+	var anchor := _make_enemy(ChronoAnchorScript, "anchor2")
+	assert_eq(anchor.anchor_flash_time(), 0.35, "chrono warp flash lasts 0.35s")
+	assert_eq(anchor.anchor_hit_flash_time(), 0.25, "chrono hit flash lasts 0.25s")

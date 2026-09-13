@@ -84,16 +84,24 @@ func rewind(snake: Node) -> void:
 	# step but keeps its HP. No kill, no damage.
 	if snake.body.size() >= 2:
 		snake.body[0] = snake.body[1]
-	flash_timer = 0.35
+	flash_timer = anchor_flash_time()
 
 func burn() -> void:
 	# Overcharge erases the anchor like residue; no snake effect.
 	is_dead = true
 	queue_free()
 
+
+func anchor_flash_time() -> float:
+	# Chrono Anchor flash after warping (pure mapping).
+	return 0.35
+
+func anchor_hit_flash_time() -> float:
+	# Chrono Anchor flash after a hit (pure mapping).
+	return 0.25
 func take_damage(amount: int = 1) -> void:
 	hp = maxi(0, hp - amount)
-	flash_timer = 0.25
+	flash_timer = anchor_hit_flash_time()
 	if hp <= 0:
 		_die()
 
