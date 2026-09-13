@@ -370,6 +370,10 @@ func evolution_bar_fill(xp: float, current_thresh: float, next_thresh: float) ->
 func hp_ratio(hp: float, max_hp: float) -> float:
 	# Snake HP bar fill ratio, clamped 0..1 (pure mapping).
 	return clampf(hp / max_hp, 0.0, 1.0)
+
+func wave_announce_time() -> float:
+	# Wave announce banner persists this many seconds (pure mapping).
+	return 2.0
 func is_boss_wave(wave: int) -> bool:
 	# Waves at or past this number are announced as boss waves (pure mapping).
 	return wave >= 10
@@ -384,7 +388,7 @@ func show_wave_announce(wave: int) -> void:
 		wave_announce.text = ">>> WAVE %d <<<" % wave
 		wave_announce.add_theme_color_override("font_color", Color(1, 0.15, 0.4))
 	wave_announce.visible = true
-	announce_timer = 2.0
+	announce_timer = wave_announce_time()
 
 func _on_score_changed(new_score: int) -> void:
 	var snake := get_node_or_null("../Snake")

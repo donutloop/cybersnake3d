@@ -162,6 +162,7 @@ Snake evolution stage derives from XP via evolution_stage_for_xp, a pure mapping
 HUD boss-wave detection comes from is_boss_wave, a pure mapping (waves >= 10).
 HUD snake HP bar fill comes from hp_ratio, a pure mapping (clamped 0..1).
 HUD evolution XP bar fill comes from evolution_bar_fill, a pure mapping (clamped to stage range).
+HUD wave announce duration comes from wave_announce_time, a pure mapping (2 seconds).
 
 ## Gameplay Features
 

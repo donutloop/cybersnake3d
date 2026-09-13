@@ -105,6 +105,7 @@ func _run_all() -> void:
 	_test_is_boss_wave()
 	_test_hp_ratio_clamps()
 	_test_evolution_bar_fill_clamps()
+	_test_wave_announce_time_persists()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -176,3 +177,6 @@ func _test_hp_ratio_clamps() -> void:
 func _test_evolution_bar_fill_clamps() -> void:
 	assert_eq(_hud.evolution_bar_fill(250.0, 200.0, 500.0), 250.0, "fill shows xp within stage range")
 	assert_eq(_hud.evolution_bar_fill(600.0, 200.0, 500.0), 500.0, "fill clamps at next threshold")
+
+func _test_wave_announce_time_persists() -> void:
+	assert_eq(_hud.wave_announce_time(), 2.0, "wave announce persists 2 seconds")
