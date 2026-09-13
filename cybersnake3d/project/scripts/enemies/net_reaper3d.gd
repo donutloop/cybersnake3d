@@ -27,6 +27,13 @@ var core_mat: ShaderMaterial
 var net_mat: ShaderMaterial
 var time_passed: float = 0.0
 
+# Every 30s the reaper swells 5x for 3s, then shrinks back to normal.
+var grow_cooldown: float = 30.0
+var grow_duration: float = 3.0
+var grow_scale: float = 5.0
+var grow_timer: float = 0.0
+var is_growing: bool = false
+
 const THREADS := 4
 const DIRECTIONS := [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
 
@@ -123,6 +130,31 @@ func _build_visuals() -> void:
 
 func _process(delta: float) -> void:
 	time_passed += delta
+
+	# ── grow phase ────────────────────────────────────────────────────
+	# Every 30s the Net Reaper swells to 5x its size for 3s, then shrinks
+	# back to normal. Scaling core_mesh grows the whole reaper (net,
+	# threads, embers, light all follow) centered on its grid cell.
+	if is_growing:
+		grow_timer -= delta
+		if core_mesh:
+			var s := lerpf(core_mesh.scale.x, grow_scale, 0.2)
+			core_mesh.scale = Vector3(s, s, s)
+		if light:
+			light.light_energy = 1.1 + 3.0 * grow_timer / grow_duration
+		if grow_timer <= 0.0:
+			is_growing = false
+			if core_mesh:
+				core_mesh.scale = Vector3.ONE
+			if light:
+				light.light_energy = 1.1
+	else:
+		grow_cooldown -= delta
+		if grow_cooldown <= 0.0:
+			is_growing = true
+			grow_timer = grow_duration
+			grow_cooldown = 30.0
+
 	# Traveling pulse sweeps the net; the whole reaper breathes.
 	if net_mat:
 		net_mat.set_shader_parameter("emissive_power", 3.0 + sin(time_passed * 3.0) * 0.8)
