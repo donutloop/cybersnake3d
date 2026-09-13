@@ -18,6 +18,7 @@ const HunterScript = preload("res://scripts/enemies/hunter3d.gd")
 const WraithScript = preload("res://scripts/enemies/wraith3d.gd")
 const ScoreLeechScript = preload("res://scripts/enemies/score_leech3d.gd")
 const OverdriveMineScript = preload("res://scripts/enemies/overdrive_mine3d.gd")
+const ChronoAnchorScript = preload("res://scripts/enemies/chrono_anchor3d.gd")
 
 var _snake: Node
 var _manager: Node
@@ -446,6 +447,43 @@ func _test_mine_strike_destroys_awards_xp() -> void:
 	assert_true(mine.is_dead, "mine dies at hp <= 0")
 	assert_gt(_snake.xp, xp_before, "destroying a mine awards XP")
 
+func _test_anchor_rewinds_snake() -> void:
+	# A vulnerable snake head entering a Chrono Anchor cell is shunted back
+	# onto the neck (body[1]) — no HP lost, the anchor persists as a wall.
+	var anchor := _make_enemy(ChronoAnchorScript, "anchor")
+	_snake.invuln_timer = 0.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = false
+	_snake.body[0] = anchor.grid_pos
+	_snake.body[1] = Vector2i(anchor.grid_pos.x - 1, anchor.grid_pos.y)
+	var hp_before: int = _snake.hp
+	anchor._check_snake_collision()
+	assert_eq(_snake.body[0], _snake.body[1], "head is rewound back onto the neck")
+	assert_eq(_snake.hp, hp_before, "rewind deals no HP damage")
+	assert_false(anchor.is_dead, "anchor persists after rewinding")
+
+func _test_anchor_burns_on_overcharge() -> void:
+	# Overcharge erases the anchor away; the snake keeps its position and HP.
+	var anchor := _make_enemy(ChronoAnchorScript, "anchor2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = anchor.grid_pos
+	var head_before: Vector2i = _snake.body[0]
+	var hp_before: int = _snake.hp
+	anchor._check_snake_collision()
+	assert_eq(_snake.body[0], head_before, "overcharge does not rewind the snake")
+	assert_eq(_snake.hp, hp_before, "overcharge deals no HP damage")
+	assert_true(anchor.is_dead, "anchor is burned away")
+
+func _test_anchor_strike_destroys_awards_xp() -> void:
+	# A direct head strike destroys the anchor normally and awards XP.
+	var anchor := _make_enemy(ChronoAnchorScript, "anchor3")
+	var xp_before: int = _snake.xp
+	anchor.take_damage(3)
+	assert_true(anchor.is_dead, "anchor dies at hp <= 0")
+	assert_gt(_snake.xp, xp_before, "destroying an anchor awards XP")
+
 func _run_all() -> void:
 	_make_snake()
 	_make_manager()
@@ -483,6 +521,9 @@ func _run_all() -> void:
 	_test_mine_detonates_wounds_snake()
 	_test_mine_burns_on_overcharge()
 	_test_mine_strike_destroys_awards_xp()
+	_test_anchor_rewinds_snake()
+	_test_anchor_burns_on_overcharge()
+	_test_anchor_strike_destroys_awards_xp()
 	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()

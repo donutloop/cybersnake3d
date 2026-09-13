@@ -77,6 +77,7 @@ $GODOT --editor --path cybersnake3d/project/
 | Blackwall Sentinel | 10+ | Boss, spawns drones |
 | **Wraith** | 12+ | Phases through body segments — only the head blocks it |
 | **Overdrive Mine** | 13+ | Stationary hazard: wounds for exactly 1 HP (never kills), burns away under overcharge |
+| **Chrono Anchor** | 11+ | Stationary temporal wall: rewinds the snake head one cell (no HP loss), burns away under overcharge |
 | **Score Leech** | 14+ | Drains a fraction of the score instead of killing outright |
 | Hive Queen | 15+ | Boss, spawns swarm minions |
 
