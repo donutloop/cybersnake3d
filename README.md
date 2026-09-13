@@ -155,6 +155,7 @@ HUD wave-clear bonus grows via wave_clear_bonus, a pure mapping (base 100 + 20/w
 HUD evolution banner comes from evolution_banner_text, a pure mapping.
 Chrono Anchor base HP comes from anchor_base_hp, a pure mapping (3 HP).
 Net Reaper base HP comes from reaper_base_hp, a pure mapping (2 HP).
+Warp Shard base HP comes from shard_base_hp, a pure mapping (4 HP).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.

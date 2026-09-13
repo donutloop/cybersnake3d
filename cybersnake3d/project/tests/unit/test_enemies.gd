@@ -541,6 +541,7 @@ func _run_all() -> void:
 	_test_hive_queen_cap()
 	_test_chrono_anchor_base_hp()
 	_test_reaper_base_hp()
+	_test_warp_shard_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -639,3 +640,7 @@ func _test_chrono_anchor_base_hp() -> void:
 func _test_reaper_base_hp() -> void:
 	var reaper := _make_enemy(ReaperScript, "reaper3")
 	assert_eq(reaper.reaper_base_hp(), 2, "net reaper has 2 base HP")
+
+func _test_warp_shard_base_hp() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard3")
+	assert_eq(shard.shard_base_hp(), 4, "warp shard has 4 base HP")

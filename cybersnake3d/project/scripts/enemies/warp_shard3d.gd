@@ -110,6 +110,10 @@ func take_damage(amount: int = 1) -> void:
 	_teleport_away()
 
 
+
+func shard_base_hp() -> int:
+	# Warp Shard base HP (pure mapping).
+	return 4
 func warp_flash_time() -> float:
 	# Warp flash duration after teleporting (pure mapping).
 	return 0.35
