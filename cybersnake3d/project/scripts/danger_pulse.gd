@@ -46,6 +46,11 @@ func _process(_delta: float) -> void:
 	_update_uniforms()
 
 
+
+func scanline_strength(hit: float) -> float:
+	# CRT scanline intensity ramps with recent-hit flash (base 0.18, +0.30).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 0.18 + hit * 0.30
 func vignette_strength(danger: float) -> float:
 	# CRT vignette ramps with danger level (base 0.25, +0.45 at full danger).
 	# Pure mapping (no node access) so the logic is unit-testable.
@@ -54,7 +59,7 @@ func _update_uniforms() -> void:
 	var danger: float = danger_level(_snake.hp, _snake.max_hp)
 	# Base vignette + danger ramp; scanlines spike on a fresh hit.
 	_crt_material.set_shader_parameter("vignette_strength", vignette_strength(danger))
-	_crt_material.set_shader_parameter("scanline_strength", 0.18 + _recent_hit * 0.30)
+	_crt_material.set_shader_parameter("scanline_strength", scanline_strength(_recent_hit))
 
 func test_danger_level(hp: int, max_hp: int) -> float:
 	return danger_level(hp, max_hp)

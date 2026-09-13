@@ -165,6 +165,7 @@ HUD evolution XP bar fill comes from evolution_bar_fill, a pure mapping (clamped
 HUD wave announce duration comes from wave_announce_time, a pure mapping (2 seconds).
 HUD death screen headline comes from game_over_text, a pure formatter.
 Camera shake decay rate comes from shake_decay_rate, a pure mapping (6/s).
+CRT scanline intensity ramps via scanline_strength, a pure mapping.
 
 ## Gameplay Features
 
