@@ -43,6 +43,7 @@ func _run_all() -> void:
 	_test_overcharge_cooldown_scales_with_evolution()
 	_test_hit_breaks_combo()
 	_test_combo()
+	_test_overdrive_shard_bonus()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -210,6 +211,19 @@ func _test_combo() -> void:
 	var g3: int = s._register_pickup()
 	assert_eq(g3, 100, "expired window resets the chain")
 	assert_eq(s.combo, 1, "combo resets to 1 after expiry")
+
+func _test_overdrive_shard_bonus() -> void:
+	# Shards eaten inside the overcharge window score a 1.5x gain bonus.
+	var s := _make_snake()
+	s.combo = 1
+	s.combo_timer = 0.5
+	s.overcharge_active = false
+	var base: int = s._register_pickup()
+	s.combo = 1
+	s.combo_timer = 0.5
+	s.overcharge_active = true
+	var bonus: int = s._register_pickup()
+	assert_eq(bonus, int(round(base * s.overdrive_gain_multiplier(true))), "overcharge shard scores 1.5x bonus")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()

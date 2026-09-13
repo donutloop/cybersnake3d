@@ -179,3 +179,4 @@ reaper) and the snake invulnerability contract.
 ## License
 
 - [Godot Engine — MIT](https://github.com/godotengine/godot/blob/master/LICENSE.txt)
+Shards eaten inside the overcharge window score a 1.5x gain bonus (overdrive_gain_multiplier), so risky overcharge play pays off.

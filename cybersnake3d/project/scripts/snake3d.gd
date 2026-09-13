@@ -597,11 +597,17 @@ func _register_pickup() -> int:
 	var mgr := get_node_or_null("../EnemyManager")
 	var wave_factor: int = 1 + (int(mgr.wave) / 10 if mgr and "wave" in mgr else 0)
 	last_gain = 100 * combo * wave_factor
+	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
 	if combo % 5 == 0:
 		add_xp(25)
 		if has_signal("xp_changed"):
 			xp_changed.emit(xp, level, evolution_stage)
 	return last_gain
+
+func overdrive_gain_multiplier(overcharge_active: bool) -> float:
+	# Shards eaten inside the overcharge window score a 1.5x bonus.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 1.5 if overcharge_active else 1.0
 
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.
