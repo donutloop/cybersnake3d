@@ -526,6 +526,7 @@ func _run_all() -> void:
 	_test_drone_swarm_size_scales_with_phase()
 	_test_hatch_size_scales_with_wave()
 	_test_phantom_teleport_radius_is_six()
+	_test_wave_delay_shrinks_with_wave()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -560,3 +561,8 @@ func _test_hatch_size_scales_with_wave() -> void:
 func _test_phantom_teleport_radius_is_six() -> void:
 	var phantom := _make_enemy(PhantomScript, "phantom2")
 	assert_eq(phantom.teleport_radius(), 6, "phantom teleport jitter radius is 6")
+
+func _test_wave_delay_shrinks_with_wave() -> void:
+	assert_eq(_manager.wave_delay(1), 2.9, "wave 1 delay is near base")
+	assert_eq(_manager.wave_delay(20), 1.0, "wave 20 delay floors at 1.0")
+	assert_lt(_manager.wave_delay(5), _manager.wave_delay(1), "later waves start faster")

@@ -5,7 +5,6 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 var wave: int = 0
 var wave_timer: float = 0.0
-var wave_delay: float = 3.0
 var enemies: Array[Node] = []
 var between_waves: bool = true
 
@@ -26,6 +25,11 @@ func _ready() -> void:
 			mat.set_shader_parameter("grid_cells", float(LevelSettings.grid_w))
 	call_deferred("_start_next_wave")
 
+
+func wave_delay(wave: int) -> float:
+	# Wave interval shrinks as waves progress: later waves start faster.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return maxf(1.0, 3.0 - wave * 0.1)
 func _process(delta: float) -> void:
 	var i := enemies.size() - 1
 	while i >= 0:
@@ -49,7 +53,7 @@ func _process(delta: float) -> void:
 
 	if between_waves:
 		wave_timer += delta
-		if wave_timer >= wave_delay:
+		if wave_timer >= wave_delay(wave):
 			_start_next_wave()
 
 func _start_next_wave() -> void:
