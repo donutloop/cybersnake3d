@@ -533,6 +533,7 @@ func _run_all() -> void:
 	_test_web_residue_life_persists()
 	_test_warp_flash_time()
 	_test_hunt_speed_ramps_and_caps()
+	_test_score_leech_drain_ratio()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -599,3 +600,7 @@ func _test_hunt_speed_ramps_and_caps() -> void:
 	var hunter := _make_enemy(HunterScript, "hunter2")
 	assert_eq(hunter.hunt_speed(5.0, 0.0, 20.0), 5, "hunter starts at base speed")
 	assert_eq(hunter.hunt_speed(5.0, 60.0, 20.0), 20, "hunter caps at max speed")
+
+func _test_score_leech_drain_ratio() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech2")
+	assert_eq(leech.drain_ratio(), 0.25, "score leech siphons 25% per drain")

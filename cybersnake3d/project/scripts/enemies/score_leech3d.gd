@@ -12,7 +12,6 @@ var speed_steps: float = 4.0
 var move_timer: float = 0.0
 var is_dead: bool = false
 var time_passed: float = 0.0
-var drain_ratio: float = 0.25
 
 var mesh_inst: MeshInstance3D
 var mat: StandardMaterial3D
@@ -90,9 +89,13 @@ func _check_snake_collision() -> void:
 	if snake.body[0] == grid_pos:
 		_drain_score(snake)
 
+
+func drain_ratio() -> float:
+	# Score Leech siphons this fraction of the snake's score per drain (pure mapping).
+	return 0.25
 func _drain_score(snake: Node) -> void:
 	# Siphon a fraction of the accumulated score instead of ending the run.
-	var lost := int(snake.score * drain_ratio)
+	var lost := int(snake.score * drain_ratio())
 	snake.score = maxi(0, snake.score - lost)
 	snake.score_changed.emit(snake.score)
 	# The leech feeds and retreats a couple cells so it can strike again.
