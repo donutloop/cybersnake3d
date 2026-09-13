@@ -64,6 +64,10 @@ func _die() -> void:
 	queue_free()
 
 
+
+func echo_base_hp() -> int:
+	# Split Echo base HP (pure mapping).
+	return 6
 func split_count() -> int:
 	# Split Echo fractures into this many echoes (pure mapping).
 	return 2
