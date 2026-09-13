@@ -70,6 +70,11 @@ func _process(delta: float) -> void:
 
 	_check_snake_collision()
 
+
+func hunt_speed(base_speed: float, chase_time: float, max_speed: float) -> int:
+	# Hunter ramps speed with chase time (base + 0.35/s), capped at max speed.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return mini(int(base_speed + chase_time * 0.35), int(max_speed))
 func _step_toward_snake() -> void:
 	var snake := get_node_or_null("../../Snake")
 	if not snake or snake.body.size() == 0:
@@ -87,7 +92,7 @@ func _step_toward_snake() -> void:
 	grid_pos = next
 	# Ramps up speed while actively closing the gap.
 	chase_time += 1.0 / speed_steps
-	speed_steps = mini(int(base_speed + chase_time * 0.35), int(max_speed))
+	speed_steps = hunt_speed(base_speed, chase_time, max_speed)
 
 func _check_snake_collision() -> void:
 	var snake := get_node_or_null("../../Snake")

@@ -532,6 +532,7 @@ func _run_all() -> void:
 	_test_split_echo_fractures_and_third_hp()
 	_test_web_residue_life_persists()
 	_test_warp_flash_time()
+	_test_hunt_speed_ramps_and_caps()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -593,3 +594,8 @@ func _test_web_residue_life_persists() -> void:
 func _test_warp_flash_time() -> void:
 	var shard := _make_enemy(WarpShardScript, "shard2")
 	assert_eq(shard.warp_flash_time(), 0.35, "warp flash lasts 0.35s")
+
+func _test_hunt_speed_ramps_and_caps() -> void:
+	var hunter := _make_enemy(HunterScript, "hunter2")
+	assert_eq(hunter.hunt_speed(5.0, 0.0, 20.0), 5, "hunter starts at base speed")
+	assert_eq(hunter.hunt_speed(5.0, 60.0, 20.0), 20, "hunter caps at max speed")

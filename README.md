@@ -146,6 +146,7 @@ Virus swarm size bounds come from swarm_size_min/max, pure mappings.
 Split Echo fracture count and HP divisor come from split_count/echo_hp_divisor, pure mappings.
 Static Web residue persistence comes from residue_life, a pure mapping (6 seconds).
 Warp Shard flash duration comes from warp_flash_time, a pure mapping (0.35s).
+Hunter chase speed ramps via hunt_speed, a pure mapping (base + 0.35/s, capped).
 
 ## Gameplay Features
 
