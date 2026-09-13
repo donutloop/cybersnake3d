@@ -108,39 +108,39 @@ func _spawn_wave(w: int) -> void:
 			_spawn_enemy("res://scripts/enemies/static_web3d.gd")
 
 	if w >= 7:
-		for i in range(w - 5):
+		for i in range(spawn_count(w, 5)):
 			_spawn_enemy("res://scripts/enemies/hunter3d.gd")
 
 	if w >= 8:
-		for i in range(w - 6):
+		for i in range(spawn_count(w, 6)):
 			_spawn_enemy("res://scripts/enemies/split_echo3d.gd")
 
 	if w >= 9:
-		for i in range(w - 8):
+		for i in range(spawn_count(w, 8)):
 			_spawn_enemy("res://scripts/enemies/warp_shard3d.gd")
 
 	if w >= 10:
-		for i in range(w - 9):
+		for i in range(spawn_count(w, 9)):
 			_spawn_enemy_capped("res://scripts/enemies/blackwall_sentinel3d.gd", 2)
 
 	if w >= 11:
-		for i in range(w - 10):
+		for i in range(spawn_count(w, 10)):
 			_spawn_enemy("res://scripts/enemies/chrono_anchor3d.gd")
 
 	if w >= 12:
-		for i in range(w - 11):
+		for i in range(spawn_count(w, 11)):
 			_spawn_enemy("res://scripts/enemies/wraith3d.gd")
 
 	if w >= 13:
-		for i in range(w - 12):
+		for i in range(spawn_count(w, 12)):
 			_spawn_enemy("res://scripts/enemies/overdrive_mine3d.gd")
 
 	if w >= 14:
-		for i in range(w - 13):
+		for i in range(spawn_count(w, 13)):
 			_spawn_enemy("res://scripts/enemies/score_leech3d.gd")
 
 	if w >= 15:
-		for i in range(w - 14):
+		for i in range(spawn_count(w, 14)):
 			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", 2)
 
 func _pulse_floor() -> void:
@@ -155,6 +155,11 @@ func _pulse_floor() -> void:
 		var tw := create_tween()
 		tw.tween_method(func(v): mat.set_shader_parameter("grid_energy", v), 1.0, 0.0, 0.6)
 
+
+func spawn_count(wave: int, unlock_wave: int) -> int:
+	# Enemy spawn count scales with waves past unlock, capped to avoid crowding.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return clampi(wave - unlock_wave, 1, 6)
 func _spawn_enemy_capped(script_path: String, cap: int) -> void:
 	# Only spawn if fewer than `cap` enemies of this script type are active.
 	var active := 0

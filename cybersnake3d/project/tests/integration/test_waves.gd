@@ -55,6 +55,7 @@ func _run_all() -> void:
 	_test_wave12_spawns_wraith()
 	_test_wave11_spawns_chrono_anchor()
 	_test_wave13_spawns_overdrive_mine()
+	_test_spawn_count_caps_and_scales()
 	_test_wave9_spawns_warp_shard()
 	_test_warp_shard_warps_when_hit()
 
@@ -327,6 +328,13 @@ func _test_wave13_spawns_overdrive_mine() -> void:
 	_manager._start_next_wave()
 	assert_gt(_count_script(_manager.enemies, "overdrive_mine3d.gd"), 0,
 		"wave 13 spawns at least one Overdrive Mine")
+func _test_spawn_count_caps_and_scales() -> void:
+	# Spawn count scales with waves past unlock, capped to avoid crowding.
+	var mgr := _manager
+	assert_eq(mgr.spawn_count(11, 10), 1, "unlock wave spawns 1")
+	assert_eq(mgr.spawn_count(10, 10), 1, "unlock wave spawns 1")
+	assert_eq(mgr.spawn_count(20, 10), 6, "spawn count caps at 6")
+
 func _test_wave11_spawns_chrono_anchor() -> void:
 	# Wave 11 gates the Chrono Anchor (rewinds the snake, never kills).
 	_reset_enemies()
