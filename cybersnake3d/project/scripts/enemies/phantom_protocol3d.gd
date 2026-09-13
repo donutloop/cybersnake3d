@@ -4,8 +4,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 3
-var max_hp: int = 3
+var hp: int = phantom_base_hp()
+var max_hp: int = phantom_base_hp()
 var speed_steps: float = 6.0
 var move_timer: float = 0.0
 var is_dead: bool = false
@@ -108,6 +108,11 @@ func _finish_phase() -> void:
 	is_phased = false
 	mesh_inst.visible = true
 
+
+
+func phantom_base_hp() -> int:
+	# Phantom Protocol base HP (pure mapping).
+	return 3
 
 func teleport_radius() -> int:
 	# Phantom teleport jitter radius (max offset from the snake head anchor).

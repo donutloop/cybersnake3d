@@ -547,6 +547,7 @@ func _run_all() -> void:
 	_test_hunter_base_hp()
 	_test_shredder_base_hp()
 	_test_web_base_hp()
+	_test_phantom_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -669,3 +670,7 @@ func _test_shredder_base_hp() -> void:
 func _test_web_base_hp() -> void:
 	var web := _make_enemy(WebScript, "web_base_hp")
 	assert_eq(web.web_base_hp(), 4, "static web has 4 base HP")
+
+func _test_phantom_base_hp() -> void:
+	var phantom := _make_enemy(PhantomScript, "phantom_base_hp")
+	assert_eq(phantom.phantom_base_hp(), 3, "phantom protocol has 3 base HP")
