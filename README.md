@@ -14,7 +14,7 @@ game) plus its test suite and the AI-agent environment that builds it.
 This top-level README is a short **index** — it points to the canonical docs
 and setup files without duplicating their contents.
 
-- Full project docs: <https://github.com/donutloop/cybersnake3d/blob/main/project/README.md>
+- Full project docs: [https://github.com/donutloop/cybersnake3d/blob/main/project/README.md](https://github.com/donutloop/cybersnake3d/blob/main/cybersnake3d/project/README.md)
 - Agent setup: <https://github.com/donutloop/cybersnake3d/tree/main/setup>
 
 ---
