@@ -4,8 +4,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i(18, 18)
-var hp: int = 10
-var max_hp: int = 10
+var hp: int = sentinel_base_hp()
+var max_hp: int = sentinel_base_hp()
 var is_dead: bool = false
 var is_boss: bool = true
 var phase: int = 1
@@ -54,6 +54,11 @@ func enrage_threshold(max_hp: int) -> int:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return maxi(max_hp / 2, 1)
 
+
+
+func sentinel_base_hp() -> int:
+	# Blackwall Sentinel base HP (pure mapping).
+	return 10
 
 func drone_swarm_size(phase: int) -> int:
 	# Sentinel drone swarm scales with phase (phase 1 spawns 2, later phases 1).
