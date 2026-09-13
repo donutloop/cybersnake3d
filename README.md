@@ -149,6 +149,7 @@ Snake combo milestones come from is_milestone, a pure mapping (every 5th combo).
 Snake combo window fade comes from decay_combo_timer, a pure mapping (linear, clamped).
 Snake overcharge cooldown fade comes from decay_overcharge_timer, a pure mapping (linear, clamped).
 Snake overcharge unlock stage comes from overcharge_unlock_stage, a pure mapping (stage 3).
+Snake overcharge burst reach comes from burst_reach, a pure mapping (magnet radius + 1).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.

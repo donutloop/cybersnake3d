@@ -586,7 +586,7 @@ func _magnet_shards() -> void:
 	var shards: Array = spawner.shards if "shards" in spawner else []
 	var eaten: Array[Vector2i] = []
 	for cell in shards:
-		if abs(cell.x - origin.x) <= 1 + int(magnet_radius(evolution_stage)) and abs(cell.y - origin.y) <= 1 + int(magnet_radius(evolution_stage)):
+		if abs(cell.x - origin.x) <= burst_reach(evolution_stage) and abs(cell.y - origin.y) <= burst_reach(evolution_stage):
 			if spawner.try_eat(cell):
 				eaten.append(cell)
 	for cell in eaten:
@@ -610,7 +610,7 @@ func _release_burst() -> void:
 		if not e or not e.has_method("get_grid_positions") or not e.has_method("take_damage"):
 			continue
 		for cell in e.get_grid_positions():
-			if abs(cell.x - origin.x) <= 1 + int(magnet_radius(evolution_stage)) and abs(cell.y - origin.y) <= 1 + int(magnet_radius(evolution_stage)):
+			if abs(cell.x - origin.x) <= burst_reach(evolution_stage) and abs(cell.y - origin.y) <= burst_reach(evolution_stage):
 				e.take_damage(1)
 				if e.get("is_dead"):
 					add_xp(kill_xp())  # overcharge kills also feed evolution
@@ -670,6 +670,10 @@ func combo_window_seconds(combo: int) -> float:
 
 
 
+
+func burst_reach(stage: int) -> int:
+	# Overcharge burst reaches magnet radius plus one ring (pure mapping).
+	return 1 + int(magnet_radius(stage))
 func overcharge_unlock_stage() -> int:
 	# Overcharge unlocks at this evolution stage (pure mapping).
 	return 3

@@ -60,6 +60,7 @@ func _run_all() -> void:
 	_test_decay_combo_timer_fades()
 	_test_decay_overcharge_timer_fades()
 	_test_overcharge_unlock_stage()
+	_test_burst_reach()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -486,3 +487,7 @@ func _test_decay_overcharge_timer_fades() -> void:
 func _test_overcharge_unlock_stage() -> void:
 	var s := _make_snake()
 	assert_eq(s.overcharge_unlock_stage(), 3, "overcharge unlocks at stage 3")
+
+func _test_burst_reach() -> void:
+	var s := _make_snake()
+	assert_eq(s.burst_reach(5), 1 + int(s.magnet_radius(5)), "burst reach is magnet radius plus one")
