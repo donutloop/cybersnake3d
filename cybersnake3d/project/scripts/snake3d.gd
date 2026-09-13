@@ -646,9 +646,7 @@ func _register_pickup() -> int:
 	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
 	last_gain = int(round(last_gain * combo_tier_multiplier(combo)))
 	if is_milestone(combo):
-		add_xp(milestone_xp(combo))
-		if has_signal("xp_changed"):
-			xp_changed.emit(xp, level, evolution_stage)
+		add_xp(milestone_xp(combo))  # add_xp already emits xp_changed once
 	return last_gain
 
 func overdrive_gain_multiplier(overcharge_active: bool) -> float:

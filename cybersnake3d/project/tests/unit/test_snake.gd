@@ -75,6 +75,8 @@ func _run_all() -> void:
 	_test_burst_kill_awards_xp()
 	_test_magnet()
 	_test_combo_milestone()
+	_test_milestone_xp_changed_once()
+	_test_overcharge_recharge_cycle()
 
 func _test_initial_state() -> void:
 	var s := _make_snake()
@@ -523,3 +525,38 @@ func _test_base_max_hp() -> void:
 	var s := _make_snake()
 	assert_eq(s.base_max_hp(), 3, "snake base max hp is 3")
 	assert_eq(s.max_hp, 3, "snake max_hp wired to base_max_hp")
+
+func _test_milestone_xp_changed_once() -> void:
+	# Regression: reaching a combo milestone must emit xp_changed exactly once.
+	# add_xp() already emits xp_changed internally; the old code emitted a
+	# second redundant signal, so this pins the fix (fires == 1, not 2).
+	var s := _make_snake()
+	# GDScript lambdas capture locals by value, so use an Array to count.
+	var fires: Array = [0]
+	s.xp_changed.connect(func(_a: int, _b: int, _c: int): fires[0] += 1)
+	for i in range(5):  # combo 1..5; combo 5 is a milestone
+		s._register_pickup()
+	assert_eq(fires[0], 1, "milestone xp_changed must fire exactly once")
+
+func _test_overcharge_recharge_cycle() -> void:
+	# Deterministic state-machine check for the overcharge burst/recharge cycle.
+	# State is reset to exact values right before each _process call, so any
+	# engine frame processing in the suite cannot flip the assertions.
+	var s := _make_snake()
+	s.evolution_stage = 3  # overcharge_unlock_stage()
+
+	# Frame 1: overcharge timer at 0 triggers the burst and starts recharge.
+	s.overcharge_timer = 0.0
+	s._process(0.01)
+	assert_true(s.overcharge_active, "overcharge activates when timer hits 0")
+	assert_gt(s.overcharge_timer, 0.0, "trigger resets the recharge cooldown")
+
+	# Expiry: force invuln to 0 so the next frame clears the burst.
+	s.invuln_timer = 0.0
+	s._process(0.01)
+	assert_false(s.overcharge_active, "overcharge expires once invuln runs out")
+
+	# Recharge: force the timer to 0 again to re-trigger the burst.
+	s.overcharge_timer = 0.0
+	s._process(0.01)
+	assert_true(s.overcharge_active, "overcharge re-triggers after cooldown")
