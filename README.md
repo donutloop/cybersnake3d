@@ -157,6 +157,7 @@ Snake pickup/wall grace periods come from pickup_invuln_time/wall_invuln_time, p
 Snake overcharge cooldown scales via overcharge_cooldown, a pure mapping (floors at 3s).
 Snake shard gain wave multiplier comes from wave_factor, a pure mapping (+1 per 10 waves).
 Snake base shard gain comes from base_shard_gain, a pure mapping (100 per shard).
+Snake enemy-kill XP comes from kill_xp, a pure mapping (15 XP).
 
 ## Gameplay Features
 

@@ -54,6 +54,7 @@ func _run_all() -> void:
 	_test_overcharge_cooldown_scales_with_stage()
 	_test_wave_factor_grows_with_wave()
 	_test_base_shard_gain()
+	_test_kill_xp_awards()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -451,3 +452,7 @@ func _test_wave_factor_grows_with_wave() -> void:
 func _test_base_shard_gain() -> void:
 	var s := _make_snake()
 	assert_eq(s.base_shard_gain(), 100, "base shard gain is 100")
+
+func _test_kill_xp_awards() -> void:
+	var s := _make_snake()
+	assert_eq(s.kill_xp(), 15, "enemy kill awards 15 xp")

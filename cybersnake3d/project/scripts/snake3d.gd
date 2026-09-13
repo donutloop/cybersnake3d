@@ -14,7 +14,6 @@ var score: int = 0
 var xp: int = 0
 var level: int = 1
 const XP_PER_LEVEL: int = 50
-const KILL_XP: int = 15  # XP awarded for killing an enemy
 const EVO_THRESHOLDS: Array[int] = [0, 200, 500, 1000, 2000]
 var evolution_stage: int = 1
 
@@ -67,6 +66,10 @@ signal xp_changed(current_xp: int, current_level: int, current_evo: int)
 signal boss_slain(value: int)
 
 
+
+func kill_xp() -> int:
+	# XP awarded for killing an enemy (pure mapping).
+	return 15
 func stats_for_stage(stage: int) -> Dictionary:
 	# Evolution stats (hp/speed) for the given stage, clamped to the roster.
 	# Pure mapping (no node access) so the logic is unit-testable.
@@ -294,7 +297,7 @@ func _check_enemy_damage(head_pos: Vector2i, is_tail_whip: bool) -> void:
 			if cell == head_pos:
 				enemy.take_damage(burst_damage(evolution_stage))
 				if enemy.get("is_dead"):
-					add_xp(KILL_XP)  # combat reward: killing an enemy feeds evolution
+					add_xp(kill_xp())  # combat reward: killing an enemy feeds evolution
 				if not is_tail_whip:
 					just_attacked = true
 					invuln_timer = wall_invuln_time()
@@ -604,7 +607,7 @@ func _release_burst() -> void:
 			if abs(cell.x - origin.x) <= 1 + int(magnet_radius(evolution_stage)) and abs(cell.y - origin.y) <= 1 + int(magnet_radius(evolution_stage)):
 				e.take_damage(1)
 				if e.get("is_dead"):
-					add_xp(KILL_XP)  # overcharge kills also feed evolution
+					add_xp(kill_xp())  # overcharge kills also feed evolution
 				break
 
 func _register_pickup() -> int:
