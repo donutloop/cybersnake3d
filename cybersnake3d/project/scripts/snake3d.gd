@@ -253,7 +253,7 @@ func _step() -> void:
 		score += gain
 		score_changed.emit(score)
 		add_xp(10)
-		invuln_timer = pickup_invuln_time()
+		invuln_timer = maxf(invuln_timer, pickup_invuln_time())
 	else:
 		body.pop_back()
 

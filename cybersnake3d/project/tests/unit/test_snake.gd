@@ -35,6 +35,7 @@ func _run_all() -> void:
 	_test_initial_state()
 	_test_movement()
 	_test_grows_when_eating_shard()
+	_test_overcharge_not_shortened_by_shard_pickup()
 	_test_wall_collision()
 	_test_self_collision()
 	_test_self_collision_fatal_while_invulnerable()
@@ -120,6 +121,27 @@ func try_eat(_c):
 	snake._step()
 	assert_eq(snake.body.size(), before + 1, "snake grows one segment when it eats a shard")
 	spawner.free()  # don't leave a stray ICEShardSpawner for later tests
+
+func _test_overcharge_not_shortened_by_shard_pickup() -> void:
+	# Regression: eating a shard during an active overcharge must NOT collapse
+	# the invuln_timer to the brief pickup grace (0.3s), which would prematurely
+	# end the overcharge. It must preserve the full overcharge duration (maxf).
+	var spawner := Node.new()
+	var sp := GDScript.new()
+	sp.source_code = "extends Node
+func try_eat(_c):
+	return true"
+	sp.reload()
+	spawner.set_script(sp)
+	var snake := _make_snake()
+	spawner.name = "ICEShardSpawner"
+	snake.get_parent().add_child(spawner)
+	snake.overcharge_active = true
+	snake.invuln_timer = snake.overcharge_duration(snake.evolution_stage)
+	var expected: float = snake.invuln_timer
+	snake._step()
+	assert_true(snake.invuln_timer >= expected, "overcharge duration preserved across shard pickup, not collapsed to pickup grace")
+	spawner.free()
 
 func _test_wall_collision() -> void:
 	var s := _make_snake()
