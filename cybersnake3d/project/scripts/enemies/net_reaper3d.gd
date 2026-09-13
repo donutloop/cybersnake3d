@@ -4,7 +4,7 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 2
+var hp: int = reaper_base_hp()
 var speed_steps: float = 5.0
 var move_timer: float = 0.0
 var is_dead: bool = false
@@ -82,6 +82,10 @@ func _check_snake_collision() -> void:
 		snake._die()
 
 
+
+func reaper_base_hp() -> int:
+	# Net Reaper base HP (pure mapping).
+	return 2
 func frenzy_speed_multiplier() -> float:
 	# Net Reaper frenzy doubles movement speed at low HP.
 	# Pure mapping (no node access) so the logic is unit-testable.
