@@ -99,6 +99,7 @@ func _run_all() -> void:
 	_test_format_score_groups_thousands()
 	_test_wave_label_zero_pads()
 	_test_combo_display_shows_only_live_window()
+	_test_combo_tier_color_matches_streak()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -138,6 +139,12 @@ func _test_combo_display_shows_only_live_window() -> void:
 	var hud := _hud
 	assert_eq(hud.combo_display_text(3, 0.0), "", "expired window shows empty")
 	assert_eq(hud.combo_display_text(3, 0.5), "COMBO x3", "live window shows multiplier")
+
+func _test_combo_tier_color_matches_streak() -> void:
+	var hud := _hud
+	assert_eq(hud.combo_tier_color(3), Color(0.3, 1.0, 0.9), "x3 combo is cyan")
+	assert_eq(hud.combo_tier_color(5), Color(1, 0.85, 0.2), "x5 combo is gold")
+	assert_eq(hud.combo_tier_color(8), Color(1, 0.25, 0.25), "x8 combo is red-hot")
 
 func _teardown() -> void:
 	_hud.queue_free()

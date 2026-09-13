@@ -53,6 +53,11 @@ func combo_display_text(combo: int, timer: float) -> String:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return "COMBO x%d" % combo if timer > 0.0 else ""
 
+func combo_tier_color(combo: int) -> Color:
+	# Combo color tiers: x2-3 cyan, x4-5 gold, x6+ red-hot.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return Color(0.3, 1.0, 0.9) if combo < 4 else (Color(1, 0.85, 0.2) if combo < 6 else Color(1, 0.25, 0.25))
+
 func _ready() -> void:
 	death_screen.visible = false
 	wave_announce.visible = false
@@ -277,7 +282,7 @@ func _update_combo_label() -> void:
 		combo_label.visible = true
 		combo_label.text = combo_display_text(combo, timer)
 		# Color tiers: x2-3 cyan, x4-5 gold, x6+ red-hot.
-		var color := Color(0.3, 1.0, 0.9) if combo < 4 else (Color(1, 0.85, 0.2) if combo < 6 else Color(1, 0.25, 0.25))
+		var color := combo_tier_color(combo)
 		combo_label.add_theme_color_override("font_color", color)
 	else:
 		combo_label.visible = false
