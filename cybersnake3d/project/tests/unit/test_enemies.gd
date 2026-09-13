@@ -524,6 +524,7 @@ func _run_all() -> void:
 	_test_sentinel_enrages_at_low_hp()
 	_test_enrage_threshold_is_half_hp()
 	_test_drone_swarm_size_scales_with_phase()
+	_test_hatch_size_scales_with_wave()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -548,3 +549,9 @@ func _run_all() -> void:
 	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()
+
+func _test_hatch_size_scales_with_wave() -> void:
+	var queen := _make_enemy(QueenScript, "queen2")
+	assert_eq(queen.hatch_size(1), 2, "wave 1 hatches 2 swarms")
+	assert_eq(queen.hatch_size(5), 3, "wave 5 hatches 3 swarms")
+	assert_eq(queen.hatch_size(30), 6, "high wave caps at 6 swarms")

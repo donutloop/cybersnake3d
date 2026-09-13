@@ -52,6 +52,11 @@ func _process(delta: float) -> void:
 	_check_snake_collision()
 
 # ── swarm hatching ──────────────────────────────────────────────────
+
+func hatch_size(wave: int) -> int:
+	# Hive swarm size scales with wave (base 2, +1 per 3 waves, capped 6).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return clampi(2 + wave / 3, 2, 6)
 func _hatch_swarms(delta: float) -> void:
 	swarm_timer -= delta
 	if swarm_timer > 0.0:
@@ -73,7 +78,8 @@ func _hatch_swarms(delta: float) -> void:
 	var script := load("res://scripts/enemies/virus_swarm3d.gd")
 	if not script:
 		return
-	for i in range(2):
+	var wave: int = int(manager.wave) if "wave" in manager else 1
+	for i in range(hatch_size(wave)):
 		var swarm := Node3D.new()
 		swarm.set_script(script)
 		if swarm.has_method("set_owner_tag"):
