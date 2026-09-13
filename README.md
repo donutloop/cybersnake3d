@@ -7,7 +7,8 @@ for the complete system map, enemy roster, bosses, HUD, controls, and known
 design choices.
 
 This top-level README is intentionally a **short index** (no duplicated
-detail): it points to the canonical doc and records the project-level state.
+detail): it points to the canonical doc, records the AI-agent build setup, and
+tracks the project-level state.
 
 ---
 
@@ -19,6 +20,9 @@ prototype_omega/            (repo root — this README)
    ├─ README.md             ← full project docs (canonical)
    ├─ project/              ← the Godot project (project.godot, main.tscn)
    │  └─ scripts/           ← snake, enemy_manager, spawner, HUD, CRT, enemies/
+   ├─ setup/                ← AI agent build environment
+   │  ├─ boot_deepseekv4_flash.sh
+   │  └─ code_agent/pi_deepseekv4_flash.json
    └─ tests/                ← unit + integration suite (54 tests)
 ```
 
@@ -34,6 +38,19 @@ godot --path cybersnake3d/project --headless --quit
 # Test suite (54 passing)
 cybersnake3d/project/tests/run_tests.sh
 ```
+
+## AI Agent Setup
+
+This project is built by an AI coding agent. The agent runs **DeepSeek V4
+Flash**, served locally via vLLM. Two files in `setup/` drive that environment:
+
+- [`setup/boot_deepseekv4_flash.sh`](cybersnake3d/setup/boot_deepseekv4_flash.sh)
+  — boots the local DeepSeek V4 Flash (vLLM) server for the agent.
+- [`setup/code_agent/pi_deepseekv4_flash.json`](cybersnake3d/setup/code_agent/pi_deepseekv4_flash.json)
+  — the agent's model config (model id + local vLLM endpoint).
+
+Read each file for its exact contents; this index only points to them so the
+agent setup is not duplicated here.
 
 ## Recent Fixes (committed)
 
