@@ -556,6 +556,7 @@ func _run_all() -> void:
 	_test_mine_base_hp()
 	_test_virus_swarm_score_award()
 	_test_warp_shard_score_award()
+	_test_wraith_score_award()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -716,3 +717,8 @@ func _test_warp_shard_score_award() -> void:
 	var shard := _make_enemy(WarpShardScript, "shard_award")
 	assert_eq(shard.score_award(), 250, "warp shard awards 250 score")
 	assert_eq(shard.xp_award(), 55, "warp shard awards 55 xp")
+
+func _test_wraith_score_award() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith_award")
+	assert_eq(wraith.score_award(), 400, "wraith awards 400 score")
+	assert_eq(wraith.xp_award(), 75, "wraith awards 75 xp")

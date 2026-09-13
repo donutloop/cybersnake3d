@@ -20,6 +20,15 @@ var light: OmniLight3D
 
 
 
+
+func score_award() -> int:
+	# Kill score awarded when a wraith dies (pure mapping).
+	return 400
+
+func xp_award() -> int:
+	# XP awarded when a wraith dies (pure mapping).
+	return 75
+
 func wraith_base_hp() -> int:
 	# Wraith base HP (pure mapping).
 	return 5
@@ -109,10 +118,10 @@ func _die() -> void:
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:
-		snake.score += 400
+		snake.score += score_award()
 		snake.score_changed.emit(snake.score)
 		if snake.has_method("add_xp"):
-			snake.add_xp(75)
+			snake.add_xp(xp_award())
 	queue_free()
 
 func get_grid_positions() -> Array[Vector2i]:
