@@ -188,3 +188,4 @@ Enemy spawn counts scale with waves past unlock via spawn_count (capped at 6 per
 The HUD score label comma-groups thousands via format_score, a pure formatter.
 Deep combo streaks extend the combo window via combo_window_seconds (base 1.0s, capped 2.5s), a pure mapping.
 Higher evolution stages grant a longer overcharge invulnerability window via overcharge_duration, a pure mapping.
+Combo milestone XP scales with the streak tier via milestone_xp, a pure mapping.

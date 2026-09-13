@@ -49,6 +49,7 @@ func _run_all() -> void:
 	_test_burst_damage_scales_with_stage()
 	_test_combo_window_extends_with_depth()
 	_test_overcharge_duration_scales_with_stage()
+	_test_milestone_xp_scales_with_tier()
 	_test_hit()
 	_test_combo_decay()
 	_test_pause()
@@ -267,6 +268,13 @@ func _test_overcharge_duration_scales_with_stage() -> void:
 	var s := _make_snake()
 	assert_eq(s.overcharge_duration(1), 2.5, "stage 1 overcharge lasts 2.5s")
 	assert_eq(s.overcharge_duration(3), 3.5, "stage 3 overcharge lasts 3.5s")
+
+func _test_milestone_xp_scales_with_tier() -> void:
+	# Combo milestone XP scales with the streak tier.
+	var s := _make_snake()
+	assert_eq(s.milestone_xp(3), 25, "low-tier milestone awards base XP")
+	assert_eq(s.milestone_xp(5), 38, "tier 1.5 milestone awards 38 XP")
+	assert_eq(s.milestone_xp(10), 50, "tier 2 milestone awards 50 XP")
 
 func _test_combo_milestone() -> void:
 	var s := _make_snake()

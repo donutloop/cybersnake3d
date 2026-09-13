@@ -600,7 +600,7 @@ func _register_pickup() -> int:
 	last_gain = int(round(last_gain * overdrive_gain_multiplier(overcharge_active)))
 	last_gain = int(round(last_gain * combo_tier_multiplier(combo)))
 	if combo % 5 == 0:
-		add_xp(25)
+		add_xp(milestone_xp(combo))
 		if has_signal("xp_changed"):
 			xp_changed.emit(xp, level, evolution_stage)
 	return last_gain
@@ -638,6 +638,11 @@ func overcharge_duration(evolution_stage: int) -> float:
 	# Higher evolution stages grant a longer overcharge invulnerability window.
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 2.0 + evolution_stage * 0.5
+
+func milestone_xp(combo: int) -> int:
+	# Combo milestone XP scales with the streak tier (x1/x1.5/x2).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return int(round(25 * combo_tier_multiplier(combo)))
 
 func _decay_combo(delta: float) -> void:
 	# Decays the combo window each frame; a chain expires when it hits 0.
