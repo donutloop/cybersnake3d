@@ -66,6 +66,11 @@ signal evolved(stage: int)
 signal xp_changed(current_xp: int, current_level: int, current_evo: int)
 signal boss_slain(value: int)
 
+
+func stats_for_stage(stage: int) -> Dictionary:
+	# Evolution stats (hp/speed) for the given stage, clamped to the roster.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return EVO_STATS[clampi(stage, 1, EVO_STATS.size() - 1)]
 func _ready() -> void:
 	# Load custom meshes if they exist in the assets directory
 	if ResourceLoader.exists("res://assets/snake_head.obj", "Mesh"):
@@ -88,7 +93,7 @@ func _ready() -> void:
 
 	_apply_evo_colors()
 	
-	var stats: Dictionary = EVO_STATS[evolution_stage]
+	var stats: Dictionary = stats_for_stage(evolution_stage)
 	max_hp = stats["hp"]
 	hp = max_hp
 	move_interval = move_interval_from_speed(stats["speed"])
@@ -237,7 +242,7 @@ func _check_evolution() -> void:
 		_on_evolve()
 
 func _on_evolve() -> void:
-	var stats: Dictionary = EVO_STATS[evolution_stage]
+	var stats: Dictionary = stats_for_stage(evolution_stage)
 	max_hp = stats["hp"]
 	hp = max_hp  # full heal on evolution
 	move_interval = move_interval_from_speed(stats["speed"])

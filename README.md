@@ -198,3 +198,4 @@ The HUD combo label color comes from combo_tier_color, a pure mapping (cyan/gold
 The HUD wave countdown label hides when elapsed via countdown_text, a pure formatter.
 The HUD score gain popup formats "+N" via gain_text, a pure formatter.
 ICE shard counts scale with board area via spawner.max_shards, a pure mapping (clamped 3-8).
+Snake evolution stats (hp/speed) come from snake.stats_for_stage, a pure clamped roster lookup.
