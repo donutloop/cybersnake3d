@@ -90,7 +90,7 @@ func _detonate(snake: Node) -> void:
 	# mine is consumed. A snake already at 1 HP would lose its last point.
 	armed = false
 	is_dead = true
-	flash_timer = 0.35
+	flash_timer = prime_flash_time()
 	var survived: bool = snake._hit()
 	# Mine is consumed regardless — it detonated.
 	queue_free()
@@ -101,9 +101,17 @@ func burn() -> void:
 	is_dead = true
 	queue_free()
 
+
+func prime_flash_time() -> float:
+	# Overdrive Mine flash after priming (pure mapping).
+	return 0.35
+
+func hit_flash_time() -> float:
+	# Overdrive Mine flash after a hit (pure mapping).
+	return 0.25
 func take_damage(amount: int = 1) -> void:
 	hp = maxi(0, hp - amount)
-	flash_timer = 0.25
+	flash_timer = hit_flash_time()
 	if hp <= 0:
 		_die()
 

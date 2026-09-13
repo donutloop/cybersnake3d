@@ -534,6 +534,7 @@ func _run_all() -> void:
 	_test_warp_flash_time()
 	_test_hunt_speed_ramps_and_caps()
 	_test_score_leech_drain_ratio()
+	_test_overdrive_mine_flash_times()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -604,3 +605,8 @@ func _test_hunt_speed_ramps_and_caps() -> void:
 func _test_score_leech_drain_ratio() -> void:
 	var leech := _make_enemy(ScoreLeechScript, "leech2")
 	assert_eq(leech.drain_ratio(), 0.25, "score leech siphons 25% per drain")
+
+func _test_overdrive_mine_flash_times() -> void:
+	var mine := _make_enemy(OverdriveMineScript, "mine2")
+	assert_eq(mine.prime_flash_time(), 0.35, "prime flash lasts 0.35s")
+	assert_eq(mine.hit_flash_time(), 0.25, "hit flash lasts 0.25s")
