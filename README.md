@@ -168,6 +168,7 @@ Hive Queen base HP comes from queen_base_hp, a pure mapping (16 HP).
 Chrono Anchor base HP comes from chrono_base_hp, a pure mapping (3 HP).
 Wraith base HP comes from wraith_base_hp, a pure mapping (5 HP).
 Overdrive Mine base HP comes from mine_base_hp, a pure mapping (2 HP).
+Warp Shard base HP wired to shard_base_hp (pure mapping).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.
