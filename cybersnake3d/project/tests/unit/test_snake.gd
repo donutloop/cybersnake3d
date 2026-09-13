@@ -43,6 +43,9 @@ func _run_all() -> void:
 	_test_overcharge_speed_boost()
 	_test_overcharge_cooldown_scales_with_evolution()
 	_test_hit_breaks_combo()
+	_test_die_protected_during_overcharge()
+	_test_die_protected_during_grace_invuln()
+	_test_die_vulnerable_reduces_hp_grants_grace()
 	_test_combo()
 	_test_overdrive_shard_bonus()
 	_test_combo_tier_multiplier()
@@ -348,6 +351,39 @@ func _test_hit() -> void:
 	assert_false(survived2, "hit at hp=1 is fatal")
 	assert_eq(s.hp, 0, "hp never goes negative (clamped at 0)")
 	assert_true(not s.is_alive, "snake is dead at hp 0")
+
+# ── _die() death-protection invariant ────────────────────────────────
+# The snake must NOT take damage from _die() while overcharging, nor while
+# inside the post-hit grace window (invuln_timer > 0, not overcharging).
+# A vulnerable snake takes exactly one hit and then gains the grace window.
+
+func _test_die_protected_during_overcharge() -> void:
+	var s := _make_snake()
+	s.overcharge_active = true
+	s.invuln_timer = 5.0
+	var hp_before: int = s.hp
+	s._die()
+	assert_eq(s.hp, hp_before, "overcharge protects the snake from _die")
+	assert_true(s.is_alive, "snake stays alive during overcharge")
+
+func _test_die_protected_during_grace_invuln() -> void:
+	var s := _make_snake()
+	s.overcharge_active = false
+	s.invuln_timer = 5.0
+	var hp_before: int = s.hp
+	s._die()
+	assert_eq(s.hp, hp_before, "grace invulnerability protects the snake from _die")
+	assert_true(s.is_alive, "snake stays alive during grace window")
+
+func _test_die_vulnerable_reduces_hp_grants_grace() -> void:
+	var s := _make_snake()
+	s.overcharge_active = false
+	s.invuln_timer = 0.0
+	var hp_before: int = s.hp
+	s._die()
+	assert_eq(s.hp, hp_before - 1, "vulnerable snake loses exactly 1 hp on _die")
+	assert_gt(s.invuln_timer, 0.0, "taking a hit grants the hit-invuln grace window")
+	assert_true(s.is_alive, "snake survives a single hit")
 
 func _test_combo_decay() -> void:
 	var s := _make_snake()

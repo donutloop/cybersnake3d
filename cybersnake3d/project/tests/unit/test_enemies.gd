@@ -581,6 +581,16 @@ func _run_all() -> void:
 	_test_wraith_dies_awards_xp()
 	_test_hunter_dies_awards_xp()
 	_test_warp_shard_dies_awards_xp()
+	_test_phantom_burns_on_overcharge_overlap()
+	_test_phantom_no_burn_when_head_far()
+	_test_hunter_burns_on_overcharge_overlap()
+	_test_hunter_no_burn_when_head_far()
+	_test_leech_burns_on_overcharge_overlap()
+	_test_leech_no_burn_when_head_far()
+	_test_warp_shard_burns_on_overcharge_overlap()
+	_test_warp_shard_no_burn_when_head_far()
+	_test_wraith_burns_on_overcharge_overlap()
+	_test_wraith_no_burn_when_head_far()
 
 func _test_hatch_size_scales_with_wave() -> void:
 	var queen := _make_enemy(QueenScript, "queen2")
@@ -722,3 +732,108 @@ func _test_wraith_score_award() -> void:
 	var wraith := _make_enemy(WraithScript, "wraith_award")
 	assert_eq(wraith.score_award(), 400, "wraith awards 400 score")
 	assert_eq(wraith.xp_award(), 75, "wraith awards 75 xp")
+
+# ── overcharge-burn regression (Section 6.3) ───────────────────────────
+# The 5 enemies below once burned away on ANY overcharge activation,
+# even when the snake head was far from their cell. Each now burns only
+# when the snake head overlaps the enemy cell. These tests pin that rule.
+
+func _test_phantom_burns_on_overcharge_overlap() -> void:
+	var phantom := _make_enemy(PhantomScript, "phantom_ovr1")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = phantom.grid_pos
+	var hp_before: int = phantom.hp
+	phantom._check_snake_collision()
+	assert_lt(phantom.hp, hp_before, "phantom burns on head overlap with overcharge")
+
+func _test_phantom_no_burn_when_head_far() -> void:
+	var phantom := _make_enemy(PhantomScript, "phantom_ovr2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = Vector2i(phantom.grid_pos.x + 5, phantom.grid_pos.y)
+	var hp_before: int = phantom.hp
+	phantom._check_snake_collision()
+	assert_eq(phantom.hp, hp_before, "phantom not burned when head is far")
+
+func _test_hunter_burns_on_overcharge_overlap() -> void:
+	var hunter := _make_enemy(HunterScript, "hunter_ovr1")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = hunter.grid_pos
+	var hp_before: int = hunter.hp
+	hunter._check_snake_collision()
+	assert_lt(hunter.hp, hp_before, "hunter burns on head overlap with overcharge")
+
+func _test_hunter_no_burn_when_head_far() -> void:
+	var hunter := _make_enemy(HunterScript, "hunter_ovr2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = Vector2i(hunter.grid_pos.x + 5, hunter.grid_pos.y)
+	var hp_before: int = hunter.hp
+	hunter._check_snake_collision()
+	assert_eq(hunter.hp, hp_before, "hunter not burned when head is far")
+
+func _test_leech_burns_on_overcharge_overlap() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech_ovr1")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = leech.grid_pos
+	var hp_before: int = leech.hp
+	leech._check_snake_collision()
+	assert_lt(leech.hp, hp_before, "score leech burns on head overlap with overcharge")
+
+func _test_leech_no_burn_when_head_far() -> void:
+	var leech := _make_enemy(ScoreLeechScript, "leech_ovr2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = Vector2i(leech.grid_pos.x + 5, leech.grid_pos.y)
+	var hp_before: int = leech.hp
+	leech._check_snake_collision()
+	assert_eq(leech.hp, hp_before, "score leech not burned when head is far")
+
+func _test_warp_shard_burns_on_overcharge_overlap() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard_ovr1")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = shard.grid_pos
+	var hp_before: int = shard.hp
+	shard._check_snake_collision()
+	assert_lt(shard.hp, hp_before, "warp shard burns on head overlap with overcharge")
+
+func _test_warp_shard_no_burn_when_head_far() -> void:
+	var shard := _make_enemy(WarpShardScript, "shard_ovr2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = Vector2i(shard.grid_pos.x + 5, shard.grid_pos.y)
+	var hp_before: int = shard.hp
+	shard._check_snake_collision()
+	assert_eq(shard.hp, hp_before, "warp shard not burned when head is far")
+
+func _test_wraith_burns_on_overcharge_overlap() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith_ovr1")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = wraith.grid_pos
+	var hp_before: int = wraith.hp
+	wraith._check_head_collision()
+	assert_lt(wraith.hp, hp_before, "wraith burns on head overlap with overcharge")
+
+func _test_wraith_no_burn_when_head_far() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith_ovr2")
+	_snake.invuln_timer = 2.0
+	_snake.just_attacked = false
+	_snake.overcharge_active = true
+	_snake.body[0] = Vector2i(wraith.grid_pos.x + 5, wraith.grid_pos.y)
+	var hp_before: int = wraith.hp
+	wraith._check_head_collision()
+	assert_eq(wraith.hp, hp_before, "wraith not burned when head is far")

@@ -83,7 +83,7 @@ func _check_snake_collision() -> void:
 	if not snake or not snake.is_alive or snake.body.size() == 0:
 		return
 	if snake.is_invulnerable():
-		if snake.overcharge_active:
+		if snake.overcharge_active and snake.body[0] == grid_pos:
 			take_damage(1)
 		return
 	if snake.body[0] == grid_pos:
