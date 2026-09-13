@@ -20,6 +20,15 @@ func swarm_size_min() -> int:
 func swarm_size_max() -> int:
 	# Virus swarm spawn ceiling (pure mapping, unit-testable).
 	return 8
+
+func score_award() -> int:
+	# Kill score awarded when a swarm dies (pure mapping).
+	return 200
+
+func xp_award() -> int:
+	# XP awarded when a swarm dies (pure mapping).
+	return 35
+
 func _ready() -> void:
 	unit_mat = StandardMaterial3D.new()
 	unit_mat.albedo_color = Color(0.2, 1.0, 0.3, 1.0)
@@ -160,10 +169,10 @@ func _all_dead() -> void:
 	is_dead = true
 	var snake := get_node_or_null("../../Snake")
 	if snake:
-		snake.score += 200
+		snake.score += score_award()
 		snake.score_changed.emit(snake.score)
 		if snake.has_method("add_xp"):
-			snake.add_xp(35)
+			snake.add_xp(xp_award())
 	queue_free()
 
 func set_owner_tag(t: String) -> void:
