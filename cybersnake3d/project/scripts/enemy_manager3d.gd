@@ -125,7 +125,7 @@ func _spawn_wave(w: int) -> void:
 
 	if w >= 10:
 		for i in range(spawn_count(w, 9)):
-			_spawn_enemy_capped("res://scripts/enemies/blackwall_sentinel3d.gd", 2)
+			_spawn_enemy_capped("res://scripts/enemies/blackwall_sentinel3d.gd", boss_cap())
 
 	if w >= 11:
 		for i in range(spawn_count(w, 10)):
@@ -165,6 +165,10 @@ func clear_bonus(wave: int) -> int:
 	# Wave-clear score bonus scales with the wave (base 100, +20/wave).
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 100 + wave * 20
+
+func boss_cap() -> int:
+	# Maximum concurrent boss enemies (pure mapping).
+	return 2
 func spawn_count(wave: int, unlock_wave: int) -> int:
 	# Enemy spawn count scales with waves past unlock, capped to avoid crowding.
 	# Pure mapping (no node access) so the logic is unit-testable.

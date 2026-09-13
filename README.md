@@ -143,6 +143,7 @@ A `danger_pulse.gd` controller drives those uniforms from the Snake's HP each fr
 Danger pulse hit flash strength comes from hit_flash_strength, a pure mapping (0.35).
 Danger pulse hit flash fade comes from decay_flash, a pure mapping (linear fade, clamped).
 ICE shard respawn interval comes from shard_spawn_interval, a pure mapping (5 seconds).
+Enemy manager boss cap comes from boss_cap, a pure mapping (2 concurrent).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.

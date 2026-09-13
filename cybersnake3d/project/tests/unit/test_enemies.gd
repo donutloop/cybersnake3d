@@ -537,6 +537,7 @@ func _run_all() -> void:
 	_test_overdrive_mine_flash_times()
 	_test_wraith_speed_glides()
 	_test_chrono_anchor_flash_times()
+	_test_boss_cap()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -621,3 +622,6 @@ func _test_chrono_anchor_flash_times() -> void:
 	var anchor := _make_enemy(ChronoAnchorScript, "anchor2")
 	assert_eq(anchor.anchor_flash_time(), 0.35, "chrono warp flash lasts 0.35s")
 	assert_eq(anchor.anchor_hit_flash_time(), 0.25, "chrono hit flash lasts 0.25s")
+
+func _test_boss_cap() -> void:
+	assert_eq(_manager.boss_cap(), 2, "max concurrent bosses is 2")
