@@ -4,7 +4,7 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 1
+var hp: int = drone_base_hp()
 var speed_steps: float = 3.0
 var move_timer: float = 0.0
 var ticks_until_turn: int = 4
@@ -24,6 +24,11 @@ var flame_mesh: MeshInstance3D
 var time_passed: float = 0.0
 
 const DIRECTIONS := [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
+
+
+func drone_base_hp() -> int:
+	# Glitch Drone base HP (pure mapping).
+	return 1
 
 func _ready() -> void:
 	grid_pos = _random_edge()

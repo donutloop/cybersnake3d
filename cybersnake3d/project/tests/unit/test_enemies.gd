@@ -549,6 +549,7 @@ func _run_all() -> void:
 	_test_web_base_hp()
 	_test_phantom_base_hp()
 	_test_sentinel_base_hp()
+	_test_drone_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -679,3 +680,7 @@ func _test_phantom_base_hp() -> void:
 func _test_sentinel_base_hp() -> void:
 	var sentinel := _make_enemy(SentinelScript, "sentinel_base_hp")
 	assert_eq(sentinel.sentinel_base_hp(), 10, "blackwall sentinel has 10 base HP")
+
+func _test_drone_base_hp() -> void:
+	var drone := _make_enemy(DroneScript, "drone_base_hp")
+	assert_eq(drone.drone_base_hp(), 1, "glitch drone has 1 base HP")
