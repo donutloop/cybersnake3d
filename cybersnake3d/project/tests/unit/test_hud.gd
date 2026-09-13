@@ -106,6 +106,7 @@ func _run_all() -> void:
 	_test_hp_ratio_clamps()
 	_test_evolution_bar_fill_clamps()
 	_test_wave_announce_time_persists()
+	_test_game_over_text_formats_scores()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -180,3 +181,6 @@ func _test_evolution_bar_fill_clamps() -> void:
 
 func _test_wave_announce_time_persists() -> void:
 	assert_eq(_hud.wave_announce_time(), 2.0, "wave announce persists 2 seconds")
+
+func _test_game_over_text_formats_scores() -> void:
+	assert_eq(_hud.game_over_text(1200, 1500), "GAME OVER — SCORE: 1200 — BEST: 1500", "death screen shows both scores")

@@ -163,6 +163,7 @@ HUD boss-wave detection comes from is_boss_wave, a pure mapping (waves >= 10).
 HUD snake HP bar fill comes from hp_ratio, a pure mapping (clamped 0..1).
 HUD evolution XP bar fill comes from evolution_bar_fill, a pure mapping (clamped to stage range).
 HUD wave announce duration comes from wave_announce_time, a pure mapping (2 seconds).
+HUD death screen headline comes from game_over_text, a pure formatter.
 
 ## Gameplay Features
 

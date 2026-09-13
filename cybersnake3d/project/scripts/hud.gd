@@ -371,6 +371,10 @@ func hp_ratio(hp: float, max_hp: float) -> float:
 	# Snake HP bar fill ratio, clamped 0..1 (pure mapping).
 	return clampf(hp / max_hp, 0.0, 1.0)
 
+
+func game_over_text(final_score: int, best_score: int) -> String:
+	# Death screen headline with final and best scores (pure mapping).
+	return "GAME OVER — SCORE: %d — BEST: %d" % [final_score, best_score]
 func wave_announce_time() -> float:
 	# Wave announce banner persists this many seconds (pure mapping).
 	return 2.0
@@ -411,7 +415,7 @@ func _on_snake_died() -> void:
 	if final_score > best:
 		best = final_score
 		_save_best_score(best)
-	death_label.text = "GAME OVER — SCORE: %d — BEST: %d" % [final_score, best]
+	death_label.text = game_over_text(final_score, best)
 	death_screen.visible = true
 	restart_label.visible = true
 
