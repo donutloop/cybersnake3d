@@ -643,6 +643,9 @@ func _release_burst() -> void:
 func _register_pickup() -> int:
 	combo = combo + 1 if combo_timer > 0.0 else 1
 	combo_timer = combo_window_seconds(combo)
+	# Track the live window so the HUD combo bar's max reflects the extended
+	# window (combo_timer can reach 2.5s while the static base is 1.0s).
+	combo_window = combo_window_seconds(combo)
 	# Shards pay more in later waves: +10% gain per wave tier.
 	var mgr := get_node_or_null("../EnemyManager")
 	var wave_factor: int = wave_factor(int(mgr.wave) if mgr and "wave" in mgr else 1)
@@ -736,3 +739,4 @@ func _decay_combo(delta: float) -> void:
 		combo_timer = decay_combo_timer(combo_timer, delta)
 		if combo_timer <= 0.0:
 			combo = 0
+			combo_window = base_combo_window()
