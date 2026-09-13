@@ -18,8 +18,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 2
-var max_hp: int = 2
+var hp: int = mine_base_hp()
+var max_hp: int = mine_base_hp()
 var is_dead: bool = false
 var armed: bool = true
 
@@ -30,6 +30,11 @@ var time_passed: float = 0.0
 var flash_timer: float = 0.0
 var pulse: float = 0.0
 
+
+
+func mine_base_hp() -> int:
+	# Overdrive Mine base HP (pure mapping).
+	return 2
 
 func _ready() -> void:
 	grid_pos = _random_edge()

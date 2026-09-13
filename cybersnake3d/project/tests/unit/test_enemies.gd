@@ -553,6 +553,7 @@ func _run_all() -> void:
 	_test_queen_base_hp()
 	_test_chrono_base_hp()
 	_test_wraith_base_hp()
+	_test_mine_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -699,3 +700,7 @@ func _test_chrono_base_hp() -> void:
 func _test_wraith_base_hp() -> void:
 	var wraith := _make_enemy(WraithScript, "wraith_base_hp")
 	assert_eq(wraith.wraith_base_hp(), 5, "wraith has 5 base HP")
+
+func _test_mine_base_hp() -> void:
+	var mine := _make_enemy(OverdriveMineScript, "mine_base_hp")
+	assert_eq(mine.mine_base_hp(), 2, "overdrive mine has 2 base HP")
