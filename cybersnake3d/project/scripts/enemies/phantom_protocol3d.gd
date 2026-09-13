@@ -108,12 +108,17 @@ func _finish_phase() -> void:
 	is_phased = false
 	mesh_inst.visible = true
 
+
+func teleport_radius() -> int:
+	# Phantom teleport jitter radius (max offset from the snake head anchor).
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return 6
 func _teleport_near_snake() -> void:
 	var snake := get_node_or_null("../../Snake")
 	var anchor := grid_pos
 	if snake and snake.body.size() > 0:
 		anchor = snake.body[0]
-	var target: Vector2i = anchor + Vector2i(randi_range(-6, 6), randi_range(-6, 6))
+	var target: Vector2i = anchor + Vector2i(randi_range(-teleport_radius(), teleport_radius()), randi_range(-teleport_radius(), teleport_radius()))
 	target.x = clampi(target.x, 1, LevelSettings.grid_w - 2)
 	target.y = clampi(target.y, 1, LevelSettings.grid_h - 2)
 	grid_pos = target
