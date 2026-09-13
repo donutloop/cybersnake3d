@@ -1,29 +1,27 @@
 # Prototype Omega — CyberSnake 3D
 
 This repository contains the **CyberSnake 3D** Godot project (a neon 3D snake
-game) plus its test suite. The full project documentation lives in
-[`cybersnake3d/project/README.md`](cybersnake3d/project/README.md) — read that
-for the complete system map, enemy roster, bosses, HUD, controls, and known
-design choices.
+game) plus its test suite and the AI-agent environment that builds it.
 
-This top-level README is intentionally a **short index** (no duplicated
-detail): it points to the canonical doc, records the AI-agent build setup, and
-tracks the project-level state.
+This top-level README is a short **index** — it points to the canonical docs
+and setup files without duplicating their contents.
+
+- Full project docs: [`cybersnake3d/project/README.md`](cybersnake3d/project/README.md)
+- Agent setup: [`cybersnake3d/setup/`](cybersnake3d/setup/)
 
 ---
 
 ## Layout
 
 ```
-prototype_omega/            (repo root — this README)
+prototype_omega/
 └─ cybersnake3d/
-   ├─ README.md             ← full project docs (canonical)
-   ├─ project/              ← the Godot project (project.godot, main.tscn)
-   │  └─ scripts/           ← snake, enemy_manager, spawner, HUD, CRT, enemies/
+   ├─ README.md             ← this index
+   ├─ project/              ← Godot project (project.godot, main.tscn, scripts/, tests/)
    ├─ setup/                ← AI agent build environment
    │  ├─ boot_deepseekv4_flash.sh
    │  └─ code_agent/pi_deepseekv4_flash.json
-   └─ tests/                ← unit + integration suite (54 tests)
+   └─ project/README.md     ← canonical, full project documentation
 ```
 
 ## Run & Test
@@ -35,34 +33,20 @@ godot --path cybersnake3d/project
 # Headless parse check
 godot --path cybersnake3d/project --headless --quit
 
-# Test suite (54 passing)
+# Test suite
 cybersnake3d/project/tests/run_tests.sh
 ```
 
 ## AI Agent Setup
 
-This project is built by an AI coding agent. The agent runs **DeepSeek V4
-Flash**, served locally via vLLM. Two files in `setup/` drive that environment:
+This project is developed by an AI coding agent running **DeepSeek V4 Flash**,
+served **locally via vLLM**. The environment is in `setup/`:
 
 - [`setup/boot_deepseekv4_flash.sh`](cybersnake3d/setup/boot_deepseekv4_flash.sh)
-  — boots the local DeepSeek V4 Flash (vLLM) server for the agent.
+  boots the local vLLM server that serves the agent's model.
 - [`setup/code_agent/pi_deepseekv4_flash.json`](cybersnake3d/setup/code_agent/pi_deepseekv4_flash.json)
-  — the agent's model config (model id + local vLLM endpoint).
+  is the agent's model config. It selects the model id **`deepseek-v4-flash`**
+  and points the agent at the **local vLLM endpoint** — the model is never
+  hosted remotely.
 
-Read each file for its exact contents; this index only points to them so the
-agent setup is not duplicated here.
-
-## Recent Fixes (committed)
-
-- **Combo meter accuracy**: the snake now tracks the live `combo_window`
-  (extended up to 2.5s) so the HUD combo bar's max matches the actual window;
-  the window resets to base on chain expiry.
-- **Double-death guard**: every enemy death handler (`_die`, and the
-  virus-swarm `_all_dead`) now returns early `if is_dead`, preventing
-  overlapping damage sources (head-bump + overdrive burst) from double-awarding
-  score/XP.
-
-## Status
-
-`HEAD` == `origin/main`, working tree clean. Headless parse clean; suite
-`PASS 54 FAIL 0`.
+Read each file for its exact contents; this index only points to them.
