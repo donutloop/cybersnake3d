@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://tests/unit/test_spawner.gd" id="3_spawner"]
 [ext_resource type="Script" path="res://tests/unit/test_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://tests/unit/test_wave_eat.gd" id="5_wave_eat"]
+[ext_resource type="Script" path="res://tests/unit/test_hud.gd" id="6_hud"]
 
 [node name="TestUnit" type="Node"]
 script = ExtResource("1_unit")
@@ -20,3 +21,6 @@ script = ExtResource("4_camera")
 
 [node name="TestWaveEat" type="Node" parent="."]
 script = ExtResource("5_wave_eat")
+
+[node name="TestHud" type="Node" parent="."]
+script = ExtResource("6_hud")

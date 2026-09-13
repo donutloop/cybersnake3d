@@ -79,7 +79,7 @@ func _ready() -> void:
 	overcharge_bar.show_percentage = false
 	overcharge_bar.add_theme_stylebox_override("background", style_bg)
 	overcharge_bar.add_theme_stylebox_override("fill", style_oc)
-	overcharge_bar.max_value = 8.0
+	overcharge_bar.max_value = 8.0  # refreshed per-stage in _update_overcharge_bar
 	overcharge_bar.value = 0.0
 	overcharge_bar.visible = false
 	add_child(overcharge_bar)
@@ -224,10 +224,14 @@ func _update_overcharge_bar() -> void:
 	var snake := get_node_or_null("../Snake")
 	var stage: int = snake.evolution_stage if snake else 0
 	var oc_active: bool = snake.overcharge_active if snake else false
-	if stage >= 5 or oc_active:
+	# Overcharge unlocks at evolution stage 3 and its cooldown shrinks with
+	# stage (8s at stage 3 down to a 3s floor at stage 5), so the bar's max
+	# must track the live cooldown or the meter reads wrong.
+	if stage >= 3:
 		overcharge_bar.visible = true
-		overcharge_bar.value = snake.overcharge_timer
-		overcharge_bar.modulate = Color(1.0, 0.25, 0.25) if snake.overcharge_timer <= 1.0 else Color.WHITE if snake else 0.0
+		overcharge_bar.max_value = maxf(3.0, 8.0 - float(stage))
+		overcharge_bar.value = snake.overcharge_timer if snake else 0.0
+		overcharge_bar.modulate = Color(1.0, 0.25, 0.25) if snake and snake.overcharge_timer <= 1.0 else Color.WHITE if snake else 0.0
 	else:
 		overcharge_bar.visible = false
 		overcharge_bar.value = 0.0
