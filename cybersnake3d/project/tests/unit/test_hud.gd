@@ -107,6 +107,7 @@ func _run_all() -> void:
 	_test_evolution_bar_fill_clamps()
 	_test_wave_announce_time_persists()
 	_test_game_over_text_formats_scores()
+	_test_boss_slain_text()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -184,3 +185,6 @@ func _test_wave_announce_time_persists() -> void:
 
 func _test_game_over_text_formats_scores() -> void:
 	assert_eq(_hud.game_over_text(1200, 1500), "GAME OVER — SCORE: 1200 — BEST: 1500", "death screen shows both scores")
+
+func _test_boss_slain_text() -> void:
+	assert_eq(_hud.boss_slain_text(500), "BOSS SLAIN +500", "boss kill banner shows bonus")

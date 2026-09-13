@@ -372,6 +372,10 @@ func hp_ratio(hp: float, max_hp: float) -> float:
 	return clampf(hp / max_hp, 0.0, 1.0)
 
 
+
+func boss_slain_text(bonus: int) -> String:
+	# Banner announcing a boss kill and its score bonus (pure mapping).
+	return "BOSS SLAIN +%d" % bonus
 func game_over_text(final_score: int, best_score: int) -> String:
 	# Death screen headline with final and best scores (pure mapping).
 	return "GAME OVER — SCORE: %d — BEST: %d" % [final_score, best_score]
@@ -501,7 +505,7 @@ func _on_xp_changed(xp: int, _level: int, evo: int) -> void:
 func _on_boss_slain(value: int) -> void:
 	# Red banner announcing a boss kill reward.
 	var banner := Label.new()
-	banner.text = "BOSS SLAIN +%d" % value
+	banner.text = boss_slain_text(value)
 	banner.add_theme_font_size_override("font_size", 28)
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.add_theme_color_override("font_color", Color(1, 0.3, 0.3))
