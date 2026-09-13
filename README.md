@@ -185,3 +185,4 @@ The overcharge shard-magnet radius scales with evolution stage (1..3) via magnet
 The Sentinel boss (wave 10) scales its HP with the wave via boss_hp (base 10, +1 per 5 waves past the first), a pure mapping.
 The overcharge burst damage scales with evolution stage (1..3) via burst_damage, a pure clamped mapping.
 Enemy spawn counts scale with waves past unlock via spawn_count (capped at 6 per type), a pure clamped mapping.
+The HUD score label comma-groups thousands via format_score, a pure formatter.

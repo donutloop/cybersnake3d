@@ -1,5 +1,19 @@
 # hud.gd — HUD overlay (reused from 2D, works on CanvasLayer in 3D)
 extends CanvasLayer
+func format_score(score: int) -> String:
+	# Comma-group thousands for the score HUD (e.g. 12345 -> "12,345").
+	# Pure mapping (no node access) so the logic is unit-testable.
+	var s: String = str(abs(score))
+	var out: String = ""
+	while s.length() > 3:
+		out = "," + s.substr(s.length() - 3) + out
+		s = s.substr(0, s.length() - 3)
+	if s.length() > 0:
+		out = s + out
+	if score < 0:
+		out = "-" + out
+	return out
+
 
 @onready var score_label: Label = $ScoreLabel
 @onready var wave_label: Label = $WaveLabel
@@ -316,7 +330,7 @@ func _update_boss_bar() -> void:
 
 func update_hud(p_score: int, wave: int, length: int) -> void:
 	if score_label:
-		score_label.text = "SCORE: %d" % p_score
+		score_label.text = "SCORE: %s" % format_score(p_score)
 	if wave_label:
 		wave_label.text = "WAVE: %d" % wave
 	if length_label:

@@ -96,6 +96,7 @@ func _run_all() -> void:
 	_test_bar_hidden_below_stage_3()
 	_test_bar_max_tracks_stage_3()
 	_test_bar_max_floors_at_stage_5()
+	_test_format_score_groups_thousands()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -118,6 +119,13 @@ func _test_bar_max_floors_at_stage_5() -> void:
 	_set_stage(5)
 	_update_bar()
 	assert_eq(_hud.overcharge_bar.max_value, COOLDOWN_STAGE_5, "max_value floored at 3.0 at stage 5")
+
+func _test_format_score_groups_thousands() -> void:
+	var hud := _hud
+	assert_eq(hud.format_score(0), "0", "score 0 formats as 0")
+	assert_eq(hud.format_score(12345), "12,345", "score groups thousands")
+	assert_eq(hud.format_score(999), "999", "sub-thousand stays plain")
+	assert_eq(hud.format_score(-1234), "-1,234", "negative score formats with minus")
 
 func _teardown() -> void:
 	_hud.queue_free()
