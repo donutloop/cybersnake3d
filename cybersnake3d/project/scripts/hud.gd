@@ -58,6 +58,11 @@ func combo_tier_color(combo: int) -> Color:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return Color(0.3, 1.0, 0.9) if combo < 4 else (Color(1, 0.85, 0.2) if combo < 6 else Color(1, 0.25, 0.25))
 
+func countdown_text(secs: int) -> String:
+	# Wave countdown label, hidden when the timer has elapsed.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return "NEXT WAVE IN %d" % secs if secs > 0 else ""
+
 func _ready() -> void:
 	death_screen.visible = false
 	wave_announce.visible = false
@@ -418,7 +423,7 @@ func _update_wave_countdown() -> void:
 	var remain: float = mgr.wave_delay - mgr.wave_timer
 	var secs: int = maxi(1, int(remain))
 	if countdown_label:
-		countdown_label.text = "NEXT WAVE IN %d" % secs
+		countdown_label.text = countdown_text(secs)
 		countdown_label.visible = true
 
 func _update_enemy_count() -> void:

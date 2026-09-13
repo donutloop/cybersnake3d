@@ -100,6 +100,7 @@ func _run_all() -> void:
 	_test_wave_label_zero_pads()
 	_test_combo_display_shows_only_live_window()
 	_test_combo_tier_color_matches_streak()
+	_test_countdown_text_hides_when_elapsed()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -145,6 +146,11 @@ func _test_combo_tier_color_matches_streak() -> void:
 	assert_eq(hud.combo_tier_color(3), Color(0.3, 1.0, 0.9), "x3 combo is cyan")
 	assert_eq(hud.combo_tier_color(5), Color(1, 0.85, 0.2), "x5 combo is gold")
 	assert_eq(hud.combo_tier_color(8), Color(1, 0.25, 0.25), "x8 combo is red-hot")
+
+func _test_countdown_text_hides_when_elapsed() -> void:
+	var hud := _hud
+	assert_eq(hud.countdown_text(5), "NEXT WAVE IN 5", "live countdown shows seconds")
+	assert_eq(hud.countdown_text(0), "", "elapsed countdown hides")
 
 func _teardown() -> void:
 	_hud.queue_free()

@@ -195,3 +195,4 @@ The HUD combo label shows the multiplier only while the combo window is live via
 The snake move interval is the inverse of speed via move_interval_from_speed, a pure clamped mapping.
 The Blackwall Sentinel enrages below half max HP via enrage_threshold, a pure mapping.
 The HUD combo label color comes from combo_tier_color, a pure mapping (cyan/gold/red-hot tiers).
+The HUD wave countdown label hides when elapsed via countdown_text, a pure formatter.
