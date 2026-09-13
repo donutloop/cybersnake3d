@@ -528,6 +528,7 @@ func _run_all() -> void:
 	_test_phantom_teleport_radius_is_six()
 	_test_wave_delay_shrinks_with_wave()
 	_test_frenzy_speed_multiplier_doubles()
+	_test_virus_swarm_size_range()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -571,3 +572,8 @@ func _test_wave_delay_shrinks_with_wave() -> void:
 func _test_frenzy_speed_multiplier_doubles() -> void:
 	var reaper := _make_enemy(ReaperScript, "reaper2")
 	assert_eq(reaper.frenzy_speed_multiplier(), 2.0, "frenzy doubles movement speed")
+
+func _test_virus_swarm_size_range() -> void:
+	var swarm := _make_enemy(SwarmScript, "swarm2")
+	assert_eq(swarm.swarm_size_min(), 4, "virus swarm spawns at least 4")
+	assert_eq(swarm.swarm_size_max(), 8, "virus swarm spawns at most 8")

@@ -12,6 +12,14 @@ var owner_tag: String = ""
 
 var unit_mat: StandardMaterial3D
 
+
+func swarm_size_min() -> int:
+	# Virus swarm spawn floor (pure mapping, unit-testable).
+	return 4
+
+func swarm_size_max() -> int:
+	# Virus swarm spawn ceiling (pure mapping, unit-testable).
+	return 8
 func _ready() -> void:
 	unit_mat = StandardMaterial3D.new()
 	unit_mat.albedo_color = Color(0.2, 1.0, 0.3, 1.0)
@@ -19,7 +27,7 @@ func _ready() -> void:
 	unit_mat.emission = Color(0.2, 1.0, 0.3, 1.0)
 	unit_mat.emission_energy_multiplier = 2.0
 
-	var count := randi_range(4, 8)
+	var count := randi_range(swarm_size_min(), swarm_size_max())
 	var edge := _random_edge()
 	center_pos = _grid_to_world(edge)
 	for i in range(count):
