@@ -535,6 +535,7 @@ func _run_all() -> void:
 	_test_hunt_speed_ramps_and_caps()
 	_test_score_leech_drain_ratio()
 	_test_overdrive_mine_flash_times()
+	_test_wraith_speed_glides()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -610,3 +611,7 @@ func _test_overdrive_mine_flash_times() -> void:
 	var mine := _make_enemy(OverdriveMineScript, "mine2")
 	assert_eq(mine.prime_flash_time(), 0.35, "prime flash lasts 0.35s")
 	assert_eq(mine.hit_flash_time(), 0.25, "hit flash lasts 0.25s")
+
+func _test_wraith_speed_glides() -> void:
+	var wraith := _make_enemy(WraithScript, "wraith2")
+	assert_eq(wraith.wraith_speed(), 3.0, "wraith glides at speed 3")

@@ -9,7 +9,6 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 var grid_pos := Vector2i.ZERO
 var hp: int = 5
 var max_hp: int = 5
-var speed_steps: float = 3.0
 var move_timer: float = 0.0
 var is_dead: bool = false
 var time_passed: float = 0.0
@@ -19,6 +18,10 @@ var mat: StandardMaterial3D
 var light: OmniLight3D
 
 
+
+func wraith_speed() -> float:
+	# Wraith glides across the grid at this speed (pure mapping).
+	return 3.0
 func _ready() -> void:
 	grid_pos = _random_edge()
 	move_timer = randf() * 1.0
@@ -56,7 +59,7 @@ func _process(delta: float) -> void:
 	light.light_energy = 1.8 + pulse
 
 	move_timer += delta
-	if move_timer >= 1.0 / speed_steps:
+	if move_timer >= 1.0 / wraith_speed():
 		move_timer = 0.0
 		_step_toward_snake()
 		_update_position()
