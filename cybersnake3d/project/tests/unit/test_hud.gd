@@ -97,6 +97,7 @@ func _run_all() -> void:
 	_test_bar_max_tracks_stage_3()
 	_test_bar_max_floors_at_stage_5()
 	_test_format_score_groups_thousands()
+	_test_wave_label_zero_pads()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -126,6 +127,11 @@ func _test_format_score_groups_thousands() -> void:
 	assert_eq(hud.format_score(12345), "12,345", "score groups thousands")
 	assert_eq(hud.format_score(999), "999", "sub-thousand stays plain")
 	assert_eq(hud.format_score(-1234), "-1,234", "negative score formats with minus")
+
+func _test_wave_label_zero_pads() -> void:
+	var hud := _hud
+	assert_eq(hud.wave_label_text(3), "WAVE: 03", "wave 3 zero-pads")
+	assert_eq(hud.wave_label_text(12), "WAVE: 12", "wave 12 stays two digits")
 
 func _teardown() -> void:
 	_hud.queue_free()

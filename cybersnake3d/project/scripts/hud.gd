@@ -43,6 +43,11 @@ var boss_label: Label
 var flash_rect: ColorRect
 var evo_tween: Tween
 
+func wave_label_text(wave: int) -> String:
+	# Zero-pad the wave number for the HUD (e.g. "WAVE: 07").
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return "WAVE: %02d" % wave
+
 func _ready() -> void:
 	death_screen.visible = false
 	wave_announce.visible = false
@@ -332,7 +337,7 @@ func update_hud(p_score: int, wave: int, length: int) -> void:
 	if score_label:
 		score_label.text = "SCORE: %s" % format_score(p_score)
 	if wave_label:
-		wave_label.text = "WAVE: %d" % wave
+		wave_label.text = wave_label_text(wave)
 	if length_label:
 		length_label.text = "LEN: %d" % length
 
