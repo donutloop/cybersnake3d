@@ -560,3 +560,12 @@ func _test_overcharge_recharge_cycle() -> void:
 	s.overcharge_timer = 0.0
 	s._process(0.01)
 	assert_true(s.overcharge_active, "overcharge re-triggers after cooldown")
+
+	# Gate: while an overcharge is already active, the recharge timer must NOT
+	# decay/reset — otherwise at high stages the duration can exceed the
+	# cooldown and the burst would re-trigger every frame (permanent overcharge).
+	s.overcharge_timer = 0.0
+	s._process(0.01)
+	assert_eq(s.overcharge_timer, 0.0,
+		"recharge timer must not reset while overcharge is active")
+	assert_true(s.overcharge_active, "active overcharge must not be cleared")

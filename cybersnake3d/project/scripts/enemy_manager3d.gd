@@ -211,13 +211,16 @@ func _spawn_enemy(script_path: String) -> void:
 				enemy.grid_pos = cell
 				enemy._update_position()
 				break
-	# Wave scaling: later waves spawn tougher, faster enemies.
-	var hpv: Variant = enemy.get("hp")
-	if hpv != null:
-		enemy.set("hp", int(hpv) + wave - 1)
-	var spv: Variant = enemy.get("speed_steps")
-	if spv != null:
-		enemy.set("speed_steps", float(spv) + float(wave) * 0.15)
+	# Wave scaling: later waves spawn tougher, faster enemies. Boss enemies set
+	# their own wave-scaled HP in _ready (via the parent manager's wave), so the
+	# generic flat HP bump would double-scale them past max_hp — skip it for them.
+	if not (enemy.get("is_boss") == true):
+		var hpv: Variant = enemy.get("hp")
+		if hpv != null:
+			enemy.set("hp", int(hpv) + wave - 1)
+		var spv: Variant = enemy.get("speed_steps")
+		if spv != null:
+			enemy.set("speed_steps", float(spv) + float(wave) * 0.15)
 	enemies.append(enemy)
 
 func get_enemy_positions() -> Array[Vector2i]:

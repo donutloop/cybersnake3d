@@ -24,6 +24,12 @@ var mat: StandardMaterial3D
 
 
 func _ready() -> void:
+	# Boss HP scales with the current wave (mirrors the Blackwall Sentinel).
+	# Read the parent EnemyManager's wave; bosses are spawned as its children.
+	var mgr := get_parent()
+	if mgr and "wave" in mgr:
+		max_hp = queen_hp(mgr.wave)
+		hp = max_hp
 	grid_pos = Vector2i(int(LevelSettings.grid_w) / 2 - 1, LevelSettings.grid_h / 2 - 1)
 
 	mat = StandardMaterial3D.new()
@@ -58,6 +64,10 @@ func queen_base_hp() -> int:
 	# Hive Queen base HP (pure mapping).
 	return 16
 
+
+func queen_hp(wave: int) -> int:
+	# Boss HP scales with wave (base 16, +1 every 5 waves past wave 10).
+	return queen_base_hp() + maxi(wave - 10, 0) / 5
 func hatch_size(wave: int) -> int:
 	# Hive swarm size scales with wave (base 2, +1 per 3 waves, capped 6).
 	# Pure mapping (no node access) so the logic is unit-testable.

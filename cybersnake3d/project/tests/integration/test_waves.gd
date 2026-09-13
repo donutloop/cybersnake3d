@@ -170,6 +170,8 @@ func _test_wave10_spawns_boss() -> void:
 	if sentinel:
 		assert_eq(sentinel.is_boss, true, "sentinel is flagged as boss")
 		assert_true(sentinel.get("max_hp") > 0, "sentinel has boss HP")
+	assert_true(sentinel.get("hp") <= sentinel.get("max_hp"),
+		"sentinel hp must never exceed max_hp (no double-scaling)")
 
 func _test_wave15_spawns_hive_queen() -> void:
 	# Wave 15 gates the hive queen boss (tier-5). Verify it spawns + is flagged boss.
@@ -180,6 +182,8 @@ func _test_wave15_spawns_hive_queen() -> void:
 	if queen:
 		assert_eq(queen.is_boss, true, "hive queen is flagged as boss")
 		assert_true(queen.get("max_hp") >= 16, "hive queen has high boss HP")
+	assert_true(queen.get("hp") <= queen.get("max_hp"),
+		"hive queen hp must never exceed max_hp (no double-scaling)")
 
 func _test_boss_population_capped() -> void:
 	# At wave 20 both bosses should spawn, but at most 2 of each stay active.

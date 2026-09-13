@@ -155,7 +155,11 @@ func _process(delta: float) -> void:
 	if not is_alive:
 		return
 
-	if evolution_stage >= overcharge_unlock_stage():
+	# Recharge the overcharge meter each frame. Do NOT recharge while an
+	# overcharge is already active: at higher stages the active duration can
+	# exceed the cooldown, so without this gate the timer would hit 0 mid-window
+	# and re-trigger the burst every frame (a permanent overcharge).
+	if evolution_stage >= overcharge_unlock_stage() and not overcharge_active:
 		# Overcharge unlocks at evolution stage 3. Higher stages recharge it
 		# faster: stage 3 takes 8s, stage 5 drops to 4s (min 3s), so evolution
 		# is a real combat upgrade rather than just raw HP/speed.

@@ -412,13 +412,19 @@ func show_wave_announce(wave: int) -> void:
 func _on_score_changed(new_score: int) -> void:
 	var snake := get_node_or_null("../Snake")
 	var length: int = snake.body.size() if snake else 0
-	update_hud(new_score, 1, length)
+	update_hud(new_score, _current_wave(), length)
 
 func _on_ate_shard() -> void:
 	var snake := get_node_or_null("../Snake")
 	var length: int = snake.body.size() if snake else 0
 	var sc: int = snake.score if snake else 0
-	update_hud(sc, 1, length)
+	update_hud(sc, _current_wave(), length)
+func _current_wave() -> int:
+	# Read the live wave from the EnemyManager so HUD refreshes (score/shards)
+	# don't clobber the wave label back to wave 1.
+	var mgr := get_node_or_null("../EnemyManager")
+	return mgr.wave if mgr and "wave" in mgr else 1
+
 
 func _on_hurt() -> void:
 	_hurt_flash = 0.45
