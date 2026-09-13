@@ -191,3 +191,4 @@ Higher evolution stages grant a longer overcharge invulnerability window via ove
 Combo milestone XP scales with the streak tier via milestone_xp, a pure mapping.
 The wave-clear score bonus scales with the wave via clear_bonus, a pure mapping.
 The HUD wave label zero-pads the wave number via wave_label_text, a pure formatter.
+The HUD combo label shows the multiplier only while the combo window is live via combo_display_text, a pure formatter.

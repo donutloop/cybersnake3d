@@ -48,6 +48,11 @@ func wave_label_text(wave: int) -> String:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return "WAVE: %02d" % wave
 
+func combo_display_text(combo: int, timer: float) -> String:
+	# Show the combo multiplier only while the window is live.
+	# Pure mapping (no node access) so the logic is unit-testable.
+	return "COMBO x%d" % combo if timer > 0.0 else ""
+
 func _ready() -> void:
 	death_screen.visible = false
 	wave_announce.visible = false
@@ -270,7 +275,7 @@ func _update_combo_label() -> void:
 	var timer: float = snake.combo_timer if snake else 0.0
 	if combo >= 2 and timer > 0.0:
 		combo_label.visible = true
-		combo_label.text = "COMBO x%d" % combo
+		combo_label.text = combo_display_text(combo, timer)
 		# Color tiers: x2-3 cyan, x4-5 gold, x6+ red-hot.
 		var color := Color(0.3, 1.0, 0.9) if combo < 4 else (Color(1, 0.85, 0.2) if combo < 6 else Color(1, 0.25, 0.25))
 		combo_label.add_theme_color_override("font_color", color)

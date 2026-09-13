@@ -98,6 +98,7 @@ func _run_all() -> void:
 	_test_bar_max_floors_at_stage_5()
 	_test_format_score_groups_thousands()
 	_test_wave_label_zero_pads()
+	_test_combo_display_shows_only_live_window()
 
 func _set_stage(stage: int) -> void:
 	_snake.evolution_stage = stage
@@ -132,6 +133,11 @@ func _test_wave_label_zero_pads() -> void:
 	var hud := _hud
 	assert_eq(hud.wave_label_text(3), "WAVE: 03", "wave 3 zero-pads")
 	assert_eq(hud.wave_label_text(12), "WAVE: 12", "wave 12 stays two digits")
+
+func _test_combo_display_shows_only_live_window() -> void:
+	var hud := _hud
+	assert_eq(hud.combo_display_text(3, 0.0), "", "expired window shows empty")
+	assert_eq(hud.combo_display_text(3, 0.5), "COMBO x3", "live window shows multiplier")
 
 func _teardown() -> void:
 	_hud.queue_free()
