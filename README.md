@@ -150,6 +150,7 @@ Hunter chase speed ramps via hunt_speed, a pure mapping (base + 0.35/s, capped).
 Score Leech siphon rate comes from drain_ratio, a pure mapping (25% per drain).
 Overdrive Mine flash durations come from prime_flash_time/hit_flash_time, pure mappings.
 Wraith glide speed comes from wraith_speed, a pure mapping (speed 3).
+ICE shard float height comes from shard_float_height, a pure mapping (0.3 units).
 
 ## Gameplay Features
 

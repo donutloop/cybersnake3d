@@ -30,6 +30,7 @@ func _run_all() -> void:
 	_test_eat_removes_shard()
 	_test_get_shard_positions()
 	_test_max_shards_scales_with_area()
+	_test_shard_float_height_bobs()
 
 
 func _set_snake_occupied(cells: Array) -> void:
@@ -94,3 +95,6 @@ func _test_max_shards_scales_with_area() -> void:
 	assert_eq(_spawner.max_shards(10, 10), 3, "small board floors at 3 shards")
 	assert_eq(_spawner.max_shards(40, 40), 8, "large board caps at 8 shards")
 	assert_eq(_spawner.max_shards(20, 20), 4, "mid board scales to 4 shards")
+
+func _test_shard_float_height_bobs() -> void:
+	assert_eq(_spawner.shard_float_height(), 0.3, "shards bob 0.3 units above floor")

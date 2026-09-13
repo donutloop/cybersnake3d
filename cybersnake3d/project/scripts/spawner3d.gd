@@ -26,6 +26,10 @@ func _ready() -> void:
 	shard_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	call_deferred("_spawn_shard")
 
+
+func shard_float_height() -> float:
+	# ICE shards bob this many units above the floor (pure mapping).
+	return 0.3
 func _process(delta: float) -> void:
 	anim_time += delta
 
@@ -41,7 +45,7 @@ func _process(delta: float) -> void:
 		if i < shard_meshes.size():
 			var mesh := shard_meshes[i]
 			var base_y := 0.7
-			mesh.position.y = base_y + sin(anim_time * 2.0 + float(i)) * 0.3
+			mesh.position.y = base_y + sin(anim_time * 2.0 + float(i)) * shard_float_height()
 			mesh.rotation.y += delta * 2.0
 
 func _spawn_shard() -> void:
