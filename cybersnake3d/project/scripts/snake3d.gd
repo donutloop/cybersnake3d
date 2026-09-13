@@ -38,7 +38,7 @@ var just_attacked: bool = false
 # Combo system: chained shard pickups within the window boost the score.
 var combo: int = 0
 var combo_timer: float = 0.0
-var combo_window: float = 2.0
+var combo_window: float = base_combo_window()
 var last_gain: int = 0
 var paused: bool = false
 
@@ -66,6 +66,15 @@ signal boss_slain(value: int)
 
 
 
+
+
+func base_move_interval() -> float:
+	# Snake base move interval in seconds (pure mapping).
+	return 0.125
+
+func base_combo_window() -> float:
+	# Snake base combo window in seconds (pure mapping).
+	return 2.0
 
 func base_max_hp() -> int:
 	# Snake base max HP (pure mapping).

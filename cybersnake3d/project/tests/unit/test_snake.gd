@@ -62,6 +62,7 @@ func _run_all() -> void:
 	_test_overcharge_unlock_stage()
 	_test_burst_reach()
 	_test_base_max_hp()
+	_test_base_timings()
 	_test_overcharge_duration_scales_with_stage()
 	_test_milestone_xp_scales_with_tier()
 	_test_move_interval_inverse_speed()
@@ -492,6 +493,11 @@ func _test_overcharge_unlock_stage() -> void:
 func _test_burst_reach() -> void:
 	var s := _make_snake()
 	assert_eq(s.burst_reach(5), 1 + int(s.magnet_radius(5)), "burst reach is magnet radius plus one")
+
+func _test_base_timings() -> void:
+	var s := _make_snake()
+	assert_eq(s.base_move_interval(), 0.125, "snake base move interval is 0.125")
+	assert_eq(s.base_combo_window(), 2.0, "snake base combo window is 2.0")
 
 func _test_base_max_hp() -> void:
 	var s := _make_snake()
