@@ -538,6 +538,7 @@ func _run_all() -> void:
 	_test_wraith_speed_glides()
 	_test_chrono_anchor_flash_times()
 	_test_boss_cap()
+	_test_hive_queen_cap()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -625,3 +626,6 @@ func _test_chrono_anchor_flash_times() -> void:
 
 func _test_boss_cap() -> void:
 	assert_eq(_manager.boss_cap(), 2, "max concurrent bosses is 2")
+
+func _test_hive_queen_cap() -> void:
+	assert_eq(_manager.hive_queen_cap(), 2, "max concurrent hive queens is 2")

@@ -145,7 +145,7 @@ func _spawn_wave(w: int) -> void:
 
 	if w >= 15:
 		for i in range(spawn_count(w, 14)):
-			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", 2)
+			_spawn_enemy_capped("res://scripts/enemies/hive_queen3d.gd", hive_queen_cap())
 
 func _pulse_floor() -> void:
 	var floor := get_node_or_null("../GridFloor")
@@ -166,6 +166,10 @@ func clear_bonus(wave: int) -> int:
 	# Pure mapping (no node access) so the logic is unit-testable.
 	return 100 + wave * 20
 
+
+func hive_queen_cap() -> int:
+	# Maximum concurrent hive queens (pure mapping).
+	return 2
 func boss_cap() -> int:
 	# Maximum concurrent boss enemies (pure mapping).
 	return 2
