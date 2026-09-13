@@ -11,8 +11,8 @@ const LevelSettings = preload("res://scripts/level_settings.gd")
 
 
 var grid_pos := Vector2i.ZERO
-var hp: int = 3
-var max_hp: int = 3
+var hp: int = shredder_base_hp()
+var max_hp: int = shredder_base_hp()
 var move_speed: float = 2.5        # chase steps/sec
 var lunge_speed: float = 12.0      # cells/sec during a lunge
 var move_timer: float = 0.0
@@ -33,6 +33,11 @@ var light: OmniLight3D
 var time_passed: float = 0.0
 var flash_timer: float = 0.0
 
+
+
+func shredder_base_hp() -> int:
+	# Cascade Shredder base HP (pure mapping).
+	return 3
 
 func _ready() -> void:
 	grid_pos = _random_edge()
@@ -57,6 +62,7 @@ func _ready() -> void:
 	mesh_inst.add_child(light)
 
 	_update_position()
+
 
 func _process(delta: float) -> void:
 	if is_dead:

@@ -545,6 +545,7 @@ func _run_all() -> void:
 	_test_split_echo_base_hp()
 	_test_leech_base_hp()
 	_test_hunter_base_hp()
+	_test_shredder_base_hp()
 	_test_boss_hp_scales_with_wave()
 	_test_queen_hatches_swarms_into_manager()
 	_test_queen_damage_reduces_hp()
@@ -659,3 +660,7 @@ func _test_leech_base_hp() -> void:
 func _test_hunter_base_hp() -> void:
 	var hunter := _make_enemy(HunterScript, "hunter3")
 	assert_eq(hunter.hunter_base_hp(), 3, "hunter has 3 base HP")
+
+func _test_shredder_base_hp() -> void:
+	var shredder := _make_enemy(ShredderScript, "shredder3")
+	assert_eq(shredder.shredder_base_hp(), 3, "cascade shredder has 3 base HP")
