@@ -140,6 +140,7 @@ Shard gain now scales with the wave: each +10 wave tier multiplies gain by 10% (
 A fullscreen `CanvasLayer` (layer 10, above the HUD) applies `shaders/crt_post.gdshader` to the viewport backbuffer: scanlines, chromatic aberration, and a vignette for the neon-noir look.
 
 A `danger_pulse.gd` controller drives those uniforms from the Snake's HP each frame: the `vignette_strength` darkens toward the screen edge as HP drops (0 at full HP, 1 at 1 HP — a pure, unit-tested mapping), and `scanline_strength` spikes briefly whenever the snake takes a hit.
+Danger pulse hit flash strength comes from hit_flash_strength, a pure mapping (0.35).
 Wave intervals shrink as waves progress via enemy_manager.wave_delay, a pure mapping (floors at 1.0).
 Net Reaper frenzy doubles speed via frenzy_speed_multiplier, a pure mapping.
 Virus swarm size bounds come from swarm_size_min/max, pure mappings.

@@ -39,7 +39,7 @@ func _process(_delta: float) -> void:
 	if _snake == null or _crt_material == null:
 		return
 	if _last_hp >= 0 and _snake.hp < _last_hp:
-		_recent_hit = 0.35
+		_recent_hit = hit_flash_strength()
 	_last_hp = _snake.hp
 	if _recent_hit > 0.0:
 		_recent_hit = maxf(_recent_hit - _delta, 0.0)
@@ -47,6 +47,10 @@ func _process(_delta: float) -> void:
 
 
 
+
+func hit_flash_strength() -> float:
+	# Danger pulse recent-hit flash strength (pure mapping).
+	return 0.35
 func scanline_strength(hit: float) -> float:
 	# CRT scanline intensity ramps with recent-hit flash (base 0.18, +0.30).
 	# Pure mapping (no node access) so the logic is unit-testable.
